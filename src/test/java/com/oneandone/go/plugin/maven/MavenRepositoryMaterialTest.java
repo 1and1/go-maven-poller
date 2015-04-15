@@ -4,6 +4,7 @@ import com.oneandone.go.plugin.maven.message.*;
 import com.oneandone.go.plugin.maven.util.JsonUtil;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
@@ -25,13 +26,14 @@ import static org.junit.Assert.*;
 public class MavenRepositoryMaterialTest {
 
     private static Server server;
+    private static Integer runningPort;
 
     @BeforeClass
     public static void setUpLocalWebServer() throws Exception {
         server = new Server();
 
         final SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(10101);
+        connector.setPort(0);
         server.addConnector(connector);
 
         final ResourceHandler resourceHandler = new ResourceHandler();
@@ -47,6 +49,7 @@ public class MavenRepositoryMaterialTest {
             public void run() {
                 try {
                     server.start();
+                    runningPort = server.getConnectors()[0].getLocalPort();
                     server.join();
                 } catch (final Exception e) {
                     e.printStackTrace();
@@ -59,6 +62,10 @@ public class MavenRepositoryMaterialTest {
 
     @Test
     public void testHandle() throws Exception {
+        while (runningPort == null) {
+            Thread.sleep(100);
+        }
+
         final MavenRepositoryMaterial repositoryMaterial = new MavenRepositoryMaterial();
 
         // request repo conf
@@ -91,7 +98,7 @@ public class MavenRepositoryMaterialTest {
         final PackageRevisionMessage revisionMessage = JsonUtil.fromJsonString(response.responseBody(), PackageRevisionMessage.class);
         assertNotNull(revisionMessage);
         assertEquals("2.1.0-SNAPSHOT", revisionMessage.getRevision());
-        assertEquals("http://localhost:10101/com/oneandone/network/rrd-client-ra/2.1.0-SNAPSHOT/rrd-client-ra-2.1.0-20150409.112032-10.rar", revisionMessage.getDataFor("LOCATION"));
+        assertEquals("http://localhost:" + runningPort + "/com/oneandone/network/rrd-client-ra/2.1.0-SNAPSHOT/rrd-client-ra-2.1.0-20150409.112032-10.rar", revisionMessage.getDataFor("LOCATION"));
 
         // check package connection
         response = repositoryMaterial.handle(request("check-repository-connection", configuration));
@@ -156,7 +163,7 @@ public class MavenRepositoryMaterialTest {
         final Field repositoryConfigurationField = messageClass.getDeclaredField("repositoryConfiguration");
         repositoryConfigurationField.setAccessible(true);
         final Map<String, PackageMaterialProperty> repositoryConfiguration = new HashMap<>();
-        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:10101"));
+        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:" + runningPort));
         repositoryConfigurationField.set(configurationMessage, repositoryConfiguration);
 
         final Field packageConfigurationField = messageClass.getDeclaredField("packageConfiguration");
@@ -177,7 +184,7 @@ public class MavenRepositoryMaterialTest {
         final Field repositoryConfigurationField = messageClass.getDeclaredField("repositoryConfiguration");
         repositoryConfigurationField.setAccessible(true);
         final Map<String, PackageMaterialProperty> repositoryConfiguration = new HashMap<>();
-        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:10101"));
+        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:" + runningPort));
         repositoryConfigurationField.set(configurationMessage, repositoryConfiguration);
 
         final Field packageConfigurationField = messageClass.getDeclaredField("packageConfiguration");

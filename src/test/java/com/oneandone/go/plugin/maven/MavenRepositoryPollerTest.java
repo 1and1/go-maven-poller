@@ -26,13 +26,14 @@ import static org.junit.Assert.assertTrue;
 public class MavenRepositoryPollerTest {
 
     private static Server server;
+    private static Integer runningPort;
 
     @BeforeClass
     public static void setUpLocalWebServer() throws Exception {
         server = new Server();
 
         final SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(10101);
+        connector.setPort(0);
         server.addConnector(connector);
 
         final ResourceHandler resourceHandler = new ResourceHandler();
@@ -48,6 +49,7 @@ public class MavenRepositoryPollerTest {
             public void run() {
                 try {
                     server.start();
+                    runningPort = server.getConnectors()[0].getLocalPort();
                     server.join();
                 } catch (final Exception e) {
                     e.printStackTrace();
@@ -63,11 +65,15 @@ public class MavenRepositoryPollerTest {
 
     @Before
     public void setUp() throws Exception {
+        while (runningPort == null) {
+            Thread.sleep(100);
+        }
+
         final String configuration =
                 "{" +
                         "  \"repository-configuration\": {" +
                         "    \"REPO_URL\": {" +
-                        "      \"value\": \"http://localhost:10101/\"" +
+                        "      \"value\": \"http://localhost:" + runningPort + "/\"" +
                         "    }" +
                         "  }," +
                         "  \"package-configuration\": {" +
