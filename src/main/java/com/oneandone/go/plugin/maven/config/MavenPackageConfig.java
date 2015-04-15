@@ -9,20 +9,63 @@ import com.oneandone.go.plugin.maven.util.MavenVersion;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import lombok.Getter;
 
+/** Representation of a maven package configuration. */
 public class MavenPackageConfig {
 
     /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(MavenPackageConfig.class);
 
+    /** The specified properties. */
     private final PackageMaterialProperties packageConfig;
 
+    /**
+     * The group id.
+     *
+     * @return the group id
+     */
     @Getter private final String groupId;
+
+    /**
+     * The artifact id.
+     *
+     * @return the artifact id
+     */
     @Getter private final String artifactId;
+
+    /**
+     * The lower version bound (inclusive).
+     *
+     * @return the lower version bound (inclusive)
+     */
     @Getter private final MavenVersion lowerBound;
+
+    /**
+     * The upper version bound (exclusive).
+     *
+     * @return the upper version bound (exclusive)
+     */
     @Getter private final MavenVersion upperBound;
+
+    /**
+     * The artifact packaging type.
+     *
+     * @return the artifact packaging type
+     */
     @Getter private final String packaging;
+
+    /**
+     * The last known version.
+     *
+     * @return the last known version
+     */
     @Getter private final String lastKnownVersion;
 
+    /**
+     * Constructs the packaging configuration by the specified properties.
+     *
+     * @param packageConfig the configuration properties
+     * @param packageRevision the last known version
+     */
     public MavenPackageConfig(final PackageMaterialProperties packageConfig, final PackageRevisionMessage packageRevision) {
         this.packageConfig = packageConfig;
 
@@ -45,18 +88,42 @@ public class MavenPackageConfig {
         this.lastKnownVersion = packageRevision != null ? packageRevision.getRevision() : null;
     }
 
+    /**
+     * Returns {@code true} if a lower version bound is specified, otherwise {@code false}.
+     *
+     * @return {@code true} if a lower version bound is specified, otherwise {@code false}
+     * @see #lowerBound
+     */
     public boolean lowerBoundGiven() {
         return lowerBound != null;
     }
 
+    /**
+     * Returns {@code true} if an upper version bound is specified, otherwise {@code false}.
+     *
+     * @return {@code true} if an upper version bound is specified, otherwise {@code false}
+     * @see #upperBound
+     */
     public boolean upperBoundGiven() {
         return upperBound != null;
     }
 
+    /**
+     * Returns {@code true} if the last version is not {@code null}, otherwise {@code false}.
+     *
+     * @return {@code true} if the last version is not {@code null}, otherwise {@code false}
+     */
     public boolean isLastVersionKnown() {
         return lastKnownVersion != null;
     }
 
+    /**
+     * Validates an id and adds occurring errors to the validation result.
+     *
+     * @param errors the errors to append to
+     * @param groupOrArtifactId the id to validate
+     * @param what the configuration key that for the value that will be validated
+     */
     private void validateId(final ValidationResultMessage errors, final String groupOrArtifactId, final String what) {
         if (groupOrArtifactId == null || groupOrArtifactId.trim().isEmpty()) {
             final String message = what + " is not specified";
@@ -72,6 +139,11 @@ public class MavenPackageConfig {
         }
     }
 
+    /**
+     * Validates the package configuration and returns the validation result.
+     *
+     * @return the validation result
+     */
     public ValidationResultMessage validate() {
         final ValidationResultMessage validationResult = new ValidationResultMessage();
         validateId(validationResult, groupId, ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID);
