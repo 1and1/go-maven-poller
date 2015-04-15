@@ -4,10 +4,11 @@ package com.oneandone.go.plugin.maven.util;
 import java.util.Comparator;
 
 /**
- * https://github.com/paour/natorder/blob/master/NaturalOrderComparator.java
+ * The natural order String comparator as provided <a href="https://github.com/paour/natorder/blob/master/NaturalOrderComparator.java">here</a>.
  */
 class NaturalOrderComparator implements Comparator<String> {
-    private int compareRight(String a, String b) {
+
+    private int compareRight(final String a, final String b) {
         int bias = 0;
         int ia = 0;
         int ib = 0;
@@ -39,7 +40,8 @@ class NaturalOrderComparator implements Comparator<String> {
         }
     }
 
-    public int compare(String a, String b) {
+    @Override
+    public int compare(final String a, final String b) {
         int ia = 0, ib = 0;
         int nza = 0, nzb = 0;
         char ca, cb;
@@ -99,7 +101,7 @@ class NaturalOrderComparator implements Comparator<String> {
         }
     }
 
-    static char charAt(String s, int i) {
+    private static char charAt(final String s, final int i) {
         if (i >= s.length()) {
             return 0;
         } else {

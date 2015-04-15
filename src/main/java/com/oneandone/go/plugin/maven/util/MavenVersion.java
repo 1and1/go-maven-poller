@@ -7,23 +7,48 @@ import lombok.Getter;
 import java.io.Serializable;
 import java.util.StringTokenizer;
 
+/** The representation of a maven version. */
 @EqualsAndHashCode(of = "original")
 public class MavenVersion implements Serializable, Comparable<MavenVersion> {
 
+    /** The serialization version of this class. */
     private static final long serialVersionUID = 2L;
 
+    /**
+     * The original version.
+     *
+     * @return the original version
+     */
     @Getter private String original;
+
+    /** The version without the qualifier. */
     private String version;
+
+    /** The qualifier. */
     private String qualifier;
 
+    /** The SNAPSHOT timestamp. */
     private String timestamp;
+
+    /** The SNAPSHOT build number. */
     private String buildNumber;
 
+    /** The version digits as String. */
     private String[] digitStrings;
+
+    /** The version digits. */
     private int[] digits;
 
+    /** The qualifier delimiter. */
     private char lastDelimiter;
 
+    /**
+     * Constructs a version representation for the specified version.
+     *
+     * @param version the version
+     * @throws NullPointerException if the specified version is {@code null}
+     * @throws IllegalArgumentException if the specified version is empty or the version digits could not be parsed
+     */
     public MavenVersion(final String version) {
         Preconditions.checkNotNull(version, "version string may not be null");
         Preconditions.checkArgument(!version.isEmpty(), "version may not be empty");
@@ -52,11 +77,17 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
             try {
                 digits[i] = Integer.valueOf(digit);
             } catch (final NumberFormatException e) {
-                throw new IllegalArgumentException("Invalid version string " + version);
+                throw new IllegalArgumentException("invalid version string " + version);
             }
         }
     }
 
+    /**
+     * Strips the version from the specified String.
+     *
+     * @param ver the version
+     * @return the stripped version
+     */
     private String stripVersion(final String ver) {
         int lastIndex = -1;
         int counter = 0;
@@ -100,30 +131,68 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
         return versionOnly;
     }
 
+    /**
+     * Returns the value for the specified version digit index or 0 if the index is out of bounds.
+     *
+     * @param index the digit index
+     * @return the value for the specified version digit index or 0 if the index is out of bounds
+     */
     private Integer getValue(int index) {
         return index < this.digitStrings.length ? digits[index] : 0;
     }
 
+    /**
+     * Returns the major version ({@code MAJOR.MINOR.BUGFIX.HOTFIX)}.
+     *
+     * @return the major version
+     */
     public int getMajor() {
         return 0 < this.digits.length ? this.digits[0] : 0;
     }
 
+    /**
+     * Returns the minor version ({@code MAJOR.MINOR.BUGFIX.HOTFIX)}.
+     *
+     * @return the minor version
+     */
     public int getMinor() {
         return 1 < this.digits.length ? this.digits[1] : 0;
     }
 
+    /**
+     * Returns the bugfix version ({@code MAJOR.MINOR.BUGFIX.HOTFIX)}.
+     *
+     * @return the bugfix version
+     */
     public int getBugfix() {
         return 2 < this.digits.length ? this.digits[2] : 0;
     }
 
+    /**
+     * Returns the hotfix version ({@code MAJOR.MINOR.BUGFIX.HOTFIX)}.
+     *
+     * @return the hotfix version
+     */
     public int getHotfix() {
         return 3 < this.digits.length ? this.digits[3] : 0;
     }
 
+    /**
+     * Returns the qualifier.
+     *
+     * @return the qualifier
+     */
     public String getQualifier() {
         return this.qualifier;
     }
 
+    /**
+     * Returns the version with qualifier.
+     * <p />
+     * Snapshot versions will be resolved to their actual artifact verison with timestamp and build number.
+     *
+     * @return the version with qualifier
+     */
     public String getVersion() {
         if (isSnapshot()) {
             return this.version + this.lastDelimiter + this.timestamp + "-" +  this.buildNumber;
@@ -132,22 +201,51 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
         return this.getQualifier() != null ? this.version + this.lastDelimiter + this.getQualifier() : this.version;
     }
 
-    public boolean notNewerThan(final MavenVersion lastKnownVersion) {
-        return this.compareTo(lastKnownVersion) <= 0;
+    /**
+     * Returns {@code true} if {@code this} version is older or equal to the specified {@code version}, otherwise {@code false}.
+     *
+     * @param version the version to compare with
+     * @return {@code true} if {@code this} version is older or equal to the specified {@code version}, otherwise {@code false}
+     */
+    public boolean notNewerThan(final MavenVersion version) {
+        return this.compareTo(version) <= 0;
     }
 
+    /**
+     * Returns {@code true} if {@code this} version is older than the specified {@code version}, otherwise {@code false}.
+     *
+     * @param version the version to compare with
+     * @return {@code true} if {@code this} version is older than the specified {@code version}, otherwise {@code false}
+     */
     public boolean lessThan(final MavenVersion version) {
         return this.compareTo(version) < 0;
     }
 
+    /**
+     * Returns {@code true} if {@code this} version is newer or equal to the specified {@code version}, otherwise {@code false}.
+     *
+     * @param version the version to compare with
+     * @return {@code true} if {@code this} version is newer or equal to the specified {@code version}, otherwise {@code false}
+     */
     public boolean greaterOrEqual(final MavenVersion version) {
         return this.compareTo(version) >= 0;
     }
 
+    /**
+     * Returns {@code true} if the qualifier equals {@code SNAPSHOT} (ignore case), otherwise {@code false}.
+     *
+     * @return {@code true} if the qualifier equals {@code SNAPSHOT} (ignore case), otherwise {@code false}
+     */
     public boolean isSnapshot() {
-        return qualifier == null ? false : "SNAPSHOT".equals(qualifier.toUpperCase());
+        return qualifier != null && "SNAPSHOT".equals(qualifier.toUpperCase());
     }
 
+    /**
+     * Sets the snapshot information for {@code this version}.
+     *
+     * @param timestamp the timestamp to set
+     * @param buildNumber the build number to set
+     */
     public void setSnapshotInformation(final String timestamp, final String buildNumber) {
         this.timestamp = timestamp;
         this.buildNumber = buildNumber;
