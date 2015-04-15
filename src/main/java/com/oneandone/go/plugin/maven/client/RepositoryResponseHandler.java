@@ -17,20 +17,35 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/** Handles the Maven repository responses in form of {@code maven-metadata.xml} contents. */
 public class RepositoryResponseHandler {
 
+    /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(RepositoryResponseHandler.class);
 
+    /** The repository response. */
     private final RepositoryResponse repoResponse;
 
+    /** The document builder. */
     private DocumentBuilder documentBuilder;
+
+    /** The metadata document or {@code null}. */
     private Document metaData;
 
+    /** The XPath to the versions. */
     private XPathExpression versionsXPath;
+
+    /** The XPath to the SNAPSHOT timestamp. */
     private XPathExpression timestampXpath;
+
+    /** The XPath to the SNAPSHOT build number. */
     private XPathExpression buildNumberXpath;
 
-
+    /**
+     * Constructs a new response handler.
+     *
+     * @param repoResponse the Maven repository response
+     */
     public RepositoryResponseHandler(final RepositoryResponse repoResponse) {
         this.repoResponse = repoResponse;
 
@@ -50,6 +65,11 @@ public class RepositoryResponseHandler {
         }
     }
 
+    /**
+     * Returns {@code true} if this handler can handle the repository response, otherwise {@code false}.
+     *
+     * @return {@code true} if this handler can handle the repository response, otherwise {@code false}
+     */
     public boolean canHandle() {
         if (metaData == null && documentBuilder != null) {
             try {
@@ -63,6 +83,11 @@ public class RepositoryResponseHandler {
         return metaData != null;
     }
 
+    /**
+     * Returns all artifact versions within the metadata of the repository response.
+     *
+     * @return all artifact versions within the metadata of the repository response
+     */
     public List<MavenRevision> getAllVersions() {
         Preconditions.checkArgument(canHandle(), "handler not initialized");
 
@@ -81,6 +106,11 @@ public class RepositoryResponseHandler {
         }
     }
 
+    /**
+     * Returns the Snapshot timestamp within the metadata of the repository response.
+     *
+     * @return the Snapshot timestamp within the metadata of the repository response
+     */
     public String getSnapshotTimestamp() {
         Preconditions.checkArgument(canHandle(), "handler not initialized");
         try {
@@ -91,6 +121,11 @@ public class RepositoryResponseHandler {
         }
     }
 
+    /**
+     * Returns the Snapshot build number within the metadata of the repository response.
+     *
+     * @return the Snapshot build number within the metadata of the repository response
+     */
     public String getSnapshotBuildNumber() {
         Preconditions.checkArgument(canHandle(), "handler not initialized");
         try {

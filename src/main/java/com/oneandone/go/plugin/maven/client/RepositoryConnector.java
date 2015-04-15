@@ -15,7 +15,6 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.entity.ContentType;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
@@ -23,17 +22,25 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
+/** The Maven repository connector. */
 public class RepositoryConnector {
 
+    /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(RepositoryConnector.class);
 
+    /** The repository configuration. */
     private final MavenRepoConfig repoConfig;
 
+    /**
+     * Constructs a connector by the specified configuration.
+     *
+     * @param repoConfig the repository configuration
+     */
     public RepositoryConnector(final MavenRepoConfig repoConfig) {
         this.repoConfig = repoConfig;
     }
 
-    public static String concatUrl(final String baseUrl, final String groupId, final String artifactId, final String version) {
+    private static String concatUrl(final String baseUrl, final String groupId, final String artifactId, final String version) {
         final StringBuilder sb = new StringBuilder();
         sb.append(baseUrl);
         if (!baseUrl.endsWith("/")) {
@@ -70,6 +77,15 @@ public class RepositoryConnector {
         return sb.toString();
     }
 
+    /**
+     * Executes a HTTP {@code GET} on the specified url and returns the response.
+     * <p />
+     * The connection will be released after the operation.
+     *
+     * @param url the URL
+     * @return the response
+     * @throws RuntimeException on any exception
+     */
     public RepositoryResponse doHttpRequest(final String url) {
         final HttpClient client = createHttpClient();
 
@@ -83,7 +99,6 @@ public class RepositoryConnector {
             }
             HttpEntity entity = response.getEntity();
             responseBody = EntityUtils.toString(entity);
-            String mimeType = ContentType.get(entity).getMimeType();
             return new RepositoryResponse(responseBody);
         } catch (final Exception e) {
             String message = String.format("Exception while connecting to %s\n%s", url, e);
@@ -96,6 +111,12 @@ public class RepositoryConnector {
         }
     }
 
+    /**
+     * Creates a HTTP {@code GET} on the specified url.
+     *
+     * @param url the URL
+     * @return the HTTP {@code GET} operation
+     */
     private HttpGet createGetMethod(final String url) {
         final HttpGet method = new HttpGet(url);
         method.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10 * 1000);
@@ -106,6 +127,11 @@ public class RepositoryConnector {
         return method;
     }
 
+    /**
+     * Returns a new HTTP client by the specified repository configuration.
+     *
+     * @return a new HTTP client by the specified repository configuration
+     */
     private HttpClient createHttpClient() {
         HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
         httpClientBuilder = httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, false));
@@ -120,6 +146,12 @@ public class RepositoryConnector {
         return httpClientBuilder.build();
     }
 
+    /**
+     * Tests the connection to the base URL of the repository, returns {@code true} on success and {@code false} otherwise.
+     *
+     * @return {@code true} if a connection could be established, otherwise {@code false}
+     * @throws RuntimeException on any exception
+     */
     public boolean testConnection() {
         final String url = repoConfig.getRepoUrlAsString();
         boolean result = false;
@@ -143,22 +175,53 @@ public class RepositoryConnector {
         return result;
     }
 
+    /**
+     * Constructs and executes a snapshot version request.
+     *
+     * @param repoConfig the repository configuration
+     * @param packageConfig the package configuration
+     * @param version the snapshot version to extend with {@link MavenVersion#setSnapshotInformation(String, String)}
+     * @return the repository response
+     */
     public RepositoryResponse makeSnapshotVersionRequest(final MavenRepoConfig repoConfig, final MavenPackageConfig packageConfig, final MavenVersion version) {
         final String url = concatUrl(repoConfig.getRepoUrlAsString(), packageConfig.getGroupId(), packageConfig.getArtifactId(), version.toString()) + "maven-metadata.xml";
         LOGGER.info("Getting version for SNAPSHOT " + url);
         return doHttpRequest(url);
     }
 
+    /**
+     * Constructs and executes a request for all versions.
+     *
+     * @param repoConfig the repository configuration
+     * @param packageConfig the package configuration
+     * @return the repository response
+     */
     public RepositoryResponse makeAllVersionsRequest(final MavenRepoConfig repoConfig, final MavenPackageConfig packageConfig) {
         final String url = concatUrl(repoConfig.getRepoUrlAsString(), packageConfig.getGroupId(), packageConfig.getArtifactId(), null);
         LOGGER.info("Getting versions from " + url);
         return doHttpRequest(url);
     }
 
+    /**
+     * Returns the URL for the specified revision.
+     *
+     * @param repoConfig the repository configuration
+     * @param packageConfig the package configuration
+     * @param revision the revision
+     * @return the URL
+     */
     public String getFilesUrl(final MavenRepoConfig repoConfig, final MavenPackageConfig packageConfig, final String revision) {
         return concatUrl(repoConfig.getRepoUrlAsString(), packageConfig.getGroupId(), packageConfig.getArtifactId(), revision);
     }
 
+    /**
+     * Returns the URL with basic authentication information for the specified revision.
+     *
+     * @param repoConfig the repository configuration
+     * @param packageConfig the package configuration
+     * @param revision the revision
+     * @return the URL with basic authentication information
+     */
     public String getFilesUrlWithBasicAuth(final MavenRepoConfig repoConfig, final MavenPackageConfig packageConfig, final String revision) {
         return concatUrl(repoConfig.getRepoUrlAsStringWithBasicAuth(), packageConfig.getGroupId(), packageConfig.getArtifactId(), revision);
     }
