@@ -26,7 +26,7 @@ public class MavenRepositoryPoller {
      * If a revision could not be found for the specified package criteria, this method will return {@code null}.
      *
      * @param packageConfig the package configuration (see {@link MavenPackageConfig})
-     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @param repoConfig the repository configuration (see {@link MavenRepoConfig})
      * @return the latest package revision or {@code null}
      * @throws RuntimeException if the specified configuration could not be validated successfully
      */
@@ -50,7 +50,7 @@ public class MavenRepositoryPoller {
      * If a revision could not be found for the specified package criteria, this method will return {@code null}.
      *
      * @param packageConfig the package configuration (see {@link MavenPackageConfig})
-     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @param repoConfig the repository configuration (see {@link MavenRepoConfig})
      * @param previouslyKnownRevision the last known package revision
      * @return the latest package revision or {@code null}
      * @throws RuntimeException if the specified configuration could not be validated successfully
@@ -83,7 +83,7 @@ public class MavenRepositoryPoller {
     /**
      * Checks the connection to the specified repository and returns the result.
      *
-     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @param repoConfig the repository configuration (see {@link MavenRepoConfig})
      * @return the result of the connection check
      */
     public CheckConnectionResultMessage checkConnectionToRepository(final PackageMaterialProperties repoConfig) {
@@ -102,7 +102,7 @@ public class MavenRepositoryPoller {
      * Checks the connection to the artifact specified in the package configuration within the specified repository and returns the result.
      *
      * @param packageConfig the package configuration (see {@link MavenPackageConfig})
-     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @param repoConfig the repository configuration (see {@link MavenRepoConfig})
      * @return the result of the connection check
      */
     public CheckConnectionResultMessage checkConnectionToPackage(PackageMaterialProperties packageConfig, PackageMaterialProperties repoConfig) {
@@ -123,7 +123,7 @@ public class MavenRepositoryPoller {
      * Validates the configuration and throws a {@link RuntimeException} if the validation failed.
      *
      * @param packageConfig the package configuration (see {@link MavenPackageConfig})
-     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @param repoConfig the repository configuration (see {@link MavenRepoConfig})
      * @throws RuntimeException if the specified configuration could not be validated successfully
      */
     private void validateConfig(final PackageMaterialProperties repoConfig, final PackageMaterialProperties packageConfig) {
@@ -144,7 +144,7 @@ public class MavenRepositoryPoller {
      * Polls the specified repository for the latest revision of the artifact as specified in the package configuration.
      *
      * @param packageConfig the package configuration (see {@link MavenPackageConfig})
-     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @param repoConfig the repository configuration (see {@link MavenRepoConfig})
      * @return the latest revision or an empty package revision
      */
     private PackageRevisionMessage poll(final MavenRepoConfig repoConfig, final MavenPackageConfig packageConfig) {
