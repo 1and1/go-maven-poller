@@ -31,7 +31,7 @@ public class MavenRepositoryMaterialTest {
         server = new Server();
 
         final SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(10102);
+        connector.setPort(10101);
         server.addConnector(connector);
 
         final ResourceHandler resourceHandler = new ResourceHandler();
@@ -156,7 +156,7 @@ public class MavenRepositoryMaterialTest {
         final Field repositoryConfigurationField = messageClass.getDeclaredField("repositoryConfiguration");
         repositoryConfigurationField.setAccessible(true);
         final Map<String, PackageMaterialProperty> repositoryConfiguration = new HashMap<>();
-        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:10102"));
+        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:10101"));
         repositoryConfigurationField.set(configurationMessage, repositoryConfiguration);
 
         final Field packageConfigurationField = messageClass.getDeclaredField("packageConfiguration");
@@ -177,7 +177,7 @@ public class MavenRepositoryMaterialTest {
         final Field repositoryConfigurationField = messageClass.getDeclaredField("repositoryConfiguration");
         repositoryConfigurationField.setAccessible(true);
         final Map<String, PackageMaterialProperty> repositoryConfiguration = new HashMap<>();
-        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:10102"));
+        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:10101"));
         repositoryConfigurationField.set(configurationMessage, repositoryConfiguration);
 
         final Field packageConfigurationField = messageClass.getDeclaredField("packageConfiguration");
