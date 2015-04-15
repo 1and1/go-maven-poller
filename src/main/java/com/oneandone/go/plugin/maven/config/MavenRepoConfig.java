@@ -10,17 +10,44 @@ import lombok.Getter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+/** Representation of a maven repository configuration. */
 public class MavenRepoConfig {
 
+    /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(MavenRepoConfig.class);
 
+    /** The specified properties. */
     private PackageMaterialProperties repoConfig;
+
+    /** The repository URL. */
     private final String repositoryURL;
 
+    /**
+     * The authentication username.
+     *
+     * @return the authentication username
+     */
     @Getter private final String username;
+
+    /**
+     * The authentication password.
+     *
+     * @return the authentication password
+     */
     @Getter private final String password;
+
+    /**
+     * The HTTP proxy.
+     *
+     * @return the HTTP proxy
+     */
     @Getter private final String proxy;
 
+    /**
+     * Constructs the repository configuration by the specified properties.
+     *
+     * @param repoConfig the properties
+     */
     public MavenRepoConfig(final PackageMaterialProperties repoConfig) {
         this.repoConfig = repoConfig;
 
@@ -30,6 +57,11 @@ public class MavenRepoConfig {
         this.proxy = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY).orNull();
     }
 
+    /**
+     * Returns the repository URL.
+     *
+     * @return the repository URL
+     */
     public RepositoryURL getRepoUrl() {
         final RepositoryURL repoUrl = new RepositoryURL(repositoryURL, username, password);
         if (!repoUrl.isHttp()) {
@@ -38,18 +70,30 @@ public class MavenRepoConfig {
         return repoUrl;
     }
 
+    /** @return {@link RepositoryURL#getURLWithBasicAuth()} */
     public String getRepoUrlAsStringWithBasicAuth() {
         return this.getRepoUrl().getURLWithBasicAuth();
     }
 
+    /** @return {@link RepositoryURL#getURL()} ()} */
     public String getRepoUrlAsString() {
         return this.getRepoUrl().getURL();
     }
 
+    /**
+     * Returns {@code true} if the repository URL is missing (is {@code null} or empty), otherwise {@code false}.
+     *
+     * @return {@code true} if the repository URL is missing (is {@code null} or empty), otherwise {@code false}
+     */
     public boolean isRepoUrlMissing() {
         return repositoryURL == null || repositoryURL.trim().isEmpty();
     }
 
+    /**
+     * Validates {@code this} configuration and returns the validation result.
+     *
+     * @return the validation result
+     */
     public ValidationResultMessage validate() {
         final ValidationResultMessage validationResult = new ValidationResultMessage();
         if (isRepoUrlMissing()) {
@@ -60,12 +104,11 @@ public class MavenRepoConfig {
         }
 
         try {
-            final URL repoUrl = new URL(repositoryURL);
-
-            if (!"http".equals(repoUrl.getProtocol().toLowerCase()) && !"https".equals(repoUrl.getProtocol().toLowerCase())) {
+            if (!this.getRepoUrl().isHttp()) {
                 validationResult.addError(new ValidationError(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL, "Invalid URL: Only http is supported."));
             }
 
+            final URL repoUrl = new URL(repositoryURL);
             if (repoUrl.getUserInfo() != null) {
                 validationResult.addError(new ValidationError(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL, "User info should not be provided as part of the URL. Please provide credentials using USERNAME and PASSWORD configuration keys."));
             }

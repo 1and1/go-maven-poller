@@ -45,7 +45,7 @@ public class RepositoryURL {
     }
 
     /**
-     * Returns the URL with a trailing slash.
+     * Returns the URL with a trailing slash (without basic authentication information).
      *
      * @return the URL with a trailing slash
      */

@@ -11,8 +11,7 @@ import lombok.Getter;
 
 public class MavenPackageConfig {
 
-    public static final String INVALID_BOUNDS_MESSAGE = "Lower Bound cannot be >= Upper Bound";
-
+    /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(MavenPackageConfig.class);
 
     private final PackageMaterialProperties packageConfig;
@@ -101,7 +100,7 @@ public class MavenPackageConfig {
         }
 
         if (upperBoundSpecified && lowerBoundSpecified && new MavenVersion(lowerBoundConfig.get()).greaterOrEqual(new MavenVersion(upperBoundConfig.get()))) {
-            validationResult.addError(new ValidationError(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_FROM, INVALID_BOUNDS_MESSAGE));
+            validationResult.addError(new ValidationError(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_FROM, "Lower Bound cannot be >= Upper Bound"));
         }
 
         ConfigurationProperties.detectInvalidKeys(packageConfig, validationResult,
