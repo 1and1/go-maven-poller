@@ -1,0 +1,11 @@
+dist/*
+out/*
+target/*
+*.iws
+go-plugin-api*.jar
+reports/*
+lib/*
+sdk/*
+*.ipr
+.idea/
+*.iml
