@@ -10,13 +10,28 @@ import com.oneandone.go.plugin.maven.message.*;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 
-
+/**
+ * This class handles all maven repository requests and delegates them accordingly.
+ * <p />
+ * The implementations for the actual repository connections are packaged in {@link com.oneandone.go.plugin.maven.client}.
+ */
 public class MavenRepositoryPoller {
 
+    /** The logging instance for this class. */
     private static Logger LOGGER = Logger.getLoggerFor(MavenRepositoryPoller.class);
 
+    /**
+     * Returns the latest package revision of the artifact specified in the package configuration within the specified repository.
+     * <p />
+     * If a revision could not be found for the specified package criteria, this method will return {@code null}.
+     *
+     * @param packageConfig the package configuration (see {@link MavenPackageConfig})
+     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @return the latest package revision or {@code null}
+     * @throws RuntimeException if the specified configuration could not be validated successfully
+     */
     public PackageRevisionMessage getLatestRevision(final PackageMaterialProperties packageConfig, final PackageMaterialProperties repoConfig) {
-        LOGGER.info(String.format("getLatestRevision called with groupId %s, artifactId %s, for repo: %s",
+        LOGGER.info(String.format("check of latest for artifact with groupId: '%s', artifactId: '%s' in repo: %s",
                         packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orNull(),
                         packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orNull(),
                         repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orNull())
@@ -24,14 +39,28 @@ public class MavenRepositoryPoller {
         validateConfig(repoConfig, packageConfig);
         final PackageRevisionMessage packageRevision = poll(new MavenRepoConfig(repoConfig), new MavenPackageConfig(packageConfig, null));
         if (packageRevision != null) {
-            LOGGER.info(String.format("getLatestRevision returning with %s, %s", packageRevision.getRevision(), packageRevision.getTimestamp()));
+            LOGGER.info("latest revision is " + packageRevision.getRevision());
         }
         return packageRevision;
     }
 
-    public PackageRevisionMessage latestModificationSince(final PackageMaterialProperties packageConfig, final PackageMaterialProperties repoConfig, final PackageRevisionMessage previouslyKnownRevision) {
-        LOGGER.info(String.format("latestModificationSince called with groupId %s, for repo: %s",
+    /**
+     * Returns the latest package revision of the artifact specified in the package configuration within the specified repository.
+     * <p />
+     * If a revision could not be found for the specified package criteria, this method will return {@code null}.
+     *
+     * @param packageConfig the package configuration (see {@link MavenPackageConfig})
+     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @param previouslyKnownRevision the last known package revision
+     * @return the latest package revision or {@code null}
+     * @throws RuntimeException if the specified configuration could not be validated successfully
+     */
+    public PackageRevisionMessage latestModificationSince(final PackageMaterialProperties packageConfig,
+                                                          final PackageMaterialProperties repoConfig,
+                                                          final PackageRevisionMessage previouslyKnownRevision) {
+        LOGGER.info(String.format("check of latest for artifact with groupId: '%s', artifactId: '%s' in repo: %s",
                         packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orNull(),
+                        packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orNull(),
                         repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orNull())
         );
         validateConfig(repoConfig, packageConfig);
@@ -40,7 +69,7 @@ public class MavenRepositoryPoller {
             LOGGER.info(String.format("no modification since %s", previouslyKnownRevision.getRevision()));
             return null;
         }
-        LOGGER.info(String.format("latestModificationSince returning with %s, %s", updatedPackage.getRevision(), updatedPackage.getTimestamp()));
+        LOGGER.info("latest revision is " + updatedPackage.getRevision());
         if (updatedPackage.getTimestamp().getTime() < previouslyKnownRevision.getTimestamp().getTime())
             LOGGER.warn(String.format("Updated Package %s published earlier (%s) than previous (%s, %s)",
                             updatedPackage.getRevision(),
@@ -51,6 +80,12 @@ public class MavenRepositoryPoller {
         return updatedPackage;
     }
 
+    /**
+     * Checks the connection to the specified repository and returns the result.
+     *
+     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @return the result of the connection check
+     */
     public CheckConnectionResultMessage checkConnectionToRepository(final PackageMaterialProperties repoConfig) {
         try {
             final MavenRepoConfig mavenRepoConfig = new MavenRepoConfig(repoConfig);
@@ -63,6 +98,13 @@ public class MavenRepositoryPoller {
         return new CheckConnectionResultMessage(CheckConnectionResultMessage.STATUS.SUCCESS);
     }
 
+    /**
+     * Checks the connection to the artifact specified in the package configuration within the specified repository and returns the result.
+     *
+     * @param packageConfig the package configuration (see {@link MavenPackageConfig})
+     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @return the result of the connection check
+     */
     public CheckConnectionResultMessage checkConnectionToPackage(PackageMaterialProperties packageConfig, PackageMaterialProperties repoConfig) {
         final CheckConnectionResultMessage repoCheckResult = checkConnectionToRepository(repoConfig);
         if (!repoCheckResult.success()) {
@@ -77,6 +119,13 @@ public class MavenRepositoryPoller {
         }
     }
 
+    /**
+     * Validates the configuration and throws a {@link RuntimeException} if the validation failed.
+     *
+     * @param packageConfig the package configuration (see {@link MavenPackageConfig})
+     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @throws RuntimeException if the specified configuration could not be validated successfully
+     */
     private void validateConfig(final PackageMaterialProperties repoConfig, final PackageMaterialProperties packageConfig) {
         final ValidationResultMessage validationResult = new ConfigurationProvider().isRepositoryConfigurationValid(repoConfig);
         validationResult.addErrors(new ConfigurationProvider().isPackageConfigurationValid(packageConfig).getValidationErrors());
@@ -91,6 +140,13 @@ public class MavenRepositoryPoller {
         }
     }
 
+    /**
+     * Polls the specified repository for the latest revision of the artifact as specified in the package configuration.
+     *
+     * @param packageConfig the package configuration (see {@link MavenPackageConfig})
+     * @param repoConfig the repository configuration (see [@link MavenRepoConfig})
+     * @return the latest revision or an empty package revision
+     */
     private PackageRevisionMessage poll(final MavenRepoConfig repoConfig, final MavenPackageConfig packageConfig) {
         final MavenRevision latest = new RepositoryClient(repoConfig, packageConfig).getLatest();
         if (latest == null) {
