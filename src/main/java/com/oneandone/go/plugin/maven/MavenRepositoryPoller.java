@@ -69,6 +69,7 @@ public class MavenRepositoryPoller {
             LOGGER.info(String.format("no modification since %s", previouslyKnownRevision.getRevision()));
             return null;
         }
+
         LOGGER.info("latest revision is " + updatedPackage.getRevision());
         if (updatedPackage.getTimestamp().getTime() < previouslyKnownRevision.getTimestamp().getTime())
             LOGGER.warn(String.format("Updated Package %s published earlier (%s) than previous (%s, %s)",
@@ -150,7 +151,7 @@ public class MavenRepositoryPoller {
     private PackageRevisionMessage poll(final MavenRepoConfig repoConfig, final MavenPackageConfig packageConfig) {
         final MavenRevision latest = new RepositoryClient(repoConfig, packageConfig).getLatest();
         if (latest == null) {
-            return new PackageRevisionMessage();
+            return null;
         }
         return latest.toPackageRevision();
     }
