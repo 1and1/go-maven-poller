@@ -206,7 +206,7 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
         return new MessageHandler() {
             @Override
             public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                final LatestPackageRevisionMessage message = fromJsonString(request.requestBody(), LatestPackageRevisionMessage.class);
+                final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
                 final PackageRevisionMessage revision = packageRepositoryPoller.getLatestRevision(message.getPackageConfiguration(), message.getRepositoryConfiguration());
                 return success(toJsonString(revision));
             }
@@ -222,7 +222,7 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
         return new MessageHandler() {
             @Override
             public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                final LatestPackageRevisionMessage message = fromJsonString(request.requestBody(), LatestPackageRevisionMessage.class);
+                final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
                 final PackageRevisionMessage revision = packageRepositoryPoller.latestModificationSince(message.getPackageConfiguration(), message.getRepositoryConfiguration(), message.getPreviousRevision());
                 return success(revision == null ? null : toJsonString(revision));
             }

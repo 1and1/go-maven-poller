@@ -157,29 +157,12 @@ public class MavenRepositoryMaterialTest {
     }
 
     private static ConfigurationMessage configuration() throws NoSuchFieldException, IllegalAccessException {
-        final ConfigurationMessage configurationMessage = new ConfigurationMessage();
-        final Class<ConfigurationMessage> messageClass = ConfigurationMessage.class;
-
-        final Field repositoryConfigurationField = messageClass.getDeclaredField("repositoryConfiguration");
-        repositoryConfigurationField.setAccessible(true);
-        final Map<String, PackageMaterialProperty> repositoryConfiguration = new HashMap<>();
-        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:" + runningPort));
-        repositoryConfigurationField.set(configurationMessage, repositoryConfiguration);
-
-        final Field packageConfigurationField = messageClass.getDeclaredField("packageConfiguration");
-        packageConfigurationField.setAccessible(true);
-        final Map<String, PackageMaterialProperty> packageConfiguration = new HashMap<>();
-        packageConfiguration.put("GROUP_ID", new PackageMaterialProperty().withValue("com.oneandone.network"));
-        packageConfiguration.put("ARTIFACT_ID", new PackageMaterialProperty().withValue("rrd-client-ra"));
-        packageConfiguration.put("PACKAGING", new PackageMaterialProperty().withValue("rar"));
-        packageConfigurationField.set(configurationMessage, packageConfiguration);
-
-        return configurationMessage;
+        return configuration(null);
     }
 
-    private static LatestPackageRevisionMessage configuration(final PackageRevisionMessage revisionMessage) throws NoSuchFieldException, IllegalAccessException {
-        final LatestPackageRevisionMessage configurationMessage = new LatestPackageRevisionMessage();
-        final Class<LatestPackageRevisionMessage> messageClass = LatestPackageRevisionMessage.class;
+    private static ConfigurationMessage configuration(final PackageRevisionMessage revisionMessage) throws NoSuchFieldException, IllegalAccessException {
+        final ConfigurationMessage configurationMessage = new ConfigurationMessage();
+        final Class<ConfigurationMessage> messageClass = ConfigurationMessage.class;
 
         final Field repositoryConfigurationField = messageClass.getDeclaredField("repositoryConfiguration");
         repositoryConfigurationField.setAccessible(true);
