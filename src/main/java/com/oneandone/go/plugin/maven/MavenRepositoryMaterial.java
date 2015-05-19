@@ -58,10 +58,10 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
     public static final String REQUEST_LATEST_PACKAGE_REVISION_SINCE = "latest-revision-since";
 
     /** The map of message handlers. */
-    private Map<String, MessageHandler> handlerMap = new LinkedHashMap<>();
+    private final Map<String, MessageHandler> handlerMap = new LinkedHashMap<>();
 
     /** The configuration provider for this plugin. */
-    private ConfigurationProvider configurationProvider;
+    private final ConfigurationProvider configurationProvider;
 
     /** The repository poller analyzes the contents of a repository and retrieves the latest revision. */
     private final MavenRepositoryPoller packageRepositoryPoller;

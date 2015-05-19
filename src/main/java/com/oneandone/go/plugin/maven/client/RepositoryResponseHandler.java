@@ -61,6 +61,7 @@ public class RepositoryResponseHandler {
             this.buildNumberXpath = xPath.compile("/metadata/versioning/snapshot/buildNumber/text()");
         } catch (final ParserConfigurationException | XPathExpressionException e) {
             LOGGER.warn("could not create xml parsing configuration", e);
+            // TODO this lets us go on with a half-initialized object. Need to fix this...
             this.documentBuilder = null;
         }
     }
