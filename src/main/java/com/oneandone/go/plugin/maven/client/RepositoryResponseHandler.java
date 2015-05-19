@@ -13,9 +13,12 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.xml.sax.InputSource;
 
 /** Handles the Maven repository responses in form of {@code maven-metadata.xml} contents. */
 public class RepositoryResponseHandler {
@@ -74,7 +77,7 @@ public class RepositoryResponseHandler {
     public boolean canHandle() {
         if (metaData == null && documentBuilder != null) {
             try {
-                metaData = documentBuilder.parse(new ByteArrayInputStream(repoResponse.getResponseBody().getBytes("utf-8")));
+                metaData = documentBuilder.parse(new InputSource(new StringReader(repoResponse.getResponseBody())));
             } catch (final IOException | SAXException e) {
                 LOGGER.warn("cannot handle metadata", e);
                 metaData = null;
