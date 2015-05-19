@@ -135,7 +135,7 @@ public class RepositoryResponseHandler {
         try {
             return buildNumberXpath.evaluate(metaData, XPathConstants.STRING).toString();
         } catch (final XPathExpressionException e) {
-            LOGGER.error("could not get timestamp value for snapshot", e);
+            LOGGER.error("could not get build number value for snapshot", e);
             return null;
         }
     }
