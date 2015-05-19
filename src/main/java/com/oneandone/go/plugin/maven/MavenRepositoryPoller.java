@@ -18,7 +18,7 @@ import com.thoughtworks.go.plugin.api.logging.Logger;
 public class MavenRepositoryPoller {
 
     /** The logging instance for this class. */
-    private static Logger LOGGER = Logger.getLoggerFor(MavenRepositoryPoller.class);
+    private static final Logger LOGGER = Logger.getLoggerFor(MavenRepositoryPoller.class);
 
     /**
      * Returns the latest package revision of the artifact specified in the package configuration within the specified repository.
