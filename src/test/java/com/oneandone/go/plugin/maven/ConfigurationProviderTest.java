@@ -4,13 +4,12 @@ import com.oneandone.go.plugin.maven.config.ConfigurationProperties;
 import com.oneandone.go.plugin.maven.config.ConfigurationProvider;
 import com.oneandone.go.plugin.maven.message.PackageMaterialProperties;
 import com.oneandone.go.plugin.maven.message.ValidationResultMessage;
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.util.Collection;
 
-
-public class ConfigurationProviderTest extends TestCase {
+public class ConfigurationProviderTest {
 
     @Test
     public void testDetectInvalidKeys() throws Exception {
