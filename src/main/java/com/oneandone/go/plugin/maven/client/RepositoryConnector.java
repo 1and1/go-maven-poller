@@ -46,7 +46,7 @@ public class RepositoryConnector {
 
     static String concatUrl(final String baseUrl, final String groupId, final String artifactId, final String version) {
         try {
-            URL base = new URL(baseUrl);
+            final URL base = new URL(baseUrl);
             URL url;
 
             if (version != null) {
