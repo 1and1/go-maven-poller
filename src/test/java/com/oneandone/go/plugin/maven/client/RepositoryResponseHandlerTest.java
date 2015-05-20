@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.List;
 
 public class RepositoryResponseHandlerTest extends TestCase {
@@ -16,7 +17,7 @@ public class RepositoryResponseHandlerTest extends TestCase {
         final InputStream stream = RepositoryResponseHandlerTest.class.getClassLoader().getResourceAsStream("web/mysql/mysql-connector-java/maven-metadata.xml");
         final StringWriter writer = new StringWriter();
 
-        IOUtils.copy(stream, writer);
+        IOUtils.copy(stream, writer, Charset.forName("UTF-8"));
         final String metadata = writer.toString();
 
         final RepositoryResponse mockedResponse = new RepositoryResponse(metadata);
