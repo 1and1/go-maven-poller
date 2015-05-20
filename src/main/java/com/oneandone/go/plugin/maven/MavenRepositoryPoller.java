@@ -1,5 +1,6 @@
 package com.oneandone.go.plugin.maven;
 
+import com.google.common.base.Joiner;
 import com.oneandone.go.plugin.maven.client.RepositoryClient;
 import com.oneandone.go.plugin.maven.client.RepositoryConnector;
 import com.oneandone.go.plugin.maven.config.ConfigurationProperties;
@@ -134,10 +135,13 @@ public class MavenRepositoryPoller {
         if (!validationResult.success()) {
             final StringBuilder stringBuilder = new StringBuilder();
             for (final ValidationError validationError : validationResult.getValidationErrors()) {
-                stringBuilder.append(validationError.getMessage()).append("; ");
+                if (stringBuilder.length() > 0) {
+                    stringBuilder.append("; ");
+                }
+                stringBuilder.append(validationError.getMessage());
             }
-            final String errorString = stringBuilder.toString();
-            throw new RuntimeException(errorString.substring(0, errorString.length() - 2));
+            
+            throw new RuntimeException(stringBuilder.toString());
         }
     }
 
