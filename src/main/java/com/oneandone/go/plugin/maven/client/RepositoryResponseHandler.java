@@ -1,6 +1,7 @@
 package com.oneandone.go.plugin.maven.client;
 
 import com.google.common.base.Preconditions;
+import com.oneandone.go.plugin.maven.exception.PluginException;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import org.w3c.dom.Document;
@@ -11,9 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +48,7 @@ public class RepositoryResponseHandler {
      *
      * @param repoResponse the Maven repository response
      */
-    public RepositoryResponseHandler(final RepositoryResponse repoResponse) {
+    public RepositoryResponseHandler(final RepositoryResponse repoResponse) throws PluginException {
         this.repoResponse = repoResponse;
 
         try {
@@ -63,9 +62,8 @@ public class RepositoryResponseHandler {
             this.timestampXpath = xPath.compile("/metadata/versioning/snapshot/timestamp/text()");
             this.buildNumberXpath = xPath.compile("/metadata/versioning/snapshot/buildNumber/text()");
         } catch (final ParserConfigurationException | XPathExpressionException e) {
-            LOGGER.warn("could not create xml parsing configuration", e);
-            // TODO this lets us go on with a half-initialized object. Need to fix this...
-            this.documentBuilder = null;
+            LOGGER.error("could not create xml parsing configuration", e);
+            throw new PluginException("could not initialize XML handlers", e);
         }
     }
 
@@ -75,7 +73,7 @@ public class RepositoryResponseHandler {
      * @return {@code true} if this handler can handle the repository response, otherwise {@code false}
      */
     public boolean canHandle() {
-        if (metaData == null && documentBuilder != null) {
+        if (metaData == null) {
             try {
                 metaData = documentBuilder.parse(new InputSource(new StringReader(repoResponse.getResponseBody())));
             } catch (final IOException | SAXException e) {

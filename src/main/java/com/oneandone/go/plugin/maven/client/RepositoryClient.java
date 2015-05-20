@@ -2,6 +2,7 @@ package com.oneandone.go.plugin.maven.client;
 
 import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
+import com.oneandone.go.plugin.maven.exception.PluginException;
 import com.oneandone.go.plugin.maven.util.MavenArtifactFiles;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
@@ -62,12 +63,15 @@ public class RepositoryClient {
 
         if (latest.isSnapshot()) {
             final RepositoryResponse repositoryResponse = repositoryConnector.makeSnapshotVersionRequest(repoConfig, packageConfig, latest);
-            RepositoryResponseHandler snapshotResponseHandler = new RepositoryResponseHandler(repositoryResponse);
-
-            if (snapshotResponseHandler.canHandle()) {
-                latest.setSnapshotInformation(snapshotResponseHandler.getSnapshotTimestamp(), snapshotResponseHandler.getSnapshotBuildNumber());
-            } else {
-                LOGGER.warn("could not handle snapshot resolution");
+            try {
+                final RepositoryResponseHandler snapshotResponseHandler = new RepositoryResponseHandler(repositoryResponse);
+                if (snapshotResponseHandler.canHandle()) {
+                    latest.setSnapshotInformation(snapshotResponseHandler.getSnapshotTimestamp(), snapshotResponseHandler.getSnapshotBuildNumber());
+                } else {
+                    LOGGER.warn("could not handle snapshot resolution");
+                    return null;
+                }
+            } catch (final PluginException e) {
                 return null;
             }
         }
@@ -109,15 +113,17 @@ public class RepositoryClient {
     }
 
     private List<MavenRevision> getAllVersions(final RepositoryResponse repoResponse) {
-        final List<MavenRevision> versions;
-        final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
-        if (repositoryResponseHandler.canHandle()) {
-            versions = repositoryResponseHandler.getAllVersions();
-        } else {
-            LOGGER.warn("Returning empty version list - no XML nor HTML Nexus answer found");
-            versions = Collections.emptyList();
+        try {
+            final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
+            if (repositoryResponseHandler.canHandle()) {
+                return repositoryResponseHandler.getAllVersions();
+            } else {
+                LOGGER.warn("Returning empty version list - no XML nor HTML Nexus answer found");
+                return Collections.emptyList();
+            }
+        } catch (final PluginException e) {
+            return Collections.emptyList();
         }
-        return versions;
     }
 
     private MavenArtifactFiles getFiles(final MavenRevision version) {
