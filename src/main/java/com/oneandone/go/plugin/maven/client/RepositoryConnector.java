@@ -53,7 +53,7 @@ public class RepositoryConnector {
                 url = new URL(base, 
                     filterSlash(groupId).replaceAll("\\.", "/")+"/"+
                     filterSlash(artifactId)+"/"+
-                    filterSlash(version)+"/");
+                    (version.isEmpty() ? "" : filterSlash(version)+"/"));
             } else {
                 url = new URL(base, 
                     filterSlash(groupId).replaceAll("\\.", "/")+"/"+
