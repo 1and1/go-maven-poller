@@ -17,7 +17,7 @@ public class MavenRepoConfig {
     private static final Logger LOGGER = Logger.getLoggerFor(MavenRepoConfig.class);
 
     /** The specified properties. */
-    private PackageMaterialProperties repoConfig;
+    private final PackageMaterialProperties repoConfig;
 
     /** The repository URL. */
     private final String repositoryURL;
