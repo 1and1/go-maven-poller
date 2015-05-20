@@ -4,6 +4,10 @@ import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
 import com.oneandone.go.plugin.maven.util.MavenVersion;
 import com.thoughtworks.go.plugin.api.logging.Logger;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.util.logging.Level;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -40,41 +44,31 @@ public class RepositoryConnector {
         this.repoConfig = repoConfig;
     }
 
-    private static String concatUrl(final String baseUrl, final String groupId, final String artifactId, final String version) {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(baseUrl);
-        if (!baseUrl.endsWith("/")) {
-            sb.append("/");
-        }
-        if (groupId.startsWith("/")) {
-            sb.append(groupId.substring(1).replace('.', '/'));
-        } else {
-            sb.append(groupId.replace('.', '/'));
-        }
-        if (!groupId.endsWith("/")) {
-            sb.append("/");
-        }
-        if (artifactId.startsWith("/")) {
-            sb.append(artifactId.substring(1));
-        } else {
-            sb.append(artifactId);
-        }
-        if (!artifactId.endsWith("/")) {
-            sb.append("/");
-        }
-        if (version == null) {
-            sb.append("maven-metadata.xml");
-        } else {
-            if (version.startsWith("/")) {
-                sb.append(version.substring(1));
+    static String concatUrl(final String baseUrl, final String groupId, final String artifactId, final String version) {
+        try {
+            final URL base = new URL(baseUrl);
+            URL url;
+
+            if (version != null) {
+                url = new URL(base, 
+                    filterSlash(groupId).replaceAll("\\.", "/")+"/"+
+                    filterSlash(artifactId)+"/"+
+                    (version.isEmpty() ? "" : filterSlash(version)+"/"));
             } else {
-                sb.append(version);
+                url = new URL(base, 
+                    filterSlash(groupId).replaceAll("\\.", "/")+"/"+
+                    filterSlash(artifactId)+"/"+
+                    "maven-metadata.xml");
             }
-            if (!version.isEmpty() && !version.endsWith("/")) {
-                sb.append("/");
-            }
+            return url.toExternalForm();
+        } catch (MalformedURLException ex) {
+            throw new RuntimeException(ex);
         }
-        return sb.toString();
+    }
+    
+    /** Removes slash parts. */
+    private static String filterSlash(String in) {
+        return in.contains("/") ? in.replaceAll("/", "") : in;
     }
 
     /**
