@@ -16,6 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,7 +31,7 @@ public class RepositoryClientTest {
         final InputStream stream = RepositoryResponseHandlerTest.class.getClassLoader().getResourceAsStream("web/mysql/mysql-connector-java/maven-metadata.xml");
         final StringWriter writer = new StringWriter();
 
-        IOUtils.copy(stream, writer);
+        IOUtils.copy(stream, writer, Charset.forName("UTF-8"));
         metadata = writer.toString();
     }
 
