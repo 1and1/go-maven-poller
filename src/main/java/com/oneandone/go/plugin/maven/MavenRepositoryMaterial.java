@@ -10,9 +10,7 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.oneandone.go.plugin.maven.util.JsonUtil.fromJsonString;
 import static com.oneandone.go.plugin.maven.util.JsonUtil.toJsonString;
@@ -32,6 +30,9 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
 
     /** The plugin extension type. */
     public static final String EXTENSION = "package-repository";
+
+    /** Request to retrieve plugin configuration. */
+    public static final String REQUEST_PLUGIN_GET_CONFIGURATION = "go.plugin-settings.get-configuration";
 
     /** Request to retrieve the repository configuration definition.*/
     public static final String REQUEST_REPOSITORY_CONFIGURATION = "repository-configuration";
@@ -71,6 +72,7 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
         configurationProvider = new ConfigurationProvider();
         packageRepositoryPoller = new MavenRepositoryPoller();
 
+        handlerMap.put(REQUEST_PLUGIN_GET_CONFIGURATION, getConfigurationMessageHandler());
         handlerMap.put(REQUEST_REPOSITORY_CONFIGURATION, repositoryConfigurationsMessageHandler());
         handlerMap.put(REQUEST_PACKAGE_CONFIGURATION, packageConfigurationMessageHandler());
         handlerMap.put(REQUEST_VALIDATE_REPOSITORY_CONFIGURATION, validateRepositoryConfigurationMessageHandler());
@@ -97,6 +99,15 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
     @Override
     public GoPluginIdentifier pluginIdentifier() {
         return new GoPluginIdentifier(EXTENSION, Collections.singletonList("1.0"));
+    }
+
+    private MessageHandler getConfigurationMessageHandler() {
+        return new MessageHandler() {
+            @Override
+            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
+                return success(toJsonString(new Object()));
+            }
+        };
     }
 
     /**

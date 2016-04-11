@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -67,8 +68,15 @@ public class MavenRepositoryMaterialTest {
 
         final MavenRepositoryMaterial repositoryMaterial = new MavenRepositoryMaterial();
 
+        // request get conf
+        GoPluginApiResponse response = repositoryMaterial.handle(request("go.plugin-settings.get-configuration", null));
+        assertNotNull(response);
+        assertEquals(200, response.responseCode());
+        assertEquals(Collections.emptyMap(), response.responseHeaders());
+        assertEquals("{}", response.responseBody());
+
         // request repo conf
-        GoPluginApiResponse response = repositoryMaterial.handle(request("repository-configuration", null));
+        response = repositoryMaterial.handle(request("repository-configuration", null));
         PackageMaterialProperties properties = JsonUtil.fromJsonString(response.responseBody(), PackageMaterialProperties.class);
         assertNotNull(properties);
 

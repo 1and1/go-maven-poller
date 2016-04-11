@@ -1,6 +1,5 @@
 package com.oneandone.go.plugin.maven;
 
-import com.google.common.base.Joiner;
 import com.oneandone.go.plugin.maven.client.RepositoryClient;
 import com.oneandone.go.plugin.maven.client.RepositoryConnector;
 import com.oneandone.go.plugin.maven.config.ConfigurationProperties;
