@@ -19,7 +19,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
      *
      * @return the original version
      */
-    @Getter private String original;
+    @Getter private final String original;
 
     /** The version without the qualifier. */
     private String version;
@@ -53,7 +53,18 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
         Preconditions.checkNotNull(version, "version string may not be null");
         Preconditions.checkArgument(!version.isEmpty(), "version may not be empty");
 
-        this.original = version.trim();
+        // check if version ends with timestamp and buildnumber
+        final String trimmedVersion = version.trim();
+        if (trimmedVersion.contains("SNAPSHOT") && trimmedVersion.matches(".* \\([0-9]{8}\\.[0-9]{6}-[0-9]+\\)")) {
+            int startOfSpecification = trimmedVersion.lastIndexOf(" (");
+            this.original = trimmedVersion.substring(0, startOfSpecification);
+
+            this.timestamp = trimmedVersion.substring(startOfSpecification + 2, startOfSpecification + 17);
+            this.buildNumber = trimmedVersion.substring(startOfSpecification + 18, trimmedVersion.lastIndexOf(")"));
+        } else {
+            this.original = trimmedVersion;
+        }
+
         final String versionStripped = this.stripVersion(this.original);
         if (versionStripped == null) {
             this.qualifier = this.original;
@@ -202,6 +213,19 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
     }
 
     /**
+     * Returns the specific version with qualifier and - if this version is a {@code SNAPSHOT} - timestamp and build number.
+     *
+     * @return the specific version
+     */
+    public String getVersionSpecific() {
+        if (isSnapshot()) {
+            return getOriginal() + " (" + this.timestamp + "-" +  this.buildNumber + ")";
+        }
+
+        return getOriginal();
+    }
+
+    /**
      * Returns {@code true} if {@code this} version is older or equal to the specified {@code version}, otherwise {@code false}.
      *
      * @param version the version to compare with
@@ -262,6 +286,14 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
         }
         if (result == 0 && this.qualifier != null && otherVersion.getQualifier() != null) {
             result = new NaturalOrderComparator().compare(this.qualifier, otherVersion.getQualifier());
+
+            if (result == 0 && this.timestamp != null && otherVersion.timestamp != null) {
+                result = new NaturalOrderComparator().compare(this.timestamp, otherVersion.timestamp);
+            }
+
+            if (result == 0 && this.buildNumber != null && otherVersion.buildNumber != null) {
+                result = new NaturalOrderComparator().compare(this.buildNumber, otherVersion.buildNumber);
+            }
         } else {
             if (result == 0 && this.qualifier == null && otherVersion.getQualifier() != null) {
                 return 1;

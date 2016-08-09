@@ -104,7 +104,7 @@ public class MavenRepositoryMaterialTest {
         response = repositoryMaterial.handle(request("latest-revision", configuration));
         final PackageRevisionMessage revisionMessage = JsonUtil.fromJsonString(response.responseBody(), PackageRevisionMessage.class);
         assertNotNull(revisionMessage);
-        assertEquals("2.1.0-SNAPSHOT", revisionMessage.getRevision());
+        assertEquals("2.1.0-SNAPSHOT (20150409.112032-10)", revisionMessage.getRevision());
         assertEquals("http://localhost:" + runningPort + "/com/oneandone/network/rrd-client-ra/2.1.0-SNAPSHOT/rrd-client-ra-2.1.0-20150409.112032-10.rar", revisionMessage.getDataFor("LOCATION"));
 
         // check package connection

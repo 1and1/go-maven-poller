@@ -58,7 +58,7 @@ public class MavenRevision extends MavenVersion {
      * @return a revision message for {@code this} revision
      */
     public PackageRevisionMessage toPackageRevision() {
-        final PackageRevisionMessage packageRevision = new PackageRevisionMessage(getOriginal(), lastModified, null, null, trackBackUrl);
+        final PackageRevisionMessage packageRevision = new PackageRevisionMessage(getVersionSpecific(), lastModified, null, null, trackBackUrl);
         packageRevision.addData("LOCATION", location);
         packageRevision.addData("VERSION", getVersion());
         if (errorMessage != null) {
