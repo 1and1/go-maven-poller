@@ -287,12 +287,21 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
         if (result == 0 && this.qualifier != null && otherVersion.getQualifier() != null) {
             result = new NaturalOrderComparator().compare(this.qualifier, otherVersion.getQualifier());
 
-            if (result == 0 && this.timestamp != null && otherVersion.timestamp != null) {
-                result = new NaturalOrderComparator().compare(this.timestamp, otherVersion.timestamp);
-            }
+            if ("SNAPSHOT".equals(this.qualifier) && "SNAPSHOT".equals(otherVersion.getQualifier())) {
+                if (result == 0 && this.timestamp != null && otherVersion.timestamp != null) {
+                    result = new NaturalOrderComparator().compare(this.timestamp, otherVersion.timestamp);
+                }
 
-            if (result == 0 && this.buildNumber != null && otherVersion.buildNumber != null) {
-                result = new NaturalOrderComparator().compare(this.buildNumber, otherVersion.buildNumber);
+                if (result == 0 && this.buildNumber != null && otherVersion.buildNumber != null) {
+                    result = new NaturalOrderComparator().compare(this.buildNumber, otherVersion.buildNumber);
+                }
+
+                if (otherVersion.timestamp == null && otherVersion.buildNumber == null) {
+                    result = 1;
+                }
+                if (this.timestamp == null && this.buildNumber == null) {
+                    result = -1;
+                }
             }
         } else {
             if (result == 0 && this.qualifier == null && otherVersion.getQualifier() != null) {

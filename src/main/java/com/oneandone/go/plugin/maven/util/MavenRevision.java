@@ -60,7 +60,7 @@ public class MavenRevision extends MavenVersion {
     public PackageRevisionMessage toPackageRevision() {
         final PackageRevisionMessage packageRevision = new PackageRevisionMessage(getVersionSpecific(), lastModified, null, null, trackBackUrl);
         packageRevision.addData("LOCATION", location);
-        packageRevision.addData("VERSION", getVersion());
+        packageRevision.addData("VERSION", getVersionSpecific());
         if (errorMessage != null) {
             packageRevision.addData("ERRORMSG", errorMessage);
         }

@@ -31,7 +31,7 @@ public class RepositoryClient {
         final List<MavenRevision> allVersions = getAllVersions(repoResponse);
         final MavenRevision latest = getLatest(allVersions);
         if (latest != null) {
-            LOGGER.info("Latest is " + latest.getVersion());
+            LOGGER.info("Latest is " + latest.getVersionSpecific());
             setLocationAndTrackBack(latest);
         } else {
             LOGGER.warn("getLatest returning null");
@@ -62,6 +62,7 @@ public class RepositoryClient {
         }
 
         if (latest.isSnapshot()) {
+            LOGGER.info("latest is snapshot, will explore further");
             final RepositoryResponse repositoryResponse = repositoryConnector.makeSnapshotVersionRequest(repoConfig, packageConfig, latest);
             try {
                 final RepositoryResponseHandler snapshotResponseHandler = new RepositoryResponseHandler(repositoryResponse);
