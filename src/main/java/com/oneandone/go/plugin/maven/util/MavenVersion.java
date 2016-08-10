@@ -218,7 +218,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
      * @return the specific version
      */
     public String getVersionSpecific() {
-        if (isSnapshot()) {
+        if (isSnapshot() && this.timestamp != null && this.buildNumber != null) {
             return getOriginal() + " (" + this.timestamp + "-" +  this.buildNumber + ")";
         }
 
@@ -287,7 +287,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
         if (result == 0 && this.qualifier != null && otherVersion.getQualifier() != null) {
             result = new NaturalOrderComparator().compare(this.qualifier, otherVersion.getQualifier());
 
-            if ("SNAPSHOT".equals(this.qualifier) && "SNAPSHOT".equals(otherVersion.getQualifier())) {
+            if ("SNAPSHOT".equalsIgnoreCase(this.qualifier) && "SNAPSHOT".equalsIgnoreCase(otherVersion.getQualifier())) {
                 if (result == 0 && this.timestamp != null && otherVersion.timestamp != null) {
                     result = new NaturalOrderComparator().compare(this.timestamp, otherVersion.timestamp);
                 }
@@ -296,11 +296,15 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
                     result = new NaturalOrderComparator().compare(this.buildNumber, otherVersion.buildNumber);
                 }
 
-                if (otherVersion.timestamp == null && otherVersion.buildNumber == null) {
-                    result = 1;
-                }
-                if (this.timestamp == null && this.buildNumber == null) {
-                    result = -1;
+                if (this.timestamp == null && this.buildNumber == null && otherVersion.timestamp == null && otherVersion.buildNumber == null) {
+                    result = 0;
+                } else {
+                    if (otherVersion.timestamp == null && otherVersion.buildNumber == null) {
+                        result = 1;
+                    }
+                    if (this.timestamp == null && this.buildNumber == null) {
+                        result = -1;
+                    }
                 }
             }
         } else {

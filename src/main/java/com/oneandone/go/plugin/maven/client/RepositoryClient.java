@@ -61,13 +61,15 @@ public class RepositoryClient {
             return null;
         }
 
+        LOGGER.info("latest version is " + latest.getOriginal() + " and will be processed");
+
         if (latest.isSnapshot()) {
-            LOGGER.info("latest is snapshot, will explore further");
             final RepositoryResponse repositoryResponse = repositoryConnector.makeSnapshotVersionRequest(repoConfig, packageConfig, latest);
             try {
                 final RepositoryResponseHandler snapshotResponseHandler = new RepositoryResponseHandler(repositoryResponse);
                 if (snapshotResponseHandler.canHandle()) {
                     latest.setSnapshotInformation(snapshotResponseHandler.getSnapshotTimestamp(), snapshotResponseHandler.getSnapshotBuildNumber());
+                    LOGGER.info("set snapshot information to specific version " + latest.getVersionSpecific());
                 } else {
                     LOGGER.warn("could not handle snapshot resolution");
                     return null;
@@ -81,7 +83,7 @@ public class RepositoryClient {
             LOGGER.info("lastKnownVersion is " + packageConfig.getLastKnownVersion());
             final MavenRevision lastKnownVersion = new MavenRevision(packageConfig.getLastKnownVersion());
             if (noNewerVersion(latest, lastKnownVersion)) {
-                LOGGER.info("no newer version");
+                LOGGER.info("version " + latest.getVersionSpecific() + " is not newer than the lastKnownVersion" + lastKnownVersion.getVersionSpecific());
                 return null;
             }
         }

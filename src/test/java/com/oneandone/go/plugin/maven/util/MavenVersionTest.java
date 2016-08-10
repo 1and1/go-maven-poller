@@ -4,9 +4,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class MavenVersionTest {
 
@@ -101,6 +99,23 @@ public class MavenVersionTest {
         assertTrue(newer.compareTo(newer) == 0);
         assertTrue(older.compareTo(older) == 0);
         assertTrue(older.compareTo(newer) < 0);
+    }
+
+    @Test
+    public void testComparisionOfNewAndOldVersionStyle() throws Exception {
+        final MavenVersion newer = new MavenVersion("1.2-SNAPSHOT (20160809.063223-25)");
+        final MavenVersion older = new MavenVersion("1.2-SNAPSHOT");
+
+        assertTrue(newer.compareTo(older) > 0);
+        assertTrue(newer.compareTo(newer) == 0);
+        assertTrue(older.compareTo(older) == 0);
+        assertTrue(older.compareTo(newer) < 0);
+
+        assertFalse(newer.notNewerThan(older));
+        assertTrue(older.notNewerThan(older));
+        assertTrue(newer.notNewerThan(newer));
+
+        assertTrue(newer.greaterOrEqual(older));
     }
 
 }
