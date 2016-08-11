@@ -1,7 +1,8 @@
 package com.oneandone.go.plugin.maven.client;
 
-import static org.junit.Assert.*;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test case for {@link RepositoryConnector}.

@@ -39,7 +39,7 @@ public class MavenRepositoryPoller {
         validateConfig(repoConfig, packageConfig);
         final PackageRevisionMessage packageRevision = poll(new MavenRepoConfig(repoConfig), new MavenPackageConfig(packageConfig, null));
         if (packageRevision != null) {
-            LOGGER.info("latest revision is " + packageRevision.getRevision());
+            LOGGER.info("latest version is: " + packageRevision.getRevision());
         }
         return packageRevision;
     }
@@ -58,21 +58,22 @@ public class MavenRepositoryPoller {
     public PackageRevisionMessage latestModificationSince(final PackageMaterialProperties packageConfig,
                                                           final PackageMaterialProperties repoConfig,
                                                           final PackageRevisionMessage previouslyKnownRevision) {
-        LOGGER.info(String.format("check of latest for artifact with groupId: '%s', artifactId: '%s' in repo: %s",
+        LOGGER.info(String.format("check of latest for artifact with groupId: '%s', artifactId: '%s' in repo: %s, since version %s",
                         packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orNull(),
                         packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orNull(),
-                        repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orNull())
+                        repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orNull(),
+                        previouslyKnownRevision.getRevision())
         );
         validateConfig(repoConfig, packageConfig);
         final PackageRevisionMessage updatedPackage = poll(new MavenRepoConfig(repoConfig), new MavenPackageConfig(packageConfig, previouslyKnownRevision));
         if (updatedPackage == null) {
-            LOGGER.info(String.format("no modification since %s", previouslyKnownRevision.getRevision()));
             return null;
+        } else {
+            LOGGER.info("new latest version: " + updatedPackage.getRevision());
         }
 
-        LOGGER.info("latest revision is " + updatedPackage.getRevision());
         if (updatedPackage.getTimestamp().getTime() < previouslyKnownRevision.getTimestamp().getTime())
-            LOGGER.warn(String.format("Updated Package %s published earlier (%s) than previous (%s, %s)",
+            LOGGER.warn(String.format("latest version %s published earlier (%s) than previous (%s, %s)",
                             updatedPackage.getRevision(),
                             updatedPackage.getTimestamp(),
                             previouslyKnownRevision.getRevision(),

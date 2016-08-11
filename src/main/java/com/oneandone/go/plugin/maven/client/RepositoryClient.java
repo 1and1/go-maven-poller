@@ -47,10 +47,9 @@ public class RepositoryClient {
             final MavenRevision latest = getLatest(allVersions);
             if (latest != null) {
                 latest.setLastModified(lastUpdatedTimestamp.or(new Date()));
-                LOGGER.info("Latest is " + latest.getVersionSpecific());
                 setLocationAndTrackBack(latest);
             } else {
-                LOGGER.warn("getLatest returning null");
+                LOGGER.error("getLatest returning null");
             }
             return latest;
 
@@ -65,7 +64,7 @@ public class RepositoryClient {
             version.setLocation(files.getArtifactLocation());
             version.setTrackBackUrl(files.getTrackBackUrl());
         } catch (final Exception ex) {
-            LOGGER.error("Error getting location for " + version.getVersion(), ex);
+            LOGGER.error("error getting location for " + version.getVersion(), ex);
             version.setErrorMessage("Plugin could not determine location/trackback. Please see plugin log for details.");
         }
     }
@@ -81,7 +80,7 @@ public class RepositoryClient {
             return null;
         }
 
-        LOGGER.info("latest version is " + latest.getOriginal() + " and will be processed");
+        LOGGER.debug("latest version is '" + latest.getOriginal() + "' and will be processed");
 
         if (latest.isSnapshot()) {
             final RepositoryResponse repositoryResponse = repositoryConnector.makeSnapshotVersionRequest(repoConfig, packageConfig, latest);
@@ -89,7 +88,7 @@ public class RepositoryClient {
                 final RepositoryResponseHandler snapshotResponseHandler = new RepositoryResponseHandler(repositoryResponse);
                 if (snapshotResponseHandler.canHandle()) {
                     latest.setSnapshotInformation(snapshotResponseHandler.getSnapshotTimestamp(), snapshotResponseHandler.getSnapshotBuildNumber());
-                    LOGGER.info("set snapshot information to specific version " + latest.getVersionSpecific());
+                    LOGGER.info("set snapshot information to specific version '" + latest.getVersionSpecific() + "'");
                 } else {
                     LOGGER.warn("could not handle snapshot resolution");
                     return null;
@@ -100,10 +99,9 @@ public class RepositoryClient {
         }
 
         if (packageConfig.isLastVersionKnown()) {
-            LOGGER.info("lastKnownVersion is " + packageConfig.getLastKnownVersion());
             final MavenRevision lastKnownVersion = new MavenRevision(packageConfig.getLastKnownVersion());
             if (noNewerVersion(latest, lastKnownVersion)) {
-                LOGGER.info("version " + latest.getVersionSpecific() + " is not newer than the lastKnownVersion" + lastKnownVersion.getVersionSpecific());
+                LOGGER.info("version '" + latest.getVersionSpecific() + "' is not newer than the lastKnownVersion '" + lastKnownVersion.getVersionSpecific() + "'");
                 return null;
             }
         }
