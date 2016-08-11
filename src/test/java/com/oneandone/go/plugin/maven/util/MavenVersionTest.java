@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class MavenVersionTest {
 
@@ -75,6 +75,47 @@ public class MavenVersionTest {
         assertEquals(0, version.getBugfix());
         assertEquals(0, version.getHotfix());
         assertEquals("SNAPSHOT", version.getQualifier());
+    }
+
+    @Test
+    public void testSnapshotVersionWithTimestampAndBuildNumber() throws Exception {
+        final MavenVersion version = new MavenVersion("1.2-SNAPSHOT (20160809.063223-25)");
+
+        assertEquals(1, version.getMajor());
+        assertEquals(2, version.getMinor());
+        assertEquals(0, version.getBugfix());
+        assertEquals(0, version.getHotfix());
+        assertEquals("1.2-SNAPSHOT", version.getOriginal());
+        assertEquals("1.2-20160809.063223-25", version.getVersion());
+        assertEquals("1.2-SNAPSHOT (20160809.063223-25)", version.getVersionSpecific());
+    }
+
+    @Test
+    public void testOrderOfSpecificSnapshotVersions() throws Exception {
+        final MavenVersion newer = new MavenVersion("1.2-SNAPSHOT (20160809.063223-25)");
+        final MavenVersion older = new MavenVersion("1.2-SNAPSHOT (20150103.114154-25)");
+
+        assertTrue(newer.compareTo(older) > 0);
+        assertTrue(newer.compareTo(newer) == 0);
+        assertTrue(older.compareTo(older) == 0);
+        assertTrue(older.compareTo(newer) < 0);
+    }
+
+    @Test
+    public void testComparisionOfNewAndOldVersionStyle() throws Exception {
+        final MavenVersion newer = new MavenVersion("1.2-SNAPSHOT (20160809.063223-25)");
+        final MavenVersion older = new MavenVersion("1.2-SNAPSHOT");
+
+        assertTrue(newer.compareTo(older) > 0);
+        assertTrue(newer.compareTo(newer) == 0);
+        assertTrue(older.compareTo(older) == 0);
+        assertTrue(older.compareTo(newer) < 0);
+
+        assertFalse(newer.notNewerThan(older));
+        assertTrue(older.notNewerThan(older));
+        assertTrue(newer.notNewerThan(newer));
+
+        assertTrue(newer.greaterOrEqual(older));
     }
 
 }

@@ -4,10 +4,11 @@ import com.oneandone.go.plugin.maven.config.ConfigurationProperties;
 import com.oneandone.go.plugin.maven.config.ConfigurationProvider;
 import com.oneandone.go.plugin.maven.message.PackageMaterialProperties;
 import com.oneandone.go.plugin.maven.message.ValidationResultMessage;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.util.Collection;
+
+import static org.junit.Assert.*;
 
 public class ConfigurationProviderTest {
 
@@ -25,7 +26,8 @@ public class ConfigurationProviderTest {
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL,
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_USERNAME,
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD,
-                ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY,
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE
         );
         assertTrue(result.success());
     }

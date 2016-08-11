@@ -1,7 +1,6 @@
 package com.oneandone.go.plugin.maven.client;
 
 import com.oneandone.go.plugin.maven.util.MavenRevision;
-import static org.junit.Assert.*;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
@@ -9,6 +8,8 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.List;
+
+import static org.junit.Assert.*;
 
 public class RepositoryResponseHandlerTest {
 

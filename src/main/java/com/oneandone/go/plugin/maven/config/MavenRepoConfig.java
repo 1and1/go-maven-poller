@@ -9,6 +9,7 @@ import lombok.Getter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.TimeZone;
 
 /** Representation of a maven repository configuration. */
 public class MavenRepoConfig {
@@ -43,6 +44,9 @@ public class MavenRepoConfig {
      */
     @Getter private final String proxy;
 
+    /** The time zone or {@code null}. */
+    private final String timeZone;
+
     /**
      * Constructs the repository configuration by the specified properties.
      *
@@ -55,6 +59,7 @@ public class MavenRepoConfig {
         this.username = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_USERNAME).orNull();
         this.password = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD).orNull();
         this.proxy = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY).orNull();
+        this.timeZone = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE).orNull();
     }
 
     /**
@@ -68,6 +73,18 @@ public class MavenRepoConfig {
             throw new RuntimeException("Only http/https urls are supported");
         }
         return repoUrl;
+    }
+
+    /**
+     * Returns the specified time zone from the repository configuration or the default time zone if none specified.
+     *
+     * @return the time zone
+     */
+    public TimeZone getTimeZone() {
+        if (timeZone == null) {
+            return TimeZone.getDefault();
+        }
+        return TimeZone.getTimeZone(timeZone);
     }
 
     /** @return {@link RepositoryURL#getURLWithBasicAuth()} */
@@ -112,7 +129,6 @@ public class MavenRepoConfig {
             if (repoUrl.getUserInfo() != null) {
                 validationResult.addError(new ValidationError(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL, "User info should not be provided as part of the URL. Please provide credentials using USERNAME and PASSWORD configuration keys."));
             }
-
         } catch (final MalformedURLException e) {
             LOGGER.error(e.getMessage());
             validationResult.addError(new ValidationError(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL, "Malformed URL specified: " + e.getMessage()));
@@ -122,7 +138,8 @@ public class MavenRepoConfig {
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL,
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_USERNAME,
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD,
-                ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY,
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE
         );
         return validationResult;
     }

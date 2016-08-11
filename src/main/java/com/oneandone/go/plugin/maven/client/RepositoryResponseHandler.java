@@ -1,11 +1,13 @@
 package com.oneandone.go.plugin.maven.client;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.oneandone.go.plugin.maven.exception.PluginException;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -14,16 +16,17 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import org.xml.sax.InputSource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /** Handles the Maven repository responses in form of {@code maven-metadata.xml} contents. */
 public class RepositoryResponseHandler {
 
     /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(RepositoryResponseHandler.class);
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 
     /** The repository response. */
     private final RepositoryResponse repoResponse;
@@ -43,6 +46,9 @@ public class RepositoryResponseHandler {
     /** The XPath to the SNAPSHOT build number. */
     private XPathExpression buildNumberXpath;
 
+    /** The XPath to the timestamp of the last update. */
+    private XPathExpression lastUpdatedXpath;
+
     /**
      * Constructs a new response handler.
      *
@@ -61,6 +67,7 @@ public class RepositoryResponseHandler {
             this.versionsXPath = xPath.compile("/metadata/versioning/versions/version");
             this.timestampXpath = xPath.compile("/metadata/versioning/snapshot/timestamp/text()");
             this.buildNumberXpath = xPath.compile("/metadata/versioning/snapshot/buildNumber/text()");
+            this.lastUpdatedXpath = xPath.compile("/metadata/versioning/lastUpdated/text()");
         } catch (final ParserConfigurationException | XPathExpressionException e) {
             LOGGER.error("could not create xml parsing configuration", e);
             throw new PluginException("could not initialize XML handlers", e);
@@ -136,5 +143,30 @@ public class RepositoryResponseHandler {
             LOGGER.error("could not get build number value for snapshot", e);
             return null;
         }
+    }
+
+    /**
+     * Returns the optional last update date in the specified time zone.
+     *
+     * @param timeZone the time zone of the last update date
+     * @return the optional last update date
+     */
+    public Optional<Date> getLastUpdated(final TimeZone timeZone) {
+        Preconditions.checkArgument(canHandle(), "handler not initialized");
+        try {
+            final String timestamp = lastUpdatedXpath.evaluate(metaData, XPathConstants.STRING).toString();
+            if (timestamp.matches("[0-9]{14}")) {
+                LOGGER.info("lastUpdated set to '" + timestamp + "'");
+                DATE_FORMAT.setTimeZone(timeZone);
+                return Optional.of(DATE_FORMAT.parse(timestamp));
+            } else {
+                LOGGER.warn("lastUpdated '" + timestamp + "' does not match the expected date pattern '" + DATE_FORMAT.toPattern() + "'");
+            }
+        } catch (final XPathExpressionException e) {
+            LOGGER.error("could not get last update value for snapshot", e);
+        } catch (final ParseException e) {
+            LOGGER.error("unable to parse lastUpdated", e);
+        }
+        return Optional.absent();
     }
 }

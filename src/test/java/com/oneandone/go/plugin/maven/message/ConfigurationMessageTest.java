@@ -3,7 +3,7 @@ package com.oneandone.go.plugin.maven.message;
 import com.oneandone.go.plugin.maven.util.JsonUtil;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
 
 public class ConfigurationMessageTest {
 

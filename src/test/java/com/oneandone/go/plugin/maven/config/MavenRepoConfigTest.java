@@ -5,6 +5,8 @@ import com.oneandone.go.plugin.maven.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.TimeZone;
+
 import static org.junit.Assert.*;
 
 public class MavenRepoConfigTest {
@@ -27,6 +29,9 @@ public class MavenRepoConfigTest {
                 "    },\n" +
                 "    \"PROXY\": {\n" +
                 "      \"value\": \"http://localhost:8080\"" +
+                "    },\n" +
+                "    \"TIME_ZONE\": {\n" +
+                "      \"value\": \"UTC\"" +
                 "    }" +
                 "  }" +
                 "}";
@@ -91,5 +96,29 @@ public class MavenRepoConfigTest {
     @Test
     public void testGetProxy() throws Exception {
         assertEquals("http://localhost:8080", repoConfig.getProxy());
+    }
+
+    @Test
+    public void testGetTimeZone() throws Exception {
+        assertEquals(TimeZone.getTimeZone("UTC"), repoConfig.getTimeZone());
+    }
+
+    @Test
+    public void testRepoConfigWithFoobarTimeZone() throws Exception {
+        final String configuration =
+                "{" +
+                        "  \"repository-configuration\": {" +
+                        "    \"REPO_URL\": {" +
+                        "      \"value\": \"http://repo1.maven.org/maven2\"" +
+                        "    }," +
+                        "    \"TIME_ZONE\": {\n" +
+                        "      \"value\": \"Foobar123Whatever\"" +
+                        "    }" +
+                        "  }" +
+                        "}";
+        final ConfigurationMessage configurationMessage = JsonUtil.fromJsonString(configuration, ConfigurationMessage.class);
+        repoConfig = new MavenRepoConfig(configurationMessage.getRepositoryConfiguration());
+
+        assertEquals(TimeZone.getTimeZone("GMT"), repoConfig.getTimeZone());
     }
 }

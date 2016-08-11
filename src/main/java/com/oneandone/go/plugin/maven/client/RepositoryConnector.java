@@ -4,8 +4,6 @@ import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
 import com.oneandone.go.plugin.maven.util.MavenVersion;
 import com.thoughtworks.go.plugin.api.logging.Logger;
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -23,6 +21,9 @@ import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /** The Maven repository connector. */
 public class RepositoryConnector {

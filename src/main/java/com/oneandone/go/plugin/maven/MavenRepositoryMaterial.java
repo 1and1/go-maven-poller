@@ -10,7 +10,9 @@ import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static com.oneandone.go.plugin.maven.util.JsonUtil.fromJsonString;
 import static com.oneandone.go.plugin.maven.util.JsonUtil.toJsonString;

@@ -1,16 +1,12 @@
 package com.oneandone.go.plugin.maven.util;
 
 import com.oneandone.go.plugin.maven.message.PackageRevisionMessage;
-import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
 /** This revision will be wrapped in a {@link PackageRevisionMessage}. */
 public class MavenRevision extends MavenVersion {
-
-    // TODO remove this once it does not trigger a bug in Go
-    private static final Date LAST_MODIFICATION_DATE = new Date(1428570532209L);
 
     /**
      * The URL location of the artifact for this revision.
@@ -34,13 +30,11 @@ public class MavenRevision extends MavenVersion {
     @Setter private String errorMessage;
 
     /**
-     * The date of the last modification.
-     * <p />
-     * This is a static value specified in {@link #LAST_MODIFICATION_DATE} and avoids a Go CD bug. It can't be read from the {@code maven-metadata.xml}.
+     * The date of the last modification. Equivalent to the {@code lastUpdated} element of the {@code maven-metadata.xml}.
      *
      * @return the date of the last modification
      */
-    @Getter private Date lastModified = null;
+    @Setter private Date lastModified = null;
 
     /**
      * Constructs a new revision by the specified version.
@@ -49,7 +43,6 @@ public class MavenRevision extends MavenVersion {
      */
     public MavenRevision(final String version) {
         super(version);
-        this.lastModified = LAST_MODIFICATION_DATE;
     }
 
     /**
@@ -58,9 +51,9 @@ public class MavenRevision extends MavenVersion {
      * @return a revision message for {@code this} revision
      */
     public PackageRevisionMessage toPackageRevision() {
-        final PackageRevisionMessage packageRevision = new PackageRevisionMessage(getOriginal(), lastModified, null, null, trackBackUrl);
+        final PackageRevisionMessage packageRevision = new PackageRevisionMessage(getVersionSpecific(), lastModified, null, null, trackBackUrl);
         packageRevision.addData("LOCATION", location);
-        packageRevision.addData("VERSION", getVersion());
+        packageRevision.addData("VERSION", getVersionSpecific());
         if (errorMessage != null) {
             packageRevision.addData("ERRORMSG", errorMessage);
         }
