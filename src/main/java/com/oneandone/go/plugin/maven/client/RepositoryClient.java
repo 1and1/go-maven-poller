@@ -37,7 +37,7 @@ public class RepositoryClient {
             try {
                 final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
                 if (repositoryResponseHandler.canHandle()) {
-                    lastUpdatedTimestamp = repositoryResponseHandler.getLastUpdated();
+                    lastUpdatedTimestamp = repositoryResponseHandler.getLastUpdated(repoConfig.getTimeZone());
                 }
             } catch (final PluginException e) {
                 // do nothing here

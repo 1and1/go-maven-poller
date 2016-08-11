@@ -1,7 +1,6 @@
 package com.oneandone.go.plugin.maven.util;
 
 import com.oneandone.go.plugin.maven.message.PackageRevisionMessage;
-import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;

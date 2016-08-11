@@ -7,6 +7,7 @@ import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -17,11 +18,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import org.xml.sax.InputSource;
+import java.util.*;
 
 /** Handles the Maven repository responses in form of {@code maven-metadata.xml} contents. */
 public class RepositoryResponseHandler {
@@ -148,12 +145,19 @@ public class RepositoryResponseHandler {
         }
     }
 
-    public Optional<Date> getLastUpdated() {
+    /**
+     * Returns the optional last update date in the specified time zone.
+     *
+     * @param timeZone the time zone of the last update date
+     * @return the optional last update date
+     */
+    public Optional<Date> getLastUpdated(final TimeZone timeZone) {
         Preconditions.checkArgument(canHandle(), "handler not initialized");
         try {
             final String timestamp = lastUpdatedXpath.evaluate(metaData, XPathConstants.STRING).toString();
             if (timestamp.matches("[0-9]{14}")) {
                 LOGGER.info("lastUpdated set to '" + timestamp + "'");
+                DATE_FORMAT.setTimeZone(timeZone);
                 return Optional.of(DATE_FORMAT.parse(timestamp));
             } else {
                 LOGGER.warn("lastUpdated '" + timestamp + "' does not match the expected date pattern '" + DATE_FORMAT.toPattern() + "'");

@@ -25,7 +25,8 @@ public class ConfigurationProviderTest {
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL,
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_USERNAME,
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD,
-                ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY,
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE
         );
         assertTrue(result.success());
     }

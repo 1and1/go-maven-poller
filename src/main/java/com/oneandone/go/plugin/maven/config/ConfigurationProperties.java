@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
+import java.util.TimeZone;
 
 /** This class lists all available configuration properties. */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -24,6 +25,9 @@ public class ConfigurationProperties {
 
     /** The property key for the HTTP proxy. */
     public static final String REPOSITORY_CONFIGURATION_KEY_PROXY = "PROXY";
+
+    /** The property kez for the time zone of the repository. */
+    public static final String REPOSITORY_CONFIGURATION_TIME_ZONE = "TIME_ZONE";
 
     /** The property key for the group id. */
     public static final String PACKAGE_CONFIGURATION_KEY_GROUP_ID = "GROUP_ID";
@@ -74,6 +78,11 @@ public class ConfigurationProperties {
      */
     public static final PackageMaterialProperty getRepositoryConfigurationPropertyProxy() {
         return new PackageMaterialProperty().withDisplayName("Proxy").withDisplayOrder(3);
+    }
+
+    public static final PackageMaterialProperty getRepositoryConfigurationTimeZone() {
+        final String defaultTimeZone = TimeZone.getDefault().getID();
+        return new PackageMaterialProperty().withDisplayName("Time zone").withValue(defaultTimeZone).withDefaultValue(defaultTimeZone).withDisplayOrder(4);
     }
 
     /**
