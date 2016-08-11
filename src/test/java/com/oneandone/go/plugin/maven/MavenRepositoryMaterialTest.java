@@ -16,9 +16,8 @@ import org.junit.Test;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.*;
@@ -105,6 +104,15 @@ public class MavenRepositoryMaterialTest {
         final PackageRevisionMessage revisionMessage = JsonUtil.fromJsonString(response.responseBody(), PackageRevisionMessage.class);
         assertNotNull(revisionMessage);
         assertEquals("2.1.0-SNAPSHOT (20150409.112032-10)", revisionMessage.getRevision());
+        assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").parse("20150409112033"), revisionMessage.getTimestamp());
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(revisionMessage.getTimestamp());
+        assertEquals(2015, calendar.get(Calendar.YEAR));
+        assertEquals(Calendar.APRIL, calendar.get(Calendar.MONTH));
+        assertEquals(9, calendar.get(Calendar.DAY_OF_MONTH));
+        assertEquals(11, calendar.get(Calendar.HOUR));
+        assertEquals(20, calendar.get(Calendar.MINUTE));
+        assertEquals(33, calendar.get(Calendar.SECOND));
         assertEquals("http://localhost:" + runningPort + "/com/oneandone/network/rrd-client-ra/2.1.0-SNAPSHOT/rrd-client-ra-2.1.0-20150409.112032-10.rar", revisionMessage.getDataFor("LOCATION"));
 
         // check package connection

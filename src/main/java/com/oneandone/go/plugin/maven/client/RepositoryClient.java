@@ -1,5 +1,6 @@
 package com.oneandone.go.plugin.maven.client;
 
+import com.google.common.base.Optional;
 import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
 import com.oneandone.go.plugin.maven.exception.PluginException;
@@ -8,6 +9,7 @@ import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 public class RepositoryClient {
@@ -29,14 +31,32 @@ public class RepositoryClient {
         final RepositoryResponse repoResponse = repositoryConnector.makeAllVersionsRequest(repoConfig, packageConfig);
         LOGGER.debug(repoResponse.getResponseBody());
         final List<MavenRevision> allVersions = getAllVersions(repoResponse);
-        final MavenRevision latest = getLatest(allVersions);
-        if (latest != null) {
-            LOGGER.info("Latest is " + latest.getVersionSpecific());
-            setLocationAndTrackBack(latest);
-        } else {
-            LOGGER.warn("getLatest returning null");
+        if (!allVersions.isEmpty()) {
+
+            Optional<Date> lastUpdatedTimestamp = Optional.absent();
+            try {
+                final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
+                if (repositoryResponseHandler.canHandle()) {
+                    lastUpdatedTimestamp = repositoryResponseHandler.getLastUpdated();
+                }
+            } catch (final PluginException e) {
+                // do nothing here
+            }
+
+
+            final MavenRevision latest = getLatest(allVersions);
+            if (latest != null) {
+                latest.setLastModified(lastUpdatedTimestamp.or(new Date()));
+                LOGGER.info("Latest is " + latest.getVersionSpecific());
+                setLocationAndTrackBack(latest);
+            } else {
+                LOGGER.warn("getLatest returning null");
+            }
+            return latest;
+
         }
-        return latest;
+
+        return null;
     }
 
     private void setLocationAndTrackBack(final MavenRevision version) {
