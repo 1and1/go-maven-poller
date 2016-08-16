@@ -49,7 +49,7 @@ public class RepositoryClient {
                 latest.setLastModified(lastUpdatedTimestamp.or(new Date()));
                 setLocationAndTrackBack(latest);
             } else {
-                LOGGER.error("getLatest returning null");
+                LOGGER.debug("getLatest returning null");
             }
             return latest;
 

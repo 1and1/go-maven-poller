@@ -91,6 +91,11 @@ public class MavenRepositoryPoller {
     public CheckConnectionResultMessage checkConnectionToRepository(final PackageMaterialProperties repoConfig) {
         try {
             final MavenRepoConfig mavenRepoConfig = new MavenRepoConfig(repoConfig);
+
+            if (mavenRepoConfig.isRepoUrlMissing()) {
+                return new CheckConnectionResultMessage(CheckConnectionResultMessage.STATUS.FAILURE, "Repo URL missing");
+            }
+
             if (!new RepositoryConnector(mavenRepoConfig).testConnection()) {
                 return new CheckConnectionResultMessage(CheckConnectionResultMessage.STATUS.FAILURE, "Did not get HTTP Status 200 response");
             }
