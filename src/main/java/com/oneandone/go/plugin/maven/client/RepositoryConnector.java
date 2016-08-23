@@ -22,6 +22,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -85,7 +87,7 @@ public class RepositoryConnector {
         String responseBody;
         HttpGet method = null;
         try {
-            method = createGetMethod(url);
+            method = createGetMethod(url, true);
             HttpResponse response = client.execute(method);
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new RuntimeException(String.format("HTTP %s, %s", response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
@@ -108,12 +110,15 @@ public class RepositoryConnector {
      * Creates a HTTP {@code GET} on the specified url.
      *
      * @param url the URL
+     * @param expectXml flag indicating whet xml is expected to be xml formatted
      * @return the HTTP {@code GET} operation
      */
-    private HttpGet createGetMethod(final String url) {
+    private HttpGet createGetMethod(final String url, final boolean expectXml) {
         final HttpGet method = new HttpGet(url);
         method.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10 * 1000);
-        method.setHeader("Accept", "application/xml");
+        if (expectXml) {
+            method.setHeader("Accept", "application/xml");
+        }
         if (repoConfig.getProxy() != null) {
             method.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, HttpHost.create(repoConfig.getProxy()));
         }
@@ -152,10 +157,33 @@ public class RepositoryConnector {
 
         HttpGet method = null;
         try {
-            method = createGetMethod(url);
+            method = createGetMethod(url, false);
 
             final HttpResponse response = client.execute(method);
             result = (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+
+            if (!result) {
+                final StringBuilder builder = new StringBuilder();
+                if (response.getEntity() != null) {
+                    try (final BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
+                        String line;
+                        while ((line = bReader.readLine()) != null) {
+                            builder.append(line);
+                        }
+                    }
+                }
+
+                if (builder.length() == 0) {
+                    LOGGER.error(String.format("expected HTTP status 200 but got %d on check of url '%s'", response.getStatusLine().getStatusCode(), url));
+                } else {
+                    LOGGER.error(String.format(
+                            "expected HTTP status 200 but got %d on check of url '%s', with entity: %s",
+                            response.getStatusLine().getStatusCode(),
+                            url,
+                            builder.toString()
+                    ));
+                }
+            }
         } catch (final Exception e) {
             final String message = String.format("Exception while connecting to %s\n%s", url, e.getMessage());
             LOGGER.error(message);
