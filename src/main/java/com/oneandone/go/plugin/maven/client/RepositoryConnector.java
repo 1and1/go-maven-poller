@@ -14,6 +14,8 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
@@ -23,6 +25,7 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -87,8 +90,9 @@ public class RepositoryConnector {
         String responseBody;
         HttpGet method = null;
         try {
-            method = createGetMethod(url, true);
-            HttpResponse response = client.execute(method);
+            method = new HttpGet(url);
+            method.setHeader("Accept", "application/xml");
+            HttpResponse response = getResponse(client, method);
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 throw new RuntimeException(String.format("HTTP %s, %s", response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
             }
@@ -104,25 +108,6 @@ public class RepositoryConnector {
                 method.releaseConnection();
             }
         }
-    }
-
-    /**
-     * Creates a HTTP {@code GET} on the specified url.
-     *
-     * @param url the URL
-     * @param expectXml flag indicating whet xml is expected to be xml formatted
-     * @return the HTTP {@code GET} operation
-     */
-    private HttpGet createGetMethod(final String url, final boolean expectXml) {
-        final HttpGet method = new HttpGet(url);
-        method.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10 * 1000);
-        if (expectXml) {
-            method.setHeader("Accept", "application/xml");
-        }
-        if (repoConfig.getProxy() != null) {
-            method.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, HttpHost.create(repoConfig.getProxy()));
-        }
-        return method;
     }
 
     /**
@@ -155,12 +140,21 @@ public class RepositoryConnector {
         boolean result = false;
         final HttpClient client = createHttpClient();
 
-        HttpGet method = null;
+        HttpRequestBase headRequest = null;
+        HttpRequestBase getRequest = null;
         try {
-            method = createGetMethod(url, false);
-
-            final HttpResponse response = client.execute(method);
+            headRequest = new HttpHead(url);
+            headRequest.setHeader("Accept", "*/*");
+            HttpResponse response = getResponse(client, headRequest);
             result = (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+
+            if (!result) {
+                LOGGER.warn("http HEAD failed for repository '" + url + "' will proceed with GET request");
+                getRequest = new HttpGet(url);
+                getRequest.setHeader("Accept", "*/*");
+                response = getResponse(client, getRequest);
+                result = (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+            }
 
             if (!result) {
                 final StringBuilder builder = new StringBuilder();
@@ -189,11 +183,30 @@ public class RepositoryConnector {
             LOGGER.error(message);
             throw new RuntimeException(message, e);
         } finally {
-            if (method != null) {
-                method.releaseConnection();
+            if (headRequest != null) {
+                headRequest.releaseConnection();
+            }
+            if (getRequest != null) {
+                getRequest.releaseConnection();
             }
         }
         return result;
+    }
+
+    /**
+     * Set socket timeout and set optional proxy by repository configuration and return the response of the specified request base.
+     *
+     * @param client the http client
+     * @param method the request
+     * @return the response
+     * @throws IOException thrown in case the connection was aborted
+     */
+    private HttpResponse getResponse(final HttpClient client, final HttpRequestBase method) throws IOException {
+        method.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, 10 * 1000);
+        if (repoConfig.getProxy() != null) {
+            method.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, HttpHost.create(repoConfig.getProxy()));
+        }
+        return client.execute(method);
     }
 
     /**
