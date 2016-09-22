@@ -5,6 +5,7 @@ import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
 import com.oneandone.go.plugin.maven.message.ConfigurationMessage;
 import com.oneandone.go.plugin.maven.util.JsonUtil;
 import com.oneandone.go.plugin.maven.util.MavenArtifactFiles;
+import com.oneandone.go.plugin.maven.util.MavenRevision;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class RepositoryClientTest {
 
     private String metadata;
+    private String metadataWithReleaseTag;
 
     @Before
     public void setUp() throws Exception {
@@ -33,10 +35,16 @@ public class RepositoryClientTest {
 
         IOUtils.copy(stream, writer, Charset.forName("UTF-8"));
         metadata = writer.toString();
+
+        final InputStream streamWithReleaseTag = RepositoryResponseHandlerTest.class.getClassLoader().getResourceAsStream("web/mysql/mysql-connector-java/maven-metadata-with-release-tag.xml");
+        final StringWriter writerWithReleaseTag = new StringWriter();
+
+        IOUtils.copy(streamWithReleaseTag, writerWithReleaseTag, Charset.forName("UTF-8"));
+        metadataWithReleaseTag = writerWithReleaseTag.toString();
     }
 
     @Test
-    public void testGetLatest() throws Exception {
+    public void testGetLatestWithoutTag() throws Exception {
         final String configuration =
                 "{" +
                         "  \"repository-configuration\": {" +
@@ -62,13 +70,122 @@ public class RepositoryClientTest {
                         "    }" +
                         "  }" +
                         "}";
+
+        final RepositoryClient client = getRepositoryClient(configuration, metadata);
+        final MavenRevision revision = client.getLatest();
+
+        assertEquals(5, revision.getMajor());
+        assertEquals(1, revision.getMinor());
+        assertEquals(14, revision.getBugfix());
+    }
+
+    @Test
+    public void testGetLatestWithReleaseTag() throws Exception {
+        final String configuration =
+                "{" +
+                        "  \"repository-configuration\": {" +
+                        "    \"REPO_URL\": {" +
+                        "      \"value\": \"http://repo1.maven.org/maven2\"" +
+                        "    }," +
+                        "    \"LATEST_VERSION_TAG\": {" +
+                        "      \"value\": \"release\"" +
+                        "    }" +
+                        "  }," +
+                        "  \"package-configuration\": {" +
+                        "    \"GROUP_ID\": {" +
+                        "      \"value\": \"mysql\"" +
+                        "    }," +
+                        "    \"ARTIFACT_ID\": {" +
+                        "      \"value\": \"mysql-connector-java\"" +
+                        "    },\n" +
+                        "    \"PACKAGING\": {" +
+                        "      \"value\": \"jar\"" +
+                        "    }\n" +
+                        "  }" +
+                        "}";
+
+        final RepositoryClient client = getRepositoryClient(configuration, metadataWithReleaseTag);
+        final MavenRevision revision = client.getLatest();
+
+        assertEquals(5, revision.getMajor());
+        assertEquals(1, revision.getMinor());
+        assertEquals(18, revision.getBugfix());
+    }
+
+    @Test
+    public void testGetLatestWithLatestTag() throws Exception {
+        final String configuration =
+                "{" +
+                        "  \"repository-configuration\": {" +
+                        "    \"REPO_URL\": {" +
+                        "      \"value\": \"http://repo1.maven.org/maven2\"" +
+                        "    }," +
+                        "    \"LATEST_VERSION_TAG\": {" +
+                        "      \"value\": \"latest\"" +
+                        "    }" +
+                        "  }," +
+                        "  \"package-configuration\": {" +
+                        "    \"GROUP_ID\": {" +
+                        "      \"value\": \"mysql\"" +
+                        "    }," +
+                        "    \"ARTIFACT_ID\": {" +
+                        "      \"value\": \"mysql-connector-java\"" +
+                        "    },\n" +
+                        "    \"PACKAGING\": {" +
+                        "      \"value\": \"jar\"" +
+                        "    }\n" +
+                        "  }" +
+                        "}";
+
+        final RepositoryClient client = getRepositoryClient(configuration, metadata);
+        final MavenRevision revision = client.getLatest();
+
+        assertEquals(2, revision.getMajor());
+        assertEquals(0, revision.getMinor());
+        assertEquals(14, revision.getBugfix());
+    }
+
+    @Test
+    public void testGetLatestWithSpecifiedTagButNoTagInMavenMetadata() throws Exception {
+        final String configuration =
+                "{" +
+                        "  \"repository-configuration\": {" +
+                        "    \"REPO_URL\": {" +
+                        "      \"value\": \"http://repo1.maven.org/maven2\"" +
+                        "    }," +
+                        "    \"LATEST_VERSION_TAG\": {" +
+                        "      \"value\": \"release\"" +
+                        "    }" +
+                        "  }," +
+                        "  \"package-configuration\": {" +
+                        "    \"GROUP_ID\": {" +
+                        "      \"value\": \"mysql\"" +
+                        "    }," +
+                        "    \"ARTIFACT_ID\": {" +
+                        "      \"value\": \"mysql-connector-java\"" +
+                        "    },\n" +
+                        "    \"PACKAGING\": {" +
+                        "      \"value\": \"jar\"" +
+                        "    }\n" +
+                        "  }" +
+                        "}";
+
+        final RepositoryClient client = getRepositoryClient(configuration, metadata);
+        final MavenRevision revision = client.getLatest();
+
+        assertEquals(5, revision.getMajor());
+        assertEquals(1, revision.getMinor());
+        assertEquals(21, revision.getBugfix());
+    }
+
+    private RepositoryClient getRepositoryClient(final String configuration, final String meta)  throws Exception {
         final ConfigurationMessage configurationMessage = JsonUtil.fromJsonString(configuration, ConfigurationMessage.class);
         final MavenRepoConfig repoConfig = new MavenRepoConfig(configurationMessage.getRepositoryConfiguration());
         final MavenPackageConfig packageConfig = new MavenPackageConfig(configurationMessage.getPackageConfiguration(), null);
 
         final RepositoryConnector connector = PowerMockito.mock(RepositoryConnector.class);
         PowerMockito.whenNew(RepositoryConnector.class).withAnyArguments().thenReturn(connector);
-        PowerMockito.when(connector.makeAllVersionsRequest(repoConfig, packageConfig)).thenReturn(new RepositoryResponse(metadata));
+        PowerMockito.when(connector.makeAllVersionsRequest(repoConfig, packageConfig)).thenReturn(new RepositoryResponse(meta));
         PowerMockito.when(connector.getFilesUrl(repoConfig, packageConfig, "5.1.14")).thenReturn("http://repo1.maven.org/maven2/mysql/5.1.14/mysql-connector-java-5.1.14.jar");
         PowerMockito.whenNew(RepositoryConnector.class).withAnyArguments().thenReturn(connector);
         PowerMockito.when(connector.doHttpRequest(Mockito.anyString())).thenReturn(new RepositoryResponse(
@@ -85,9 +202,6 @@ public class RepositoryClientTest {
                         "</project>"
         ));
 
-        final RepositoryClient client = new RepositoryClient(repoConfig, packageConfig);
-        assertEquals(5, client.getLatest().getMajor());
-        assertEquals(1, client.getLatest().getMinor());
-        assertEquals(14, client.getLatest().getBugfix());
+        return new RepositoryClient(repoConfig, packageConfig);
     }
 }
