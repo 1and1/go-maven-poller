@@ -165,16 +165,13 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
      * @return the message handler
      */
     private MessageHandler validatePackageConfigurationMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
-                final ValidationResultMessage validationResultMessage = configurationProvider.isPackageConfigurationValid(message.getPackageConfiguration());
-                if (validationResultMessage.failure()) {
-                    return success(toJsonString(validationResultMessage.getValidationErrors()));
-                }
-                return success("");
+        return request -> {
+            final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
+            final ValidationResultMessage validationResultMessage = configurationProvider.isPackageConfigurationValid(message.getPackageConfiguration());
+            if (validationResultMessage.failure()) {
+                return success(toJsonString(validationResultMessage.getValidationErrors()));
             }
+            return success("");
         };
     }
 
@@ -184,13 +181,10 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
      * @return the message handler
      */
     private MessageHandler checkRepositoryConnectionMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
-                final CheckConnectionResultMessage result = packageRepositoryPoller.checkConnectionToRepository(message.getRepositoryConfiguration());
-                return success(toJsonString(result));
-            }
+        return request -> {
+            final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
+            final CheckConnectionResultMessage result = packageRepositoryPoller.checkConnectionToRepository(message.getRepositoryConfiguration());
+            return success(toJsonString(result));
         };
     }
 
@@ -200,13 +194,10 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
      * @return the message handler
      */
     private MessageHandler checkPackageConnectionMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
-                final CheckConnectionResultMessage result = packageRepositoryPoller.checkConnectionToPackage(message.getPackageConfiguration(), message.getRepositoryConfiguration());
-                return success(toJsonString(result));
-            }
+        return request -> {
+            final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
+            final CheckConnectionResultMessage result = packageRepositoryPoller.checkConnectionToPackage(message.getPackageConfiguration(), message.getRepositoryConfiguration());
+            return success(toJsonString(result));
         };
     }
 
@@ -216,13 +207,10 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
      * @return the message handler
      */
     private MessageHandler latestRevisionMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
-                final PackageRevisionMessage revision = packageRepositoryPoller.getLatestRevision(message.getPackageConfiguration(), message.getRepositoryConfiguration());
-                return success(toJsonString(revision));
-            }
+        return request -> {
+            final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
+            final PackageRevisionMessage revision = packageRepositoryPoller.getLatestRevision(message.getPackageConfiguration(), message.getRepositoryConfiguration());
+            return success(toJsonString(revision));
         };
     }
 
@@ -232,13 +220,10 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
      * @return the message handler
      */
     private MessageHandler latestRevisionSinceMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
-                final PackageRevisionMessage revision = packageRepositoryPoller.latestModificationSince(message.getPackageConfiguration(), message.getRepositoryConfiguration(), message.getPreviousRevision());
-                return success(revision == null ? null : toJsonString(revision));
-            }
+        return request -> {
+            final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
+            final PackageRevisionMessage revision = packageRepositoryPoller.latestModificationSince(message.getPackageConfiguration(), message.getRepositoryConfiguration(), message.getPreviousRevision());
+            return success(revision == null ? null : toJsonString(revision));
         };
     }
 
