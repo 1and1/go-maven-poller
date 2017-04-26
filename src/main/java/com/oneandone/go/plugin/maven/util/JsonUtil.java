@@ -4,9 +4,14 @@ import com.google.gson.GsonBuilder;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 /** Json serializer and deserializer utility class. */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtil {
+
+    private static final DateTimeFormatter dateTomeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 
     /**
      * This method serializes the specified object into its equivalent Json representation.
@@ -16,7 +21,7 @@ public class JsonUtil {
      */
     public static String toJsonString(final Object object) {
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        gsonBuilder.registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeConverter(dateTomeFormatter));
         return gsonBuilder.create().toJson(object);
     }
 
@@ -31,7 +36,7 @@ public class JsonUtil {
      */
     public static <T> T fromJsonString(final String json, final Class<T> type) {
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        gsonBuilder.registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeConverter(dateTomeFormatter));
         return gsonBuilder.create().fromJson(json, type);
     }
 }

@@ -12,5 +12,5 @@ public interface MessageHandler {
      * @param request the request to handle
      * @return the response
      */
-    public GoPluginApiResponse handle(final GoPluginApiRequest request);
+    GoPluginApiResponse handle(final GoPluginApiRequest request);
 }

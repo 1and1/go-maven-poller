@@ -8,8 +8,8 @@ import com.oneandone.go.plugin.maven.util.MavenArtifactFiles;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 
+import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class RepositoryClient {
@@ -33,7 +33,7 @@ public class RepositoryClient {
         final List<MavenRevision> allVersions = getAllVersions(repoResponse);
         if (!allVersions.isEmpty()) {
 
-            Optional<Date> lastUpdatedTimestamp = Optional.absent();
+            Optional<ZonedDateTime> lastUpdatedTimestamp = Optional.absent();
             try {
                 final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
                 if (repositoryResponseHandler.canHandle()) {
@@ -46,7 +46,7 @@ public class RepositoryClient {
 
             final MavenRevision latest = getLatest(allVersions);
             if (latest != null) {
-                latest.setLastModified(lastUpdatedTimestamp.or(new Date()));
+                latest.setLastModified(lastUpdatedTimestamp.or(ZonedDateTime.now()));
                 setLocationAndTrackBack(latest);
             } else {
                 LOGGER.debug("getLatest returning null");

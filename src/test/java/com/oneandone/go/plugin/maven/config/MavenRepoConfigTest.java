@@ -5,7 +5,7 @@ import com.oneandone.go.plugin.maven.util.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.TimeZone;
+import java.time.ZoneId;
 
 import static org.junit.Assert.*;
 
@@ -100,7 +100,7 @@ public class MavenRepoConfigTest {
 
     @Test
     public void testGetTimeZone() throws Exception {
-        assertEquals(TimeZone.getTimeZone("UTC"), repoConfig.getTimeZone());
+        assertEquals(ZoneId.of("UTC"), repoConfig.getTimeZone());
     }
 
     @Test
@@ -119,6 +119,6 @@ public class MavenRepoConfigTest {
         final ConfigurationMessage configurationMessage = JsonUtil.fromJsonString(configuration, ConfigurationMessage.class);
         repoConfig = new MavenRepoConfig(configurationMessage.getRepositoryConfiguration());
 
-        assertEquals(TimeZone.getTimeZone("GMT"), repoConfig.getTimeZone());
+        assertEquals(ZoneId.of("GMT"), repoConfig.getTimeZone());
     }
 }

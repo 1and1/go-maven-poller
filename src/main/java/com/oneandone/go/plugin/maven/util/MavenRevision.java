@@ -3,7 +3,7 @@ package com.oneandone.go.plugin.maven.util;
 import com.oneandone.go.plugin.maven.message.PackageRevisionMessage;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 /** This revision will be wrapped in a {@link PackageRevisionMessage}. */
 public class MavenRevision extends MavenVersion {
@@ -13,14 +13,14 @@ public class MavenRevision extends MavenVersion {
      *
      * @param location the URL location to set
      */
-    @Setter private String location = null;
+    @Setter private String location;
 
     /**
      * The track back URL.
      *
      * @param trackBackUrl the track back URL to set
      */
-    @Setter private String trackBackUrl = null;
+    @Setter private String trackBackUrl;
 
     /**
      * Sets an error message for {@code this} revision.
@@ -34,7 +34,7 @@ public class MavenRevision extends MavenVersion {
      *
      * @return the date of the last modification
      */
-    @Setter private Date lastModified = null;
+    @Setter private ZonedDateTime lastModified;
 
     /**
      * Constructs a new revision by the specified version.

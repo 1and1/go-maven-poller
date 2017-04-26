@@ -9,7 +9,8 @@ import lombok.Getter;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.TimeZone;
+import java.time.ZoneId;
+import java.time.zone.ZoneRulesException;
 
 /** Representation of a maven repository configuration. */
 public class MavenRepoConfig {
@@ -80,11 +81,16 @@ public class MavenRepoConfig {
      *
      * @return the time zone
      */
-    public TimeZone getTimeZone() {
+    public ZoneId getTimeZone() {
         if (timeZone == null) {
-            return TimeZone.getDefault();
+            return ZoneId.systemDefault();
         }
-        return TimeZone.getTimeZone(timeZone);
+        try {
+            return ZoneId.of(timeZone);
+        } catch (final ZoneRulesException e) {
+            LOGGER.warn("The time zone was not found. Uses GMT as fallback.");
+            return ZoneId.of("GMT");
+        }
     }
 
     /** @return {@link RepositoryURL#getURLWithBasicAuth()} */
