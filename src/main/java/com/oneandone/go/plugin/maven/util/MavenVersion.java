@@ -86,7 +86,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
             digitStrings[i] = digit;
 
             try {
-                digits[i] = Integer.valueOf(digit);
+                digits[i] = Integer.parseInt(digit);
             } catch (final NumberFormatException e) {
                 throw new IllegalArgumentException("invalid version string " + version);
             }
