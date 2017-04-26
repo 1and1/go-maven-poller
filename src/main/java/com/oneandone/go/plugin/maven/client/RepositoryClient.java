@@ -44,7 +44,6 @@ public class RepositoryClient {
             allVersions = getAllVersions(repoResponse);
         }
 
-
         if (!allVersions.isEmpty()) {
             Optional<ZonedDateTime> lastUpdatedTimestamp = Optional.absent();
 
