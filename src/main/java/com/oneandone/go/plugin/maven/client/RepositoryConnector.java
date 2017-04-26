@@ -100,7 +100,7 @@ public class RepositoryConnector {
             responseBody = EntityUtils.toString(entity);
             return new RepositoryResponse(responseBody);
         } catch (final Exception e) {
-            String message = String.format("Exception while connecting to %s\n%s", url, e);
+            String message = String.format("Exception while connecting to %s%n%s", url, e);
             LOGGER.error(message, e);
             throw new RuntimeException(message, e);
         } finally {
@@ -179,7 +179,7 @@ public class RepositoryConnector {
                 }
             }
         } catch (final Exception e) {
-            final String message = String.format("Exception while connecting to %s\n%s", url, e.getMessage());
+            final String message = String.format("Exception while connecting to %s%n%s", url, e.getMessage());
             LOGGER.error(message);
             throw new RuntimeException(message, e);
         } finally {
