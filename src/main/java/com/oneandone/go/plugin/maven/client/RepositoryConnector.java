@@ -29,6 +29,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /** The Maven repository connector. */
 public class RepositoryConnector {
@@ -159,7 +161,7 @@ public class RepositoryConnector {
             if (!result) {
                 final StringBuilder builder = new StringBuilder();
                 if (response.getEntity() != null) {
-                    try (final BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
+                    try (final BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8))) {
                         String line;
                         while ((line = bReader.readLine()) != null) {
                             builder.append(line);
