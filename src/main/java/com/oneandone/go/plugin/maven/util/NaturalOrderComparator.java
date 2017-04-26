@@ -1,12 +1,13 @@
 package com.oneandone.go.plugin.maven.util;
 
 
+import java.io.Serializable;
 import java.util.Comparator;
 
 /**
  * The natural order String comparator as provided <a href="https://github.com/paour/natorder/blob/master/NaturalOrderComparator.java">here</a>.
  */
-class NaturalOrderComparator implements Comparator<String> {
+class NaturalOrderComparator implements Comparator<String>, Serializable {
 
     private int compareRight(final String a, final String b) {
         int bias = 0;
