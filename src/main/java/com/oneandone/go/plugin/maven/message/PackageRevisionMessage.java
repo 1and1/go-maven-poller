@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public class PackageRevisionMessage {
      * @return the revision timestampe
      */
     @Expose
-    @Getter private Date timestamp;
+    @Getter private ZonedDateTime timestamp;
 
     @Expose
     @Getter private String user;
@@ -62,7 +62,7 @@ public class PackageRevisionMessage {
      * @param revisionComment the revision comment
      * @param trackbackUrl the track back URL
      */
-    public PackageRevisionMessage(final String revision, final Date timestamp, final String user, final String revisionComment, final String trackbackUrl) {
+    public PackageRevisionMessage(final String revision, final ZonedDateTime timestamp, final String user, final String revisionComment, final String trackbackUrl) {
         this.revision = revision;
         this.timestamp = timestamp;
         this.user = user;

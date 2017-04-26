@@ -16,9 +16,13 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
 import java.io.IOException;
 import java.io.StringReader;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /** Handles the Maven repository responses in form of {@code maven-metadata.xml} contents. */
 public class RepositoryResponseHandler {
@@ -26,7 +30,7 @@ public class RepositoryResponseHandler {
     /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(RepositoryResponseHandler.class);
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
     /** The repository response. */
     private final RepositoryResponse repoResponse;
@@ -176,21 +180,19 @@ public class RepositoryResponseHandler {
      * @param timeZone the time zone of the last update date
      * @return the optional last update date
      */
-    public Optional<Date> getLastUpdated(final TimeZone timeZone) {
+    public Optional<ZonedDateTime> getLastUpdated(final ZoneId timeZone) {
         Preconditions.checkArgument(canHandle(), "handler not initialized");
         try {
             final String timestamp = lastUpdatedXpath.evaluate(metaData, XPathConstants.STRING).toString();
             if (timestamp.matches("[0-9]{14}")) {
                 LOGGER.info("lastUpdated set to '" + timestamp + "'");
-                DATE_FORMAT.setTimeZone(timeZone);
-                return Optional.of(DATE_FORMAT.parse(timestamp));
+                final LocalDateTime localdate = LocalDateTime.parse(timestamp, DATE_FORMAT);
+                return Optional.of(ZonedDateTime.of(localdate, timeZone));
             } else {
-                LOGGER.warn("lastUpdated '" + timestamp + "' does not match the expected date pattern '" + DATE_FORMAT.toPattern() + "'");
+                LOGGER.warn("lastUpdated '" + timestamp + "' does not match the expected date pattern '" + DATE_FORMAT + "'");
             }
         } catch (final XPathExpressionException e) {
             LOGGER.error("could not get last update value for snapshot", e);
-        } catch (final ParseException e) {
-            LOGGER.error("unable to parse lastUpdated", e);
         }
         return Optional.absent();
     }

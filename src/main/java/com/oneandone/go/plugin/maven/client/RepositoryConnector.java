@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /** The Maven repository connector. */
 public class RepositoryConnector {
@@ -100,7 +101,7 @@ public class RepositoryConnector {
             responseBody = EntityUtils.toString(entity);
             return new RepositoryResponse(responseBody);
         } catch (final Exception e) {
-            String message = String.format("Exception while connecting to %s\n%s", url, e);
+            String message = String.format("Exception while connecting to %s%n%s", url, e);
             LOGGER.error(message, e);
             throw new RuntimeException(message, e);
         } finally {
@@ -159,7 +160,7 @@ public class RepositoryConnector {
             if (!result) {
                 final StringBuilder builder = new StringBuilder();
                 if (response.getEntity() != null) {
-                    try (final BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))) {
+                    try (final BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8))) {
                         String line;
                         while ((line = bReader.readLine()) != null) {
                             builder.append(line);
@@ -179,7 +180,7 @@ public class RepositoryConnector {
                 }
             }
         } catch (final Exception e) {
-            final String message = String.format("Exception while connecting to %s\n%s", url, e.getMessage());
+            final String message = String.format("Exception while connecting to %s%n%s", url, e.getMessage());
             LOGGER.error(message);
             throw new RuntimeException(message, e);
         } finally {

@@ -17,7 +17,9 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Date;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
@@ -110,7 +112,8 @@ public class MavenRepositoryPollerTest {
     @Test
     public void testLatestModificationSince() throws Exception {
         final MavenRepositoryPoller mavenPoller = new MavenRepositoryPoller();
-        PackageRevisionMessage revisionMessage = new PackageRevisionMessage("5.1.0", new Date(0L), null, null, null);
+        PackageRevisionMessage revisionMessage = new PackageRevisionMessage("5.1.0",
+                ZonedDateTime.ofInstant(Instant.ofEpochSecond(0L), ZoneId.systemDefault() ), null, null, null);
         final PackageRevisionMessage packageRevision = mavenPoller.latestModificationSince(packageConfiguration, repositoryConfiguration, revisionMessage);
         assertEquals("5.1.14", packageRevision.getRevision());
     }

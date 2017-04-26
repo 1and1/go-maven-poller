@@ -3,7 +3,7 @@ package com.oneandone.go.plugin.maven.util;
 import com.oneandone.go.plugin.maven.message.PackageRevisionMessage;
 import org.junit.Test;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,7 +22,7 @@ public class MavenRevisionTest {
         mavenRevision.setErrorMessage("error msg");
         mavenRevision.setLocation("somelocation");
         mavenRevision.setTrackBackUrl("trackback");
-        mavenRevision.setLastModified(new Date());
+        mavenRevision.setLastModified(ZonedDateTime.now());
 
         final PackageRevisionMessage packageRevision = mavenRevision.toPackageRevision();
         assertNotNull(packageRevision);

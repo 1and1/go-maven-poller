@@ -72,7 +72,7 @@ public class MavenRepositoryPoller {
             LOGGER.info("new latest version: " + updatedPackage.getRevision());
         }
 
-        if (updatedPackage.getTimestamp().getTime() < previouslyKnownRevision.getTimestamp().getTime())
+        if (updatedPackage.getTimestamp().toInstant().toEpochMilli() < previouslyKnownRevision.getTimestamp().toInstant().toEpochMilli())
             LOGGER.warn(String.format("latest version %s published earlier (%s) than previous (%s, %s)",
                             updatedPackage.getRevision(),
                             updatedPackage.getTimestamp(),
