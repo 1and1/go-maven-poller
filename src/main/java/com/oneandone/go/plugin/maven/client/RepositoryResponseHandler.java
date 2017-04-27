@@ -135,6 +135,31 @@ public class RepositoryResponseHandler {
     }
 
     /**
+     * Returns the release version within the metadata of the repository response.
+     *
+     * @return the release version within the metadata of the repository response
+     */
+    public MavenRevision getLatestVersionByTag(final String latestVersionTag) {
+        Preconditions.checkArgument(canHandle(), "handler not initialized");
+        try {
+            final XPathFactory xPathFactory = XPathFactory.newInstance();
+            final XPath xPath = xPathFactory.newXPath();
+            XPathExpression latestVersionTagXPath = xPath.compile("/metadata/versioning/" + latestVersionTag + "/text()");
+
+            String version = latestVersionTagXPath.evaluate(metaData, XPathConstants.STRING).toString();
+            if(version.isEmpty()) {
+                return null;
+            }
+            else {
+                return new MavenRevision(version);
+            }
+        } catch (final XPathExpressionException e) {
+            LOGGER.error("could not get value for latest version tag: <" + latestVersionTag + "> by xpath", e);
+            return null;
+        }
+    }
+
+    /**
      * Returns the Snapshot build number within the metadata of the repository response.
      *
      * @return the Snapshot build number within the metadata of the repository response

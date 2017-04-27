@@ -8,7 +8,9 @@ import com.oneandone.go.plugin.maven.util.MavenArtifactFiles;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 
+import java.util.ArrayList;
 import java.time.ZonedDateTime;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -27,13 +29,24 @@ public class RepositoryClient {
         this.packageConfig = packageConfig;
     }
 
+    /*
+     * Dependening on, if there is special latest version xml tag for latest version specified for current repository
+     * we deliver either the value of this tag or the highest from all available versions.
+     */
     public MavenRevision getLatest() {
         final RepositoryResponse repoResponse = repositoryConnector.makeAllVersionsRequest(repoConfig, packageConfig);
         LOGGER.debug(repoResponse.getResponseBody());
-        final List<MavenRevision> allVersions = getAllVersions(repoResponse);
-        if (!allVersions.isEmpty()) {
+        List<MavenRevision> allVersions = null;
 
+        if (repoConfig.hasLatestVersionTag() && isLatestVersionTagAvailable(repoResponse, repoConfig.getLatestVersionTag())) {
+            allVersions = getLatestVersionByTag(repoResponse, repoConfig.getLatestVersionTag());
+        } else {
+            allVersions = getAllVersions(repoResponse);
+        }
+
+        if (!allVersions.isEmpty()) {
             Optional<ZonedDateTime> lastUpdatedTimestamp = Optional.absent();
+
             try {
                 final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
                 if (repositoryResponseHandler.canHandle()) {
@@ -42,7 +55,6 @@ public class RepositoryClient {
             } catch (final PluginException e) {
                 // do nothing here
             }
-
 
             final MavenRevision latest = getLatest(allVersions);
             if (latest != null) {
@@ -100,10 +112,14 @@ public class RepositoryClient {
 
         if (packageConfig.isLastVersionKnown()) {
             final MavenRevision lastKnownVersion = new MavenRevision(packageConfig.getLastKnownVersion());
-            if (noNewerVersion(latest, lastKnownVersion)) {
-                LOGGER.info("version '" + latest.getVersionSpecific() + "' is not newer than the lastKnownVersion '" + lastKnownVersion.getVersionSpecific() + "'");
+            if (isSameVersion(latest, lastKnownVersion)) {
+                LOGGER.info("version '" + latest.getVersionSpecific() + "' is the same as the lastKnownVersion '" + lastKnownVersion.getVersionSpecific() + "'");
                 return null;
             }
+//            if (noNewerVersion(latest, lastKnownVersion)) {
+//                LOGGER.info("version '" + latest.getVersionSpecific() + "' is not newer than the lastKnownVersion '" + lastKnownVersion.getVersionSpecific() + "'");
+//                return null;
+//           }
         }
         if (!packageConfig.lowerBoundGiven() || latest.greaterOrEqual(packageConfig.getLowerBound())) {
             return latest;
@@ -133,6 +149,10 @@ public class RepositoryClient {
         return latest.notNewerThan(lastKnownVersion);
     }
 
+    private boolean isSameVersion(final MavenRevision latest, final MavenRevision lastKnownVersion) {
+        return latest.equal(lastKnownVersion);
+    }
+
     private List<MavenRevision> getAllVersions(final RepositoryResponse repoResponse) {
         try {
             final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
@@ -140,6 +160,32 @@ public class RepositoryClient {
                 return repositoryResponseHandler.getAllVersions();
             } else {
                 LOGGER.warn("Returning empty version list - no XML nor HTML Nexus answer found");
+                return Collections.emptyList();
+            }
+        } catch (final PluginException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    private Boolean isLatestVersionTagAvailable(final RepositoryResponse repoResponse, final String latestVersionTag) {
+        return !getLatestVersionByTag(repoResponse, latestVersionTag).isEmpty();
+    }
+
+    private List<MavenRevision> getLatestVersionByTag(final RepositoryResponse repoResponse, final String latestVersionTag) {
+        try {
+            final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
+            if (repositoryResponseHandler.canHandle()) {
+                final MavenRevision latestVersion = repositoryResponseHandler.getLatestVersionByTag(latestVersionTag);
+                if (latestVersion != null) {
+                    final List<MavenRevision> allVersions = new ArrayList<>(1);
+                    allVersions.add(latestVersion);
+                    return allVersions;
+                } else {
+                    LOGGER.warn("Returning empty latest version list - no latest version tag: <" + latestVersionTag + "> found");
+                    return Collections.emptyList();
+                }
+            } else {
+                LOGGER.warn("Returning empty latest version list - no XML nor HTML Nexus answer found");
                 return Collections.emptyList();
             }
         } catch (final PluginException e) {

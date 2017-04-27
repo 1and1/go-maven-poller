@@ -12,16 +12,24 @@ import java.net.URL;
 import java.time.ZoneId;
 import java.time.zone.ZoneRulesException;
 
-/** Representation of a maven repository configuration. */
+/**
+ * Representation of a maven repository configuration.
+ */
 public class MavenRepoConfig {
 
-    /** The logging instance for this class. */
+    /**
+     * The logging instance for this class.
+     */
     private static final Logger LOGGER = Logger.getLoggerFor(MavenRepoConfig.class);
 
-    /** The specified properties. */
+    /**
+     * The specified properties.
+     */
     private final PackageMaterialProperties repoConfig;
 
-    /** The repository URL. */
+    /**
+     * The repository URL.
+     */
     private final String repositoryURL;
 
     /**
@@ -29,24 +37,35 @@ public class MavenRepoConfig {
      *
      * @return the authentication username
      */
-    @Getter private final String username;
+    @Getter
+    private final String username;
 
     /**
      * The authentication password.
      *
      * @return the authentication password
      */
-    @Getter private final String password;
+    @Getter
+    private final String password;
 
     /**
      * The HTTP proxy.
      *
      * @return the HTTP proxy
      */
-    @Getter private final String proxy;
+    @Getter
+    private final String proxy;
 
-    /** The time zone or {@code null}. */
+    /**
+     * The time zone or {@code null}.
+     */
     private final String timeZone;
+
+    /**
+     * The name of the tag inside maven-metadata.xml which specifies the latest version.
+     */
+    @Getter
+    private final String latestVersionTag;
 
     /**
      * Constructs the repository configuration by the specified properties.
@@ -61,6 +80,7 @@ public class MavenRepoConfig {
         this.password = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD).orNull();
         this.proxy = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY).orNull();
         this.timeZone = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE).orNull();
+        this.latestVersionTag = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG).orNull();
     }
 
     /**
@@ -93,12 +113,20 @@ public class MavenRepoConfig {
         }
     }
 
-    /** @return {@link RepositoryURL#getURLWithBasicAuth()} */
+    public Boolean hasLatestVersionTag() {
+        return (latestVersionTag != null);
+    }
+
+    /**
+     * @return {@link RepositoryURL#getURLWithBasicAuth()}
+     */
     public String getRepoUrlAsStringWithBasicAuth() {
         return this.getRepoUrl().getURLWithBasicAuth();
     }
 
-    /** @return {@link RepositoryURL#getURL()} ()} */
+    /**
+     * @return {@link RepositoryURL#getURL()} ()}
+     */
     public String getRepoUrlAsString() {
         return this.getRepoUrl().getURL();
     }
@@ -145,7 +173,8 @@ public class MavenRepoConfig {
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_USERNAME,
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD,
                 ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY,
-                ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE,
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG
         );
         return validationResult;
     }

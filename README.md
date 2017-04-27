@@ -24,7 +24,8 @@ Download `go-maven-poller.jar` into the `plugins/external` directory of your GoC
 
 Repo URL must be a valid http or https URL. Basic authentication (user:password@host/path) is supported.
 You may specify a proxy. If your GoCD server system doesn't use the same timezone as the repository, you may set
-a specific time zone. 
+a specific time zone.
+If 'Latest version Tag' is specified, the value of it will be used to determine, if new version is available. It will be not compared to other versions of the package.
 
 ![Add a Maven repository][1]
 

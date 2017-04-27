@@ -29,6 +29,9 @@ public class ConfigurationProperties {
     /** The property kez for the time zone of the repository. */
     public static final String REPOSITORY_CONFIGURATION_TIME_ZONE = "TIME_ZONE";
 
+    /** The property key for the latest version tag to poll. */
+    public static final String REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG = "LATEST_VERSION_TAG";
+
     /** The property key for the group id. */
     public static final String PACKAGE_CONFIGURATION_KEY_GROUP_ID = "GROUP_ID";
 
@@ -83,6 +86,15 @@ public class ConfigurationProperties {
     public static final PackageMaterialProperty getRepositoryConfigurationTimeZone() {
         final String defaultTimeZone = TimeZone.getDefault().getID();
         return new PackageMaterialProperty().withDisplayName("Time zone").withValue(defaultTimeZone).withDefaultValue(defaultTimeZone).withDisplayOrder(4);
+    }
+
+    /**
+     * Returns the material property for {@link #REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG}.
+     *
+     * @return the material property for {@link #REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG}
+     */
+    public static final PackageMaterialProperty getRepositoryConfigurationPropertyLatestVersionTag() {
+        return new PackageMaterialProperty().withDisplayName("Latest version Tag").withDisplayOrder(4);
     }
 
     /**

@@ -20,6 +20,7 @@ public class ConfigurationProvider {
         repoConfig.addPackageMaterialProperty(REPOSITORY_CONFIGURATION_KEY_PASSWORD, getRepositoryConfigurationPropertyPassword());
         repoConfig.addPackageMaterialProperty(REPOSITORY_CONFIGURATION_KEY_PROXY, getRepositoryConfigurationPropertyProxy());
         repoConfig.addPackageMaterialProperty(REPOSITORY_CONFIGURATION_TIME_ZONE, getRepositoryConfigurationTimeZone());
+        repoConfig.addPackageMaterialProperty(REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG, getRepositoryConfigurationPropertyLatestVersionTag());
         return repoConfig;
     }
 

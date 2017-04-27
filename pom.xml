@@ -6,7 +6,6 @@
     <groupId>com.oneandone</groupId>
     <artifactId>go-maven-poller</artifactId>
     <version>1.2.0</version>
-
     <url>https://github.com/1and1/go-maven-poller</url>
 
     <licenses>
