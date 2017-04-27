@@ -5,12 +5,13 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /** Representation of a validation error. */
+@SuppressWarnings("ALL")
 @EqualsAndHashCode
-public class ValidationError {
+public final class ValidationError {
 
     /** The error key. */
     @Expose
-    private String key;
+    private final String key;
 
     /**
      * The error message.
@@ -18,7 +19,7 @@ public class ValidationError {
      * @return the error message
      */
     @Expose
-    @Getter private String message;
+    @Getter private final String message;
 
     /**
      * Constructs a validation error.

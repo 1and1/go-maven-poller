@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
  * @see JsonDeserializer
  * @see JsonDeserializer
  */
-public class ZonedDateTimeConverter implements JsonSerializer<ZonedDateTime>, JsonDeserializer<ZonedDateTime> {
+class ZonedDateTimeConverter implements JsonSerializer<ZonedDateTime>, JsonDeserializer<ZonedDateTime> {
 
     /** Format specifier. */
     private final DateTimeFormatter dateTimeFormatter;

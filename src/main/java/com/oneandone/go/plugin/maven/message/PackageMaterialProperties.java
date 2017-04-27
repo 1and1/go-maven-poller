@@ -40,7 +40,7 @@ public class PackageMaterialProperties {
      * @param key the key
      * @return the property definition or {@code null}
      */
-    public PackageMaterialProperty getProperty(final String key) {
+    private PackageMaterialProperty getProperty(final String key) {
         return propertyMap.get(key);
     }
 
@@ -50,7 +50,7 @@ public class PackageMaterialProperties {
      * @param key the key
      * @return {@code true} if a property definition for the specified {@code key} is defined, otherwise {@code false}
      */
-    public boolean hasKey(final String key) {
+    private boolean hasKey(final String key) {
         return propertyMap.keySet().contains(key);
     }
 

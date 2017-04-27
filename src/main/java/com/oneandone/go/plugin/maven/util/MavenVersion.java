@@ -22,7 +22,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
     @Getter private final String original;
 
     /** The version without the qualifier. */
-    private String version;
+    private final String version;
 
     /** The qualifier. */
     private String qualifier;
@@ -34,10 +34,10 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
     private String buildNumber;
 
     /** The version digits as String. */
-    private String[] digitStrings;
+    private final String[] digitStrings;
 
     /** The version digits. */
-    private int[] digits;
+    private final int[] digits;
 
     /** The qualifier delimiter. */
     private char lastDelimiter;

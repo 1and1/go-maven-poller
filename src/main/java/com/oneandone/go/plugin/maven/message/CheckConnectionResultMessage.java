@@ -20,7 +20,7 @@ public class CheckConnectionResultMessage {
 
     /** The connection check status */
     @Expose
-    private STATUS status;
+    private final STATUS status;
 
     /**
      * The list of messages associated with the connection check.
@@ -28,7 +28,7 @@ public class CheckConnectionResultMessage {
      * @return list of messages associated with the connection check
      */
     @Expose
-    @Getter private List<String> messages;
+    @Getter private final List<String> messages;
 
     /**
      * Constructs a connection check result.

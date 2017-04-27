@@ -52,7 +52,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #REPOSITORY_CONFIGURATION_KEY_REPO_URL}
      */
-    public static final PackageMaterialProperty getRepositoryConfigurationPropertyRepoUrl() {
+    public static PackageMaterialProperty getRepositoryConfigurationPropertyRepoUrl() {
         return new PackageMaterialProperty().withDisplayName("Maven Repo base URL").withDisplayOrder(0).withPartOfIdentity(true).withRequired(true);
     }
 
@@ -61,7 +61,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #REPOSITORY_CONFIGURATION_KEY_USERNAME}
      */
-    public static final PackageMaterialProperty getRepositoryConfigurationPropertyUsername() {
+    public static PackageMaterialProperty getRepositoryConfigurationPropertyUsername() {
         return new PackageMaterialProperty().withDisplayName("UserName").withDisplayOrder(1);
     }
 
@@ -70,7 +70,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #REPOSITORY_CONFIGURATION_KEY_PASSWORD}
      */
-    public static final PackageMaterialProperty getRepositoryConfigurationPropertyPassword() {
+    public static PackageMaterialProperty getRepositoryConfigurationPropertyPassword() {
         return new PackageMaterialProperty().withDisplayName("Password").withDisplayOrder(2).withSecure(true);
     }
 
@@ -79,11 +79,11 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #REPOSITORY_CONFIGURATION_KEY_PROXY}
      */
-    public static final PackageMaterialProperty getRepositoryConfigurationPropertyProxy() {
+    public static PackageMaterialProperty getRepositoryConfigurationPropertyProxy() {
         return new PackageMaterialProperty().withDisplayName("Proxy").withDisplayOrder(3);
     }
 
-    public static final PackageMaterialProperty getRepositoryConfigurationTimeZone() {
+    public static PackageMaterialProperty getRepositoryConfigurationTimeZone() {
         final String defaultTimeZone = TimeZone.getDefault().getID();
         return new PackageMaterialProperty().withDisplayName("Time zone").withValue(defaultTimeZone).withDefaultValue(defaultTimeZone).withDisplayOrder(4);
     }
@@ -93,7 +93,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG}
      */
-    public static final PackageMaterialProperty getRepositoryConfigurationPropertyLatestVersionTag() {
+    public static PackageMaterialProperty getRepositoryConfigurationPropertyLatestVersionTag() {
         return new PackageMaterialProperty().withDisplayName("Latest version Tag").withDisplayOrder(4);
     }
 
@@ -102,7 +102,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #PACKAGE_CONFIGURATION_KEY_GROUP_ID}
      */
-    public static final PackageMaterialProperty getPackageConfigurationPropertyGroupId() {
+    public static PackageMaterialProperty getPackageConfigurationPropertyGroupId() {
         return new PackageMaterialProperty().withDisplayName("Group Id").withDisplayOrder(0).withPartOfIdentity(true).withRequired(true);
     }
 
@@ -111,7 +111,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID}
      */
-    public static final PackageMaterialProperty getPackageConfigurationPropertyArtifactId() {
+    public static PackageMaterialProperty getPackageConfigurationPropertyArtifactId() {
         return new PackageMaterialProperty().withDisplayName("Artifact Id").withDisplayOrder(1).withPartOfIdentity(true).withRequired(true);
     }
 
@@ -120,7 +120,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #PACKAGE_CONFIGURATION_KEY_PACKAGING}
      */
-    public static final PackageMaterialProperty getPackageConfigurationPropertyPackaging() {
+    public static PackageMaterialProperty getPackageConfigurationPropertyPackaging() {
         return new PackageMaterialProperty().withDisplayName("Packaging (jar,war,ear...)").withDisplayOrder(2).withDefaultValue("jar").withPartOfIdentity(true).withRequired(true);
     }
 
@@ -129,7 +129,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #PACKAGE_CONFIGURATION_KEY_POLL_VERSION_FROM}
      */
-    public static final PackageMaterialProperty getPackageConfigurationPropertyPollVersionFrom() {
+    public static PackageMaterialProperty getPackageConfigurationPropertyPollVersionFrom() {
         return new PackageMaterialProperty().withDisplayName("Version to poll >=").withDisplayOrder(3).withPartOfIdentity(true);
     }
 
@@ -138,7 +138,7 @@ public class ConfigurationProperties {
      *
      * @return the material property for {@link #PACKAGE_CONFIGURATION_KEY_POLL_VERSION_TO}
      */
-    public static final PackageMaterialProperty getPackageConfigurationPropertyPollVersionTo() {
+    public static PackageMaterialProperty getPackageConfigurationPropertyPollVersionTo() {
         return new PackageMaterialProperty().withDisplayName("Version to poll <").withDisplayOrder(4).withPartOfIdentity(true);
     }
 

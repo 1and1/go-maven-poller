@@ -37,7 +37,7 @@ public class RepositoryResponseHandlerTest {
         final InputStream stream = RepositoryResponseHandlerTest.class.getClassLoader().getResourceAsStream("web/mysql/mysql-connector-java/maven-metadata.xml");
         final StringWriter writer = new StringWriter();
 
-        IOUtils.copy(stream, writer);
+        IOUtils.copy(stream, writer, Charset.defaultCharset());
         final String metadata = writer.toString();
 
         final RepositoryResponse mockedResponse = new RepositoryResponse(metadata);

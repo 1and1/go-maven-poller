@@ -51,7 +51,7 @@ public class PackageRevisionMessage {
      * @return the map of additional properties.
      */
     @Expose
-    @Getter private Map<String, String> data = new HashMap<>();
+    @Getter private final Map<String, String> data = new HashMap<>();
 
     /**
      * Constructs a package revision.

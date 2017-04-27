@@ -8,9 +8,8 @@ import com.oneandone.go.plugin.maven.util.MavenArtifactFiles;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 
-import java.util.ArrayList;
 import java.time.ZonedDateTime;
-
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

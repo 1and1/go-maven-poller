@@ -88,7 +88,7 @@ public class MavenRepoConfig {
      *
      * @return the repository URL
      */
-    public RepositoryURL getRepoUrl() {
+    private RepositoryURL getRepoUrl() {
         final RepositoryURL repoUrl = new RepositoryURL(repositoryURL, username, password);
         if (!repoUrl.isHttp()) {
             throw new RuntimeException("Only http/https urls are supported");

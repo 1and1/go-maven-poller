@@ -15,7 +15,7 @@ import com.thoughtworks.go.plugin.api.logging.Logger;
  * <p />
  * The implementations for the actual repository connections are packaged in {@link com.oneandone.go.plugin.maven.client}.
  */
-public class MavenRepositoryPoller {
+class MavenRepositoryPoller {
 
     /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(MavenRepositoryPoller.class);
@@ -30,7 +30,7 @@ public class MavenRepositoryPoller {
      * @return the latest package revision or {@code null}
      * @throws RuntimeException if the specified configuration could not be validated successfully
      */
-    public PackageRevisionMessage getLatestRevision(final PackageMaterialProperties packageConfig, final PackageMaterialProperties repoConfig) {
+    PackageRevisionMessage getLatestRevision(final PackageMaterialProperties packageConfig, final PackageMaterialProperties repoConfig) {
         LOGGER.info(String.format("check of latest for artifact with groupId: '%s', artifactId: '%s' in repo: %s",
                         packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orNull(),
                         packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orNull(),

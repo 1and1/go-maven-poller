@@ -13,7 +13,7 @@ public class ValidationResultMessage {
      *
      * @return the list of validation errors
      */
-    @Getter private List<ValidationError> validationErrors = new ArrayList<>();
+    @Getter private final List<ValidationError> validationErrors = new ArrayList<>();
 
     /**
      * Adds the specified error to the list of errors.

@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 /** Handles the Maven repository responses in form of {@code maven-metadata.xml} contents. */
-public class RepositoryResponseHandler {
+class RepositoryResponseHandler {
 
     /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(RepositoryResponseHandler.class);
