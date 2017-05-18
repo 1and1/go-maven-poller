@@ -3,12 +3,13 @@ package com.oneandone.go.plugin.maven.message;
 import com.oneandone.go.plugin.maven.util.JsonUtil;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class ConfigurationMessageTest {
 
     @Test
-    public void testDeserialization() throws Exception {
+    public void testDeserializationSerialization() throws Exception {
         final ConfigurationMessage configurationMessage = JsonUtil.fromJsonString(
                 "{\n" +
                 "  \"repository-configuration\": {\n" +
@@ -39,7 +40,9 @@ public class ConfigurationMessageTest {
 
         assertNotNull(configurationMessage);
         assertNotNull(configurationMessage.getPreviousRevision());
+        assertEquals("0.0.6-SNAPSHOT", configurationMessage.getPreviousRevision().getRevision());
         assertNotNull(configurationMessage.getPreviousRevision().getTimestamp());
+        assertEquals("\"2015-04-09T11:08:52.209Z\"", JsonUtil.toJsonString(configurationMessage.getPreviousRevision().getTimestamp()));
     }
 
 }
