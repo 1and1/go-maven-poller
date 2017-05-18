@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtil {
 
-    private static final DateTimeFormatter dateTomeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
     /**
      * This method serializes the specified object into its equivalent Json representation.
@@ -21,7 +21,7 @@ public class JsonUtil {
      */
     public static String toJsonString(final Object object) {
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeConverter(dateTomeFormatter));
+        gsonBuilder.registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeConverter(dateTimeFormatter));
         return gsonBuilder.create().toJson(object);
     }
 
@@ -36,7 +36,7 @@ public class JsonUtil {
      */
     public static <T> T fromJsonString(final String json, final Class<T> type) {
         final GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeConverter(dateTomeFormatter));
+        gsonBuilder.registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeConverter(dateTimeFormatter));
         return gsonBuilder.create().fromJson(json, type);
     }
 }
