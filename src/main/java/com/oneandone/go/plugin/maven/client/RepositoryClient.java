@@ -144,10 +144,6 @@ public class RepositoryClient {
         return null;
     }
 
-    private boolean noNewerVersion(final MavenRevision latest, final MavenRevision lastKnownVersion) {
-        return latest.notNewerThan(lastKnownVersion);
-    }
-
     private boolean isSameVersion(final MavenRevision latest, final MavenRevision lastKnownVersion) {
         return latest.equal(lastKnownVersion);
     }
