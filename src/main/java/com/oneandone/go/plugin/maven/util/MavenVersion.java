@@ -1,10 +1,11 @@
 package com.oneandone.go.plugin.maven.util;
 
-import com.google.common.base.Preconditions;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
+import javax.swing.text.html.Option;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.StringTokenizer;
 
 /** The representation of a maven version. */
@@ -50,8 +51,10 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
      * @throws IllegalArgumentException if the specified version is empty or the version digits could not be parsed
      */
     public MavenVersion(final String version) {
-        Preconditions.checkNotNull(version, "version string may not be null");
-        Preconditions.checkArgument(!version.isEmpty(), "version may not be empty");
+        Objects.requireNonNull(version, "version string may not be null");
+        if (version.isEmpty()) {
+            throw new IllegalArgumentException("version may not be empty");
+        }
 
         // check if version ends with timestamp and buildnumber
         final String trimmedVersion = version.trim();

@@ -1,6 +1,5 @@
 package com.oneandone.go.plugin.maven.config;
 
-import com.google.common.base.Optional;
 import com.oneandone.go.plugin.maven.message.PackageMaterialProperties;
 import com.oneandone.go.plugin.maven.message.PackageRevisionMessage;
 import com.oneandone.go.plugin.maven.message.ValidationError;
@@ -8,6 +7,8 @@ import com.oneandone.go.plugin.maven.message.ValidationResultMessage;
 import com.oneandone.go.plugin.maven.util.MavenVersion;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import lombok.Getter;
+
+import java.util.Optional;
 
 /** Representation of a maven package configuration. */
 public class MavenPackageConfig {
@@ -69,9 +70,9 @@ public class MavenPackageConfig {
     public MavenPackageConfig(final PackageMaterialProperties packageConfig, final PackageRevisionMessage packageRevision) {
         this.packageConfig = packageConfig;
 
-        this.groupId = packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orNull();
-        this.artifactId = packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orNull();
-        this.packaging = packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_PACKAGING).orNull();
+        this.groupId = packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orElse(null);
+        this.artifactId = packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orElse(null);
+        this.packaging = packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_PACKAGING).orElse(null);
 
         if (packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_FROM).isPresent()) {
             this.lowerBound = new MavenVersion(packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_FROM).get());

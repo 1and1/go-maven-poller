@@ -1,6 +1,5 @@
 package com.oneandone.go.plugin.maven.client;
 
-import com.google.common.base.Optional;
 import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
 import com.oneandone.go.plugin.maven.exception.PluginException;
@@ -12,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class RepositoryClient {
 
@@ -44,7 +44,7 @@ public class RepositoryClient {
         }
 
         if (!allVersions.isEmpty()) {
-            Optional<ZonedDateTime> lastUpdatedTimestamp = Optional.absent();
+            Optional<ZonedDateTime> lastUpdatedTimestamp = Optional.empty();
 
             try {
                 final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(repoResponse);
@@ -57,7 +57,7 @@ public class RepositoryClient {
 
             final MavenRevision latest = getLatest(allVersions);
             if (latest != null) {
-                latest.setLastModified(lastUpdatedTimestamp.or(ZonedDateTime.now()));
+                latest.setLastModified(lastUpdatedTimestamp.orElse(ZonedDateTime.now()));
                 setLocationAndTrackBack(latest);
             } else {
                 LOGGER.debug("getLatest returning null");

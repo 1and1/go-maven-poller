@@ -75,12 +75,12 @@ public class MavenRepoConfig {
     public MavenRepoConfig(final PackageMaterialProperties repoConfig) {
         this.repoConfig = repoConfig;
 
-        this.repositoryURL = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orNull();
-        this.username = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_USERNAME).orNull();
-        this.password = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD).orNull();
-        this.proxy = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY).orNull();
-        this.timeZone = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE).orNull();
-        this.latestVersionTag = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG).orNull();
+        this.repositoryURL = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orElse(null);
+        this.username = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_USERNAME).orElse(null);
+        this.password = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD).orElse(null);
+        this.proxy = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PROXY).orElse(null);
+        this.timeZone = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_TIME_ZONE).orElse(null);
+        this.latestVersionTag = repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_LATEST_VERSION_TAG).orElse(null);
     }
 
     /**

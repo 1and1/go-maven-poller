@@ -1,7 +1,5 @@
 package com.oneandone.go.plugin.maven.client;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.oneandone.go.plugin.maven.exception.PluginException;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
@@ -13,7 +11,11 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.*;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 import java.io.StringReader;
 import java.time.LocalDateTime;
@@ -23,6 +25,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /** Handles the Maven repository responses in form of {@code maven-metadata.xml} contents. */
 class RepositoryResponseHandler {
@@ -96,14 +99,22 @@ class RepositoryResponseHandler {
         return metaData != null;
     }
 
+    /** Check whether the handler is initialized.
+     * @throws IllegalArgumentException if the handler is not initialized.
+     * */
+    private void assureCanHandle() {
+        if (!canHandle()) {
+            throw new IllegalArgumentException("handler not initialized");
+        }
+    }
+
     /**
      * Returns all artifact versions within the metadata of the repository response.
      *
      * @return all artifact versions within the metadata of the repository response
      */
     public List<MavenRevision> getAllVersions() {
-        Preconditions.checkArgument(canHandle(), "handler not initialized");
-
+        assureCanHandle();
         try {
             final NodeList nodes = (NodeList) versionsXPath.evaluate(metaData, XPathConstants.NODESET);
             final int nodesLength = nodes.getLength();
@@ -125,7 +136,7 @@ class RepositoryResponseHandler {
      * @return the Snapshot timestamp within the metadata of the repository response
      */
     public String getSnapshotTimestamp() {
-        Preconditions.checkArgument(canHandle(), "handler not initialized");
+        assureCanHandle();
         try {
             return timestampXpath.evaluate(metaData, XPathConstants.STRING).toString();
         } catch (final XPathExpressionException e) {
@@ -140,7 +151,7 @@ class RepositoryResponseHandler {
      * @return the release version within the metadata of the repository response
      */
     public MavenRevision getLatestVersionByTag(final String latestVersionTag) {
-        Preconditions.checkArgument(canHandle(), "handler not initialized");
+        assureCanHandle();
         try {
             final XPathFactory xPathFactory = XPathFactory.newInstance();
             final XPath xPath = xPathFactory.newXPath();
@@ -165,7 +176,7 @@ class RepositoryResponseHandler {
      * @return the Snapshot build number within the metadata of the repository response
      */
     public String getSnapshotBuildNumber() {
-        Preconditions.checkArgument(canHandle(), "handler not initialized");
+        assureCanHandle();
         try {
             return buildNumberXpath.evaluate(metaData, XPathConstants.STRING).toString();
         } catch (final XPathExpressionException e) {
@@ -181,7 +192,7 @@ class RepositoryResponseHandler {
      * @return the optional last update date
      */
     public Optional<ZonedDateTime> getLastUpdated(final ZoneId timeZone) {
-        Preconditions.checkArgument(canHandle(), "handler not initialized");
+        assureCanHandle();
         try {
             final String timestamp = lastUpdatedXpath.evaluate(metaData, XPathConstants.STRING).toString();
             if (timestamp.matches("[0-9]{14}")) {
@@ -194,6 +205,6 @@ class RepositoryResponseHandler {
         } catch (final XPathExpressionException e) {
             LOGGER.error("could not get last update value for snapshot", e);
         }
-        return Optional.absent();
+        return Optional.empty();
     }
 }
