@@ -3,6 +3,7 @@ Go Maven Poller
 
 [![Build Status](https://travis-ci.org/1and1/go-maven-poller.svg)](https://travis-ci.org/1and1/go-maven-poller)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3384a8a750e34feaadfa5647eff4f3c3)](https://www.codacy.com/app/Stephan-FuhrmannOrganization/go-maven-poller?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1and1/go-maven-poller&amp;utm_campaign=Badge_Grade)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 This is a Maven repository package plugin for [Go CD](http://www.go.cd/) and a remix of the [aresok's](https://github.com/aresok/go-maven-poller) codebase. The major differences are:
 
