@@ -73,16 +73,16 @@ public class PackageMaterialProperties {
     }
 
     /**
-     * Returns an {@link java.util.Optional} for the value of the property for the specified {@code key}.
+     * Returns an {@link Optional} for the value of the property for the specified {@code key}.
      *
      * @param key the key
      * @return {@link Optional} for the value of the property for the specified {@code key}
      */
     public Optional<String> getValue(final String key) {
         if (hasKey(key) && getProperty(key).getValue() != null && !getProperty(key).getValue().trim().isEmpty()) {
-            return java.util.Optional.of(getProperty(key).getValue());
+            return Optional.of(getProperty(key).getValue());
         } else {
-            return java.util.Optional.empty();
+            return Optional.empty();
         }
     }
 }
