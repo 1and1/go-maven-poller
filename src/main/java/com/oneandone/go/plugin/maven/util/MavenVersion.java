@@ -3,7 +3,6 @@ package com.oneandone.go.plugin.maven.util;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import javax.swing.text.html.Option;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.StringTokenizer;
