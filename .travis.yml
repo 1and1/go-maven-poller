@@ -5,3 +5,4 @@ matrix:
   - jdk: oraclejdk8
   - jdk: openjdk10
   - jdk: openjdk11
+  - jdk: openjdk12
