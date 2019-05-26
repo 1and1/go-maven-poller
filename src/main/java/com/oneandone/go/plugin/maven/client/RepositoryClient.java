@@ -35,7 +35,7 @@ public class RepositoryClient {
     public MavenRevision getLatest() {
         final RepositoryResponse repoResponse = repositoryConnector.makeAllVersionsRequest(repoConfig, packageConfig);
         LOGGER.debug(repoResponse.getResponseBody());
-        List<MavenRevision> allVersions = null;
+        List<MavenRevision> allVersions;
 
         if (repoConfig.hasLatestVersionTag() && isLatestVersionTagAvailable(repoResponse, repoConfig.getLatestVersionTag())) {
             allVersions = getLatestVersionByTag(repoResponse, repoConfig.getLatestVersionTag());
