@@ -20,7 +20,7 @@ Tested on following repositories:
 
 ### Installation
 
-Download `go-maven-poller.jar` into the `plugins/external` directory of your GoCD server and restart it.
+Download [`go-maven-poller.jar`](https://github.com/1and1/go-maven-poller/releases) into the `plugins/external` directory of your GoCD server and restart it.
 
 ### Repository definition
 
