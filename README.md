@@ -19,6 +19,12 @@ Tested on following repositories:
 * Bintray jCenter ([Link](http://jcenter.bintray.com/))
 * Artifactory
 
+### Requirements
+
+The go-maven-poller requires at least the following environment:
+* JDK 8 - 12 and later
+* GoCD 17.4.0 and later
+
 ### Installation
 
 Download [`go-maven-poller.jar`](https://github.com/1and1/go-maven-poller/releases) into the `plugins/external` directory of your GoCD server and restart it.
