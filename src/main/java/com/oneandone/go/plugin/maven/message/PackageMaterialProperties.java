@@ -1,12 +1,12 @@
 package com.oneandone.go.plugin.maven.message;
 
-import com.google.common.base.Optional;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /** Representation of configuration properties. */
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
@@ -73,16 +73,16 @@ public class PackageMaterialProperties {
     }
 
     /**
-     * Returns an {@link Optional} for the value of the property for the specified {@code key}.
+     * Returns an {@link java.util.Optional} for the value of the property for the specified {@code key}.
      *
      * @param key the key
      * @return {@link Optional} for the value of the property for the specified {@code key}
      */
     public Optional<String> getValue(final String key) {
         if (hasKey(key) && getProperty(key).getValue() != null && !getProperty(key).getValue().trim().isEmpty()) {
-            return Optional.of(getProperty(key).getValue());
+            return java.util.Optional.of(getProperty(key).getValue());
         } else {
-            return Optional.absent();
+            return java.util.Optional.empty();
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.oneandone.go.plugin.maven.util;
 
-import com.google.common.base.Preconditions;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -8,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 /**
  * Json (GSON) serializer/deserializer for converting JAVA 8 time api {@link ZonedDateTime} objects.
@@ -21,7 +21,7 @@ class ZonedDateTimeConverter implements JsonSerializer<ZonedDateTime>, JsonDeser
     private final DateTimeFormatter dateTimeFormatter;
 
     ZonedDateTimeConverter(final DateTimeFormatter dateTimeFormatter) {
-        Preconditions.checkArgument(dateTimeFormatter != null, "dateTimeFormatter is null");
+        Objects.requireNonNull(dateTimeFormatter, "dateTimeFormatter is null");
         this.dateTimeFormatter = dateTimeFormatter;
     }
 

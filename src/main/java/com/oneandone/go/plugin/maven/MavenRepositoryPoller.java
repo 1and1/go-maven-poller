@@ -6,7 +6,11 @@ import com.oneandone.go.plugin.maven.config.ConfigurationProperties;
 import com.oneandone.go.plugin.maven.config.ConfigurationProvider;
 import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
-import com.oneandone.go.plugin.maven.message.*;
+import com.oneandone.go.plugin.maven.message.CheckConnectionResultMessage;
+import com.oneandone.go.plugin.maven.message.PackageMaterialProperties;
+import com.oneandone.go.plugin.maven.message.PackageRevisionMessage;
+import com.oneandone.go.plugin.maven.message.ValidationError;
+import com.oneandone.go.plugin.maven.message.ValidationResultMessage;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 
@@ -32,9 +36,9 @@ class MavenRepositoryPoller {
      */
     PackageRevisionMessage getLatestRevision(final PackageMaterialProperties packageConfig, final PackageMaterialProperties repoConfig) {
         LOGGER.info(String.format("check of latest for artifact with groupId: '%s', artifactId: '%s' in repo: %s",
-                        packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orNull(),
-                        packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orNull(),
-                        repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orNull())
+                packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orElse(null),
+                packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orElse(null),
+                repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orElse(null))
         );
         validateConfig(repoConfig, packageConfig);
         final PackageRevisionMessage packageRevision = poll(new MavenRepoConfig(repoConfig), new MavenPackageConfig(packageConfig, null));
@@ -59,9 +63,9 @@ class MavenRepositoryPoller {
                                                           final PackageMaterialProperties repoConfig,
                                                           final PackageRevisionMessage previouslyKnownRevision) {
         LOGGER.info(String.format("check of latest for artifact with groupId: '%s', artifactId: '%s' in repo: %s, since version %s",
-                        packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orNull(),
-                        packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orNull(),
-                        repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orNull(),
+                packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID).orElse(null),
+                packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orElse(null),
+                repoConfig.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_REPO_URL).orElse(null),
                         previouslyKnownRevision.getRevision())
         );
         validateConfig(repoConfig, packageConfig);
@@ -145,7 +149,7 @@ class MavenRepositoryPoller {
                 }
                 stringBuilder.append(validationError.getMessage());
             }
-            
+
             throw new RuntimeException(stringBuilder.toString());
         }
     }
