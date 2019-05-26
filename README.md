@@ -17,7 +17,7 @@ Tested on following repositories:
 * Maven Central ([Link](https://repo1.maven.org/maven2/))
 * JBoss Nexus ([Link](https://repository.jboss.org/nexus/content/repositories/))
 * Bintray jCenter ([Link](http://jcenter.bintray.com/))
-* Artifactory
+* Artifactory ([Link](https://jfrog.com/artifactory/))
 
 ### Requirements
 
