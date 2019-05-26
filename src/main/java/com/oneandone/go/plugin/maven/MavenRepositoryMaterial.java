@@ -104,12 +104,7 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
     }
 
     private MessageHandler getConfigurationMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                return success(toJsonString(new Object()));
-            }
-        };
+        return request -> success(toJsonString(new Object()));
     }
 
     /**
@@ -118,12 +113,7 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
      * @return the message handler
      */
     private MessageHandler packageConfigurationMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                return success(toJsonString(configurationProvider.getPackageConfiguration().getPropertyMap()));
-            }
-        };
+        return request -> success(toJsonString(configurationProvider.getPackageConfiguration().getPropertyMap()));
     }
 
     /**
@@ -132,12 +122,7 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
      * @return the message handler
      */
     private MessageHandler repositoryConfigurationsMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                return success(toJsonString(configurationProvider.getRepositoryConfiguration().getPropertyMap()));
-            }
-        };
+        return request -> success(toJsonString(configurationProvider.getRepositoryConfiguration().getPropertyMap()));
     }
 
     /**
@@ -146,16 +131,13 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
      * @return the message handler
      */
     private MessageHandler validateRepositoryConfigurationMessageHandler() {
-        return new MessageHandler() {
-            @Override
-            public GoPluginApiResponse handle(final GoPluginApiRequest request) {
-                final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
-                final ValidationResultMessage validationResultMessage = configurationProvider.isRepositoryConfigurationValid(message.getRepositoryConfiguration());
-                if (validationResultMessage.failure()) {
-                    return success(toJsonString(validationResultMessage.getValidationErrors()));
-                }
-                return success("");
+        return request -> {
+            final ConfigurationMessage message = fromJsonString(request.requestBody(), ConfigurationMessage.class);
+            final ValidationResultMessage validationResultMessage = configurationProvider.isRepositoryConfigurationValid(message.getRepositoryConfiguration());
+            if (validationResultMessage.failure()) {
+                return success(toJsonString(validationResultMessage.getValidationErrors()));
             }
+            return success("");
         };
     }
 
