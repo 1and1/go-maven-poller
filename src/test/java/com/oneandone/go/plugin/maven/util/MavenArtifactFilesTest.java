@@ -19,13 +19,13 @@ import static org.junit.Assert.assertEquals;
 public class MavenArtifactFilesTest {
 
     @Test
-    public void testGetArtifactLocation() throws Exception {
+    public void testGetArtifactLocation() {
         final MavenArtifactFiles files = new MavenArtifactFiles("http://repo1.maven.org/maven2/", "go-maven-poller-1.0.0.jar", "go-maven-poller-1.0.0.pom.xml", null);
         assertEquals("http://repo1.maven.org/maven2/go-maven-poller-1.0.0.jar", files.getArtifactLocation());
     }
 
     @Test
-    public void testGetPomLocation() throws Exception {
+    public void testGetPomLocation() {
         final MavenArtifactFiles files = new MavenArtifactFiles("http://repo1.maven.org/maven2/", "go-maven-poller-1.0.0.jar", "go-maven-poller-1.0.0.pom.xml", null);
         assertEquals("http://repo1.maven.org/maven2/go-maven-poller-1.0.0.pom.xml", files.getPomLocation());
     }

@@ -10,63 +10,63 @@ import static org.junit.Assert.assertEquals;
 public class RepositoryConnectorTest {
 
     @Test
-    public void testConcatUrl() throws Exception {
+    public void testConcatUrl() {
         String url = RepositoryConnector.concatUrl("http://www.test.org/", "foo", "bar", "1.0");
         assertEquals("http://www.test.org/foo/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithMissingBaseUrlSlash() throws Exception {
+    public void testConcatUrlWithMissingBaseUrlSlash() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "foo", "bar", "1.0");
         assertEquals("http://www.test.org/foo/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithPointInGroupId() throws Exception {
+    public void testConcatUrlWithPointInGroupId() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "foo.com", "bar", "1.0");
         assertEquals("http://www.test.org/foo/com/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithSlashBeforeGroupId() throws Exception {
+    public void testConcatUrlWithSlashBeforeGroupId() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "/foo.com", "bar", "1.0");
         assertEquals("http://www.test.org/foo/com/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithSlashAfterGroupId() throws Exception {
+    public void testConcatUrlWithSlashAfterGroupId() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "foo.com/", "bar", "1.0");
         assertEquals("http://www.test.org/foo/com/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithSlashBeforeArtifactId() throws Exception {
+    public void testConcatUrlWithSlashBeforeArtifactId() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "foo.com", "/bar", "1.0");
         assertEquals("http://www.test.org/foo/com/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithSlashAfterArtifactId() throws Exception {
+    public void testConcatUrlWithSlashAfterArtifactId() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "foo.com", "bar/", "1.0");
         assertEquals("http://www.test.org/foo/com/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithSlashBeforeVersion() throws Exception {
+    public void testConcatUrlWithSlashBeforeVersion() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "foo.com", "bar", "/1.0");
         assertEquals("http://www.test.org/foo/com/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithSlashAfterVersion() throws Exception {
+    public void testConcatUrlWithSlashAfterVersion() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "foo.com", "bar", "1.0/");
         assertEquals("http://www.test.org/foo/com/bar/1.0/", url);
     }
-    
+
     @Test
-    public void testConcatUrlWithNullVersion() throws Exception {
+    public void testConcatUrlWithNullVersion() {
         String url = RepositoryConnector.concatUrl("http://www.test.org", "foo.com", "bar/", null);
         assertEquals("http://www.test.org/foo/com/bar/maven-metadata.xml", url);
     }
-    
+
 }

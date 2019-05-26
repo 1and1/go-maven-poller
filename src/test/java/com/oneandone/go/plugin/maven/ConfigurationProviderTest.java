@@ -13,7 +13,7 @@ import static org.junit.Assert.*;
 public class ConfigurationProviderTest {
 
     @Test
-    public void testDetectInvalidKeys() throws Exception {
+    public void testDetectInvalidKeys() {
         final ConfigurationProvider configurationProvider = new ConfigurationProvider();
         final PackageMaterialProperties repositoryConfiguration = configurationProvider.getRepositoryConfiguration();
 
@@ -34,7 +34,7 @@ public class ConfigurationProviderTest {
     }
 
     @Test
-    public void testGetRepositoryConfiguration() throws Exception {
+    public void testGetRepositoryConfiguration() {
         final ConfigurationProvider configurationProvider = new ConfigurationProvider();
         final PackageMaterialProperties repositoryConfiguration = configurationProvider.getRepositoryConfiguration();
         assertNotNull(repositoryConfiguration);
@@ -45,7 +45,7 @@ public class ConfigurationProviderTest {
     }
 
     @Test
-    public void testGetPackageConfiguration() throws Exception {
+    public void testGetPackageConfiguration() {
         final ConfigurationProvider configurationProvider = new ConfigurationProvider();
         final PackageMaterialProperties packageConfiguration = configurationProvider.getPackageConfiguration();
         assertNotNull(packageConfiguration);
@@ -53,7 +53,7 @@ public class ConfigurationProviderTest {
     }
 
     @Test
-    public void testIsRepositoryConfigurationValid() throws Exception {
+    public void testIsRepositoryConfigurationValid() {
         final ConfigurationProvider configurationProvider = new ConfigurationProvider();
         final PackageMaterialProperties repositoryConfiguration = configurationProvider.getRepositoryConfiguration();
 
@@ -62,7 +62,7 @@ public class ConfigurationProviderTest {
     }
 
     @Test
-    public void testIsPackageConfigurationValid() throws Exception {
+    public void testIsPackageConfigurationValid() {
         final ConfigurationProvider configurationProvider = new ConfigurationProvider();
         final PackageMaterialProperties packageConfiguration = configurationProvider.getPackageConfiguration();
 

@@ -13,7 +13,7 @@ public class MavenPackageConfigTest {
     private MavenPackageConfig packageConfig;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         final String configuration =
                 "{" +
                         "  \"package-configuration\": {" +
@@ -39,7 +39,7 @@ public class MavenPackageConfigTest {
     }
 
     @Test
-    public void testAccessor() throws Exception {
+    public void testAccessor() {
         assertEquals("com.oneandone", packageConfig.getGroupId());
         assertEquals("go-maven-poller", packageConfig.getArtifactId());
         assertEquals("jar", packageConfig.getPackaging());
@@ -49,27 +49,27 @@ public class MavenPackageConfigTest {
     }
 
     @Test
-    public void testLowerBoundGiven() throws Exception {
+    public void testLowerBoundGiven() {
         assertTrue(packageConfig.lowerBoundGiven());
     }
 
     @Test
-    public void testUpperBoundGiven() throws Exception {
+    public void testUpperBoundGiven() {
         assertTrue(packageConfig.upperBoundGiven());
     }
 
     @Test
-    public void testIsLastVersionKnown() throws Exception {
+    public void testIsLastVersionKnown() {
         assertFalse(packageConfig.isLastVersionKnown());
     }
 
     @Test
-    public void testValidate() throws Exception {
+    public void testValidate() {
         assertTrue(packageConfig.validate().success());
     }
 
     @Test
-    public void testValidationWithMissingGroupId() throws Exception {
+    public void testValidationWithMissingGroupId() {
         final String configuration =
                 "{" +
                         "  \"package-configuration\": {" +
@@ -93,7 +93,7 @@ public class MavenPackageConfigTest {
     }
 
     @Test
-    public void testValidationWithIllegalGroupId() throws Exception {
+    public void testValidationWithIllegalGroupId() {
         final String configuration =
                 "{" +
                         "  \"package-configuration\": {" +
@@ -120,7 +120,7 @@ public class MavenPackageConfigTest {
     }
 
     @Test
-    public void testValidationWithMissingArtifactId() throws Exception {
+    public void testValidationWithMissingArtifactId() {
         final String configuration =
                 "{" +
                         "  \"package-configuration\": {" +
@@ -144,7 +144,7 @@ public class MavenPackageConfigTest {
     }
 
     @Test
-    public void testValidationWithIllegalArtifactId() throws Exception {
+    public void testValidationWithIllegalArtifactId() {
         final String configuration =
                 "{" +
                         "  \"package-configuration\": {" +
@@ -172,7 +172,7 @@ public class MavenPackageConfigTest {
 
     @Ignore
     @Test
-    public void testValidationWithIllegalLowerBound() throws Exception {
+    public void testValidationWithIllegalLowerBound() {
         final String configuration =
                 "{" +
                         "  \"package-configuration\": {" +
@@ -199,7 +199,7 @@ public class MavenPackageConfigTest {
     }
 
     @Test
-    public void testValidationWithIllegalUpperBound() throws Exception {
+    public void testValidationWithIllegalUpperBound() {
         final String configuration =
                 "{" +
                         "  \"package-configuration\": {" +
@@ -226,7 +226,7 @@ public class MavenPackageConfigTest {
     }
 
     @Test
-    public void testValidationWithLowerBoundGreaterThanUpperBound() throws Exception {
+    public void testValidationWithLowerBoundGreaterThanUpperBound() {
         final String configuration =
                 "{" +
                         "  \"package-configuration\": {" +

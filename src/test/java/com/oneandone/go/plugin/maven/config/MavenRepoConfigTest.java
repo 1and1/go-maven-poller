@@ -14,7 +14,7 @@ public class MavenRepoConfigTest {
     private MavenRepoConfig repoConfig;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         final String configuration =
                 "{" +
                 "  \"repository-configuration\": {" +
@@ -40,22 +40,22 @@ public class MavenRepoConfigTest {
     }
 
     @Test
-    public void testGetRepoUrlAsStringWithBasicAuth() throws Exception {
+    public void testGetRepoUrlAsStringWithBasicAuth() {
         assertEquals("http://admin:12345@repo1.maven.org/maven2/", repoConfig.getRepoUrlAsStringWithBasicAuth());
     }
 
     @Test
-    public void testGetRepoUrlAsString() throws Exception {
+    public void testGetRepoUrlAsString() {
         assertEquals("http://repo1.maven.org/maven2/", repoConfig.getRepoUrlAsString());
     }
 
     @Test
-    public void testIsRepoUrlNotMissing() throws Exception {
+    public void testIsRepoUrlNotMissing() {
         assertFalse(repoConfig.isRepoUrlMissing());
     }
 
     @Test
-    public void testWithRepoUrlMissing() throws Exception {
+    public void testWithRepoUrlMissing() {
         final String configuration =
                 "{" +
                         "  \"repository-configuration\": {" +
@@ -79,32 +79,32 @@ public class MavenRepoConfigTest {
 
 
     @Test
-    public void testValidate() throws Exception {
+    public void testValidate() {
         assertTrue(repoConfig.validate().success());
     }
 
     @Test
-    public void testGetUsername() throws Exception {
+    public void testGetUsername() {
         assertEquals("admin", repoConfig.getUsername());
     }
 
     @Test
-    public void testGetPassword() throws Exception {
+    public void testGetPassword() {
         assertEquals("12345", repoConfig.getPassword());
     }
 
     @Test
-    public void testGetProxy() throws Exception {
+    public void testGetProxy() {
         assertEquals("http://localhost:8080", repoConfig.getProxy());
     }
 
     @Test
-    public void testGetTimeZone() throws Exception {
+    public void testGetTimeZone() {
         assertEquals(ZoneId.of("UTC"), repoConfig.getTimeZone());
     }
 
     @Test
-    public void testRepoConfigWithFoobarTimeZone() throws Exception {
+    public void testRepoConfigWithFoobarTimeZone() {
         final String configuration =
                 "{" +
                         "  \"repository-configuration\": {" +

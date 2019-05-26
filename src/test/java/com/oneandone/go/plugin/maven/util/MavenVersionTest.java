@@ -9,17 +9,17 @@ import static org.junit.Assert.*;
 public class MavenVersionTest {
 
     @Test(expected = NullPointerException.class)
-    public void testConstructWithNull() throws Exception {
+    public void testConstructWithNull() {
         new MavenVersion(null);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testConstructWithEmptyString() throws Exception {
+    public void testConstructWithEmptyString() {
         new MavenVersion("");
     }
 
     @Test
-    public void testVersionWithoutQualifier() throws Exception {
+    public void testVersionWithoutQualifier() {
         final MavenVersion version = new MavenVersion("10.2.333.4");
         assertEquals(10, version.getMajor());
         assertEquals(2, version.getMinor());
@@ -29,7 +29,7 @@ public class MavenVersionTest {
     }
 
     @Test
-    public void testVersionWithQualifier() throws Exception {
+    public void testVersionWithQualifier() {
         final MavenVersion version = new MavenVersion("10.2.333.4-sources");
         assertEquals(10, version.getMajor());
         assertEquals(2, version.getMinor());
@@ -40,7 +40,7 @@ public class MavenVersionTest {
     }
 
     @Test
-    public void testIgnoreOfLeadingOrTrailingSpaces() throws Exception {
+    public void testIgnoreOfLeadingOrTrailingSpaces() {
         final MavenVersion version = new MavenVersion("  10.2.333.4-sources     ");
         assertEquals(10, version.getMajor());
         assertEquals(2, version.getMinor());
@@ -51,7 +51,7 @@ public class MavenVersionTest {
     }
 
     @Test
-    public void testSort() throws Exception {
+    public void testSort() {
         final MavenVersion a = new MavenVersion("1.2.3.4");
         final MavenVersion b = new MavenVersion("2.2.3.4");
         final MavenVersion c = new MavenVersion("0.1.2.3");
@@ -67,7 +67,7 @@ public class MavenVersionTest {
     }
 
     @Test
-    public void testSnapshotVersion() throws Exception {
+    public void testSnapshotVersion() {
         final MavenVersion version = new MavenVersion("1.2-SNAPSHOT");
 
         assertEquals(1, version.getMajor());
@@ -78,7 +78,7 @@ public class MavenVersionTest {
     }
 
     @Test
-    public void testSnapshotVersionWithTimestampAndBuildNumber() throws Exception {
+    public void testSnapshotVersionWithTimestampAndBuildNumber() {
         final MavenVersion version = new MavenVersion("1.2-SNAPSHOT (20160809.063223-25)");
 
         assertEquals(1, version.getMajor());
@@ -91,7 +91,7 @@ public class MavenVersionTest {
     }
 
     @Test
-    public void testOrderOfSpecificSnapshotVersions() throws Exception {
+    public void testOrderOfSpecificSnapshotVersions() {
         final MavenVersion newer = new MavenVersion("1.2-SNAPSHOT (20160809.063223-25)");
         final MavenVersion older = new MavenVersion("1.2-SNAPSHOT (20150103.114154-25)");
 
@@ -102,7 +102,7 @@ public class MavenVersionTest {
     }
 
     @Test
-    public void testComparisionOfNewAndOldVersionStyle() throws Exception {
+    public void testComparisionOfNewAndOldVersionStyle() {
         final MavenVersion newer = new MavenVersion("1.2-SNAPSHOT (20160809.063223-25)");
         final MavenVersion older = new MavenVersion("1.2-SNAPSHOT");
 

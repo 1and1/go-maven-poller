@@ -31,7 +31,7 @@ public class MavenRepositoryPollerTest {
     private static Integer runningPort;
 
     @BeforeClass
-    public static void setUpLocalWebServer() throws Exception {
+    public static void setUpLocalWebServer() {
         server = new Server();
 
         final SelectChannelConnector connector = new SelectChannelConnector();
@@ -103,14 +103,14 @@ public class MavenRepositoryPollerTest {
     }
 
     @Test
-    public void testGetLatestRevision() throws Exception {
+    public void testGetLatestRevision() {
         final MavenRepositoryPoller mavenPoller = new MavenRepositoryPoller();
         final PackageRevisionMessage latestRevision = mavenPoller.getLatestRevision(packageConfiguration, repositoryConfiguration);
         assertEquals("5.1.14", latestRevision.getRevision());
     }
 
     @Test
-    public void testLatestModificationSince() throws Exception {
+    public void testLatestModificationSince() {
         final MavenRepositoryPoller mavenPoller = new MavenRepositoryPoller();
         PackageRevisionMessage revisionMessage = new PackageRevisionMessage("5.1.0",
                 ZonedDateTime.ofInstant(Instant.ofEpochSecond(0L), ZoneId.systemDefault() ), null, null, null);
@@ -119,14 +119,14 @@ public class MavenRepositoryPollerTest {
     }
 
     @Test
-    public void testCheckConnectionToRepository() throws Exception {
+    public void testCheckConnectionToRepository() {
         final MavenRepositoryPoller mavenPoller = new MavenRepositoryPoller();
         final CheckConnectionResultMessage result = mavenPoller.checkConnectionToRepository(repositoryConfiguration);
         assertTrue(result.success());
     }
 
     @Test
-    public void testCheckConnectionToPackage() throws Exception {
+    public void testCheckConnectionToPackage() {
         final MavenRepositoryPoller mavenPoller = new MavenRepositoryPoller();
         final CheckConnectionResultMessage result = mavenPoller.checkConnectionToPackage(packageConfiguration, repositoryConfiguration);
         assertTrue(result.success());

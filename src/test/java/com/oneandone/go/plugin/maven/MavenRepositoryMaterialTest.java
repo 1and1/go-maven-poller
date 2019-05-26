@@ -34,7 +34,7 @@ public class MavenRepositoryMaterialTest {
     private static Integer runningPort;
 
     @BeforeClass
-    public static void setUpLocalWebServer() throws Exception {
+    public static void setUpLocalWebServer() {
         server = new Server();
 
         final SelectChannelConnector connector = new SelectChannelConnector();
@@ -131,7 +131,7 @@ public class MavenRepositoryMaterialTest {
     }
 
     @Test
-    public void testPluginIdentifier() throws Exception {
+    public void testPluginIdentifier() {
         final MavenRepositoryMaterial material = new MavenRepositoryMaterial();
         assertEquals("package-repository", material.pluginIdentifier().getExtension());
         assertTrue(material.pluginIdentifier().getSupportedExtensionVersions().contains("1.0"));

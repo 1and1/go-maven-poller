@@ -11,13 +11,13 @@ import static org.junit.Assert.assertNotNull;
 public class MavenRevisionTest {
 
     @Test
-    public void testGetRevisionLabel() throws Exception {
+    public void testGetRevisionLabel() {
         final MavenRevision mavenRevision = new MavenRevision("1.2.3-beta-2");
         assertEquals("1.2.3-beta-2", mavenRevision.getVersion());
     }
 
     @Test
-    public void testToPackageRevision() throws Exception {
+    public void testToPackageRevision() {
         final MavenRevision mavenRevision = new MavenRevision("1.2.3-beta-2");
         mavenRevision.setErrorMessage("error msg");
         mavenRevision.setLocation("somelocation");

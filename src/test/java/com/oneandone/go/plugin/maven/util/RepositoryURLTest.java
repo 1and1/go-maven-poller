@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 public class RepositoryURLTest {
 
     @Test
-    public void testHasCredentials() throws Exception {
+    public void testHasCredentials() {
         RepositoryURL url = new RepositoryURL("http://localhost/", "admin", "12345");
         assertTrue(url.hasCredentials());
 
@@ -16,19 +16,19 @@ public class RepositoryURLTest {
     }
 
     @Test
-    public void testGetURL() throws Exception {
+    public void testGetURL() {
         final RepositoryURL url = new RepositoryURL("http://localhost/repo", "admin", "12345");
         assertEquals("http://localhost/repo/", url.getURL());
     }
 
     @Test
-    public void testGetURLWithBasicAuth() throws Exception {
+    public void testGetURLWithBasicAuth() {
         final RepositoryURL url = new RepositoryURL("http://localhost/repo", "admin", "12345");
         assertEquals("http://admin:12345@localhost/repo/", url.getURLWithBasicAuth());
     }
 
     @Test
-    public void testIsHttp() throws Exception {
+    public void testIsHttp() {
         RepositoryURL url = new RepositoryURL("http://localhost/", null, null);
         assertTrue(url.isHttp());
 

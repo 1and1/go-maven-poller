@@ -9,7 +9,7 @@ import static org.junit.Assert.assertNotNull;
 public class ConfigurationMessageTest {
 
     @Test
-    public void testDeserializationSerialization() throws Exception {
+    public void testDeserializationSerialization() {
         final ConfigurationMessage configurationMessage = JsonUtil.fromJsonString(
                 "{\n" +
                 "  \"repository-configuration\": {\n" +
