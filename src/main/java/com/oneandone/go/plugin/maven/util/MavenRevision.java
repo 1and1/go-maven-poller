@@ -10,29 +10,21 @@ public class MavenRevision extends MavenVersion {
 
     /**
      * The URL location of the artifact for this revision.
-     *
-     * @param location the URL location to set
      */
     @Setter private String location;
 
     /**
      * The track back URL.
-     *
-     * @param trackBackUrl the track back URL to set
      */
     @Setter private String trackBackUrl;
 
     /**
      * Sets an error message for {@code this} revision.
-     *
-     * @param errorMessage the errorMessage
      */
     @Setter private String errorMessage;
 
     /**
      * The date of the last modification. Equivalent to the {@code lastUpdated} element of the {@code maven-metadata.xml}.
-     *
-     * @return the date of the last modification
      */
     @Setter private ZonedDateTime lastModified;
 
