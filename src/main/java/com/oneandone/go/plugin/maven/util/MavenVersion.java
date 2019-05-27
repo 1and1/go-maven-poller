@@ -12,7 +12,7 @@ import java.util.StringTokenizer;
 public class MavenVersion implements Serializable, Comparable<MavenVersion> {
 
     /** The snapshot suffix for version strings. */
-    private final static String SNAPSHOT = "SNAPSHOT";
+    private static final String SNAPSHOT = "SNAPSHOT";
 
     /** The serialization version of this class. */
     private static final long serialVersionUID = 2L;
