@@ -16,8 +16,6 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
 
     /**
      * The original version.
-     *
-     * @return the original version
      */
     @Getter private final String original;
 
