@@ -16,7 +16,7 @@ import com.thoughtworks.go.plugin.api.logging.Logger;
 
 /**
  * This class handles all maven repository requests and delegates them accordingly.
- * <p />
+ * <br>
  * The implementations for the actual repository connections are packaged in {@link com.oneandone.go.plugin.maven.client}.
  */
 class MavenRepositoryPoller {
@@ -26,7 +26,7 @@ class MavenRepositoryPoller {
 
     /**
      * Returns the latest package revision of the artifact specified in the package configuration within the specified repository.
-     * <p />
+     * <br>
      * If a revision could not be found for the specified package criteria, this method will return {@code null}.
      *
      * @param packageConfig the package configuration (see {@link MavenPackageConfig})
@@ -50,7 +50,7 @@ class MavenRepositoryPoller {
 
     /**
      * Returns the latest package revision of the artifact specified in the package configuration within the specified repository.
-     * <p />
+     * <br>
      * If a revision could not be found for the specified package criteria, this method will return {@code null}.
      *
      * @param packageConfig the package configuration (see {@link MavenPackageConfig})

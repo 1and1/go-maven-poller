@@ -64,7 +64,7 @@ public class PackageMaterialProperty {
 
     /**
      * Constructs a property.
-     * <p />
+     * <br>
      * All {@code boolean} properties are set to {@code false} as default value.
      */
     public PackageMaterialProperty() {
@@ -75,7 +75,7 @@ public class PackageMaterialProperty {
 
     /**
      * Sets whether value should be hidden.
-     * <p />
+     * <br>
      * Default is {@code false}.
      *
      * @param secure {@code true} if value should be hidden, otherwise {@code false}
@@ -88,7 +88,7 @@ public class PackageMaterialProperty {
 
     /**
      * Sets whether property is part of identity.
-     * <p />
+     * <br>
      * Default is {@code false}.
      *
      * @param partOfIdentity {@code true} if {@code this} property is part of the identity, otherwise {@code false}
@@ -101,7 +101,7 @@ public class PackageMaterialProperty {
 
     /**
      * Sets whether a value is required.
-     * <p />
+     * <br>
      * Default is {@code false}.
      *
      * @param required {@code true} if value is required, otherwise {@code false}

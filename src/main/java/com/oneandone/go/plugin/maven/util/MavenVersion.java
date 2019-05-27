@@ -201,7 +201,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
 
     /**
      * Returns the version with qualifier.
-     * <p />
+     * <br>
      * Snapshot versions will be resolved to their actual artifact verison with timestamp and build number.
      *
      * @return the version with qualifier

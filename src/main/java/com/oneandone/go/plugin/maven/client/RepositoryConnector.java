@@ -76,7 +76,7 @@ public class RepositoryConnector {
 
     /**
      * Executes a HTTP {@code GET} on the specified url and returns the response.
-     * <p />
+     * <br>
      * The connection will be released after the operation.
      *
      * @param url the URL

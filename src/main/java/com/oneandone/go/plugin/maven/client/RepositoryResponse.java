@@ -4,7 +4,7 @@ import lombok.Getter;
 
 /**
  * Representation of a Maven repository response
- * <p />
+ * <br>
  * This class can be extended if e.g. the MIME type should be analyzed.
  */
 public class RepositoryResponse {
