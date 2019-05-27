@@ -274,7 +274,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
      * @return {@code true} if the qualifier equals {@code SNAPSHOT} (ignore case), otherwise {@code false}
      */
     public boolean isSnapshot() {
-        return qualifier != null && SNAPSHOT.equals(qualifier.toUpperCase());
+        return qualifier != null && SNAPSHOT.equalsIgnoreCase(qualifier);
     }
 
     /**
