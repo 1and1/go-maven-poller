@@ -11,6 +11,9 @@ import java.util.StringTokenizer;
 @EqualsAndHashCode(of = "original")
 public class MavenVersion implements Serializable, Comparable<MavenVersion> {
 
+    /** The snapshot suffix for version strings. */
+    private final static String SNAPSHOT = "SNAPSHOT";
+
     /** The serialization version of this class. */
     private static final long serialVersionUID = 2L;
 
@@ -55,7 +58,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
 
         // check if version ends with timestamp and buildnumber
         final String trimmedVersion = version.trim();
-        if (trimmedVersion.contains("SNAPSHOT") && trimmedVersion.matches(".* \\([0-9]{8}\\.[0-9]{6}-[0-9]+\\)")) {
+        if (trimmedVersion.contains(SNAPSHOT) && trimmedVersion.matches(".* \\([0-9]{8}\\.[0-9]{6}-[0-9]+\\)")) {
             int startOfSpecification = trimmedVersion.lastIndexOf(" (");
             this.original = trimmedVersion.substring(0, startOfSpecification);
 
@@ -104,9 +107,9 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
         int counter = 0;
 
         char delimiter = '.';
-        final char[] version = ver.toCharArray();
+        final char[] versionArray = ver.toCharArray();
 
-        for (char c : version) {
+        for (char c : versionArray) {
             if (!Character.isDigit(c)) {
                 lastIndex = counter;
                 delimiter = c;
@@ -271,7 +274,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
      * @return {@code true} if the qualifier equals {@code SNAPSHOT} (ignore case), otherwise {@code false}
      */
     public boolean isSnapshot() {
-        return qualifier != null && "SNAPSHOT".equals(qualifier.toUpperCase());
+        return qualifier != null && SNAPSHOT.equals(qualifier.toUpperCase());
     }
 
     /**
@@ -297,7 +300,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
         if (result == 0 && this.qualifier != null && otherVersion.getQualifier() != null) {
             result = new NaturalOrderComparator().compare(this.qualifier, otherVersion.getQualifier());
 
-            if ("SNAPSHOT".equalsIgnoreCase(this.qualifier) && "SNAPSHOT".equalsIgnoreCase(otherVersion.getQualifier())) {
+            if (SNAPSHOT.equalsIgnoreCase(this.qualifier) && SNAPSHOT.equalsIgnoreCase(otherVersion.getQualifier())) {
                 if (result == 0 && this.timestamp != null && otherVersion.timestamp != null) {
                     result = new NaturalOrderComparator().compare(this.timestamp, otherVersion.timestamp);
                 }

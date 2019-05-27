@@ -74,17 +74,8 @@ public class MavenPackageConfig {
         this.artifactId = packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID).orElse(null);
         this.packaging = packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_PACKAGING).orElse(null);
 
-        if (packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_FROM).isPresent()) {
-            this.lowerBound = new MavenVersion(packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_FROM).get());
-        } else {
-            this.lowerBound = null;
-        }
-
-        if (packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_TO).isPresent()) {
-            this.upperBound = new MavenVersion(packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_TO).get());
-        } else {
-            this.upperBound = null;
-        }
+        this.lowerBound = new MavenVersion(packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_FROM).orElse(null);
+        this.upperBound = new MavenVersion(packageConfig.getValue(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_POLL_VERSION_TO).orElse(null);
 
         this.lastKnownVersion = packageRevision != null ? packageRevision.getRevision() : null;
     }
