@@ -46,19 +46,16 @@ public class MavenRepositoryPollerTest {
         handlers.setHandlers(new Handler[]{resourceHandler, new DefaultHandler()});
         server.setHandler(handlers);
 
-        final Thread serverThread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    server.start();
-                    runningPort = server.getConnectors()[0].getLocalPort();
-                    server.join();
-                } catch (final Exception e) {
-                    e.printStackTrace();
-                }
-
+        final Thread serverThread = new Thread(() -> {
+            try {
+                server.start();
+                runningPort = server.getConnectors()[0].getLocalPort();
+                server.join();
+            } catch (final Exception e) {
+                e.printStackTrace();
             }
-        };
+
+        });
         Executors.newSingleThreadExecutor().submit(serverThread);
     }
 

@@ -152,7 +152,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
      * @return the value for the specified version digit index or 0 if the index is out of bounds
      */
     private Integer getValue(int index) {
-        return index < this.digitStrings.length ? digits[index] : 0;
+        return index < this.digits.length ? digits[index] : 0;
     }
 
     /**
@@ -274,7 +274,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
      * @return {@code true} if the qualifier equals {@code SNAPSHOT} (ignore case), otherwise {@code false}
      */
     public boolean isSnapshot() {
-        return qualifier != null && SNAPSHOT.equalsIgnoreCase(qualifier);
+        return SNAPSHOT.equalsIgnoreCase(qualifier);
     }
 
     /**

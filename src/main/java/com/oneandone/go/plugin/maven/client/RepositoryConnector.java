@@ -53,12 +53,12 @@ public class RepositoryConnector {
             URL url;
 
             if (version != null) {
-                url = new URL(base, 
+                url = new URL(base,
                     filterSlash(groupId).replaceAll("\\.", "/")+"/"+
                     filterSlash(artifactId)+"/"+
                     (version.isEmpty() ? "" : filterSlash(version)+"/"));
             } else {
-                url = new URL(base, 
+                url = new URL(base,
                     filterSlash(groupId).replaceAll("\\.", "/")+"/"+
                     filterSlash(artifactId)+"/"+
                     "maven-metadata.xml");
@@ -68,7 +68,7 @@ public class RepositoryConnector {
             throw new RuntimeException(ex);
         }
     }
-    
+
     /** Removes slash parts. */
     private static String filterSlash(String in) {
         return in.contains("/") ? in.replaceAll("/", "") : in;
@@ -121,9 +121,11 @@ public class RepositoryConnector {
             requestBuilder.setProxy(HttpHost.create(repoConfig.getProxy()));
         }
 
-        HttpClientBuilder httpClientBuilder = HttpClientBuilder.create().setDefaultRequestConfig(requestBuilder.build());
-        httpClientBuilder = httpClientBuilder.setRetryHandler(new DefaultHttpRequestRetryHandler(3, false));
-        httpClientBuilder = httpClientBuilder.setRedirectStrategy(new DefaultRedirectStrategy());
+        HttpClientBuilder httpClientBuilder =
+                HttpClientBuilder.create()
+                        .setDefaultRequestConfig(requestBuilder.build())
+                        .setRetryHandler(new DefaultHttpRequestRetryHandler(3, false))
+                        .setRedirectStrategy(new DefaultRedirectStrategy());
 
         if (repoConfig.getUsername() != null) {
             final Credentials creds = new UsernamePasswordCredentials(repoConfig.getUsername(), repoConfig.getPassword());

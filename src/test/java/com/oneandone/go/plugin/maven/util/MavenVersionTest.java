@@ -96,8 +96,8 @@ public class MavenVersionTest {
         final MavenVersion older = new MavenVersion("1.2-SNAPSHOT (20150103.114154-25)");
 
         assertTrue(newer.compareTo(older) > 0);
-        assertTrue(newer.compareTo(newer) == 0);
-        assertTrue(older.compareTo(older) == 0);
+        assertEquals(0, newer.compareTo(newer));
+        assertEquals(0, older.compareTo(older));
         assertTrue(older.compareTo(newer) < 0);
     }
 
@@ -107,8 +107,8 @@ public class MavenVersionTest {
         final MavenVersion older = new MavenVersion("1.2-SNAPSHOT");
 
         assertTrue(newer.compareTo(older) > 0);
-        assertTrue(newer.compareTo(newer) == 0);
-        assertTrue(older.compareTo(older) == 0);
+        assertEquals(0, newer.compareTo(newer));
+        assertEquals(0, older.compareTo(older));
         assertTrue(older.compareTo(newer) < 0);
 
         assertFalse(newer.notNewerThan(older));

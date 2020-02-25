@@ -51,7 +51,7 @@ public class PackageMaterialProperties {
      * @return {@code true} if a property definition for the specified {@code key} is defined, otherwise {@code false}
      */
     private boolean hasKey(final String key) {
-        return propertyMap.keySet().contains(key);
+        return propertyMap.containsKey(key);
     }
 
     /**

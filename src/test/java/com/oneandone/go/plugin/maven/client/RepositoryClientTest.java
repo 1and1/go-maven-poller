@@ -19,6 +19,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,13 +36,13 @@ public class RepositoryClientTest {
         final InputStream stream = RepositoryResponseHandlerTest.class.getClassLoader().getResourceAsStream("web/mysql/mysql-connector-java/maven-metadata.xml");
         final StringWriter writer = new StringWriter();
 
-        IOUtils.copy(stream, writer, Charset.forName("UTF-8"));
+        IOUtils.copy(stream, writer, StandardCharsets.UTF_8);
         metadata = writer.toString();
 
         final InputStream streamWithReleaseTag = RepositoryResponseHandlerTest.class.getClassLoader().getResourceAsStream("web/mysql/mysql-connector-java/maven-metadata-with-release-tag.xml");
         final StringWriter writerWithReleaseTag = new StringWriter();
 
-        IOUtils.copy(streamWithReleaseTag, writerWithReleaseTag, Charset.forName("UTF-8"));
+        IOUtils.copy(streamWithReleaseTag, writerWithReleaseTag, StandardCharsets.UTF_8);
         metadataWithReleaseTag = writerWithReleaseTag.toString();
     }
 

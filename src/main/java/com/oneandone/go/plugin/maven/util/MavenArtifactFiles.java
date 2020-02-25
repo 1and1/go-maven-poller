@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 /** Contains the artifact locations for an artifact within a Maven repository. */
 public class MavenArtifactFiles {
@@ -74,7 +75,7 @@ public class MavenArtifactFiles {
 
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             final DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-            final Document document = documentBuilder.parse(new ByteArrayInputStream(repoResponse.getResponseBody().getBytes("utf-8")));
+            final Document document = documentBuilder.parse(new ByteArrayInputStream(repoResponse.getResponseBody().getBytes(StandardCharsets.UTF_8)));
 
             final Element projectElement = document.getDocumentElement();
             final NodeList urlNodes = projectElement.getElementsByTagName("url");
