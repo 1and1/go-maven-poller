@@ -4,12 +4,6 @@ import com.oneandone.go.plugin.maven.message.*;
 import com.oneandone.go.plugin.maven.util.JsonUtil;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -24,49 +18,27 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Executors;
 
 import static org.junit.Assert.*;
 
 public class MavenRepositoryMaterialTest {
 
-    private static Server server;
-    private static Integer runningPort;
+    private static EmbeddedHttpServer embeddedHttpServer;
 
     @BeforeClass
     public static void setUpLocalWebServer() {
-        server = new Server();
+        embeddedHttpServer = new EmbeddedHttpServer(new File("src/test/resources/web"));
+        embeddedHttpServer.start();
+    }
 
-        final SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(0);
-        server.addConnector(connector);
-
-        final ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setDirectoriesListed(true);
-        resourceHandler.setResourceBase(new File("src/test/resources/web").getAbsolutePath());
-
-        final HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resourceHandler, new DefaultHandler()});
-        server.setHandler(handlers);
-
-        final Thread serverThread = new Thread(() -> {
-            try {
-                server.start();
-                runningPort = server.getConnectors()[0].getLocalPort();
-                server.join();
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-
-        });
-        Executors.newSingleThreadExecutor().submit(serverThread);
+    @AfterClass
+    public static void stopLocalWebServer() throws Exception {
+        embeddedHttpServer.stop();
     }
 
     @Test
     public void testHandle() throws Exception {
-        while (runningPort == null) {
-            Thread.sleep(100);
-        }
+        int runningPort = embeddedHttpServer.getRunningPort();
 
         final MavenRepositoryMaterial repositoryMaterial = new MavenRepositoryMaterial();
 
@@ -134,11 +106,6 @@ public class MavenRepositoryMaterialTest {
         assertTrue(material.pluginIdentifier().getSupportedExtensionVersions().contains("1.0"));
     }
 
-    @AfterClass
-    public static void stopLocalWebServer() throws Exception {
-        server.stop();
-    }
-
     private static GoPluginApiRequest request(final String requestName, final String requestBody) {
         return new GoPluginApiRequest() {
             @Override
@@ -184,7 +151,7 @@ public class MavenRepositoryMaterialTest {
         final Field repositoryConfigurationField = messageClass.getDeclaredField("repositoryConfiguration");
         repositoryConfigurationField.setAccessible(true);
         final Map<String, PackageMaterialProperty> repositoryConfiguration = new HashMap<>();
-        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:" + runningPort));
+        repositoryConfiguration.put("REPO_URL", new PackageMaterialProperty().withValue("http://localhost:" + embeddedHttpServer.getRunningPort()));
         repositoryConfigurationField.set(configurationMessage, repositoryConfiguration);
 
         final Field packageConfigurationField = messageClass.getDeclaredField("packageConfiguration");

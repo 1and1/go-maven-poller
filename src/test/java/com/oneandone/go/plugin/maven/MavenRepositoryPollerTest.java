@@ -5,12 +5,6 @@ import com.oneandone.go.plugin.maven.message.ConfigurationMessage;
 import com.oneandone.go.plugin.maven.message.PackageMaterialProperties;
 import com.oneandone.go.plugin.maven.message.PackageRevisionMessage;
 import com.oneandone.go.plugin.maven.util.JsonUtil;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -20,43 +14,23 @@ import java.io.File;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class MavenRepositoryPollerTest {
 
-    private static Server server;
-    private static Integer runningPort;
+    private static EmbeddedHttpServer embeddedHttpServer;
 
     @BeforeClass
     public static void setUpLocalWebServer() {
-        server = new Server();
+        embeddedHttpServer = new EmbeddedHttpServer(new File("src/test/resources/web"));
+        embeddedHttpServer.start();
+    }
 
-        final SelectChannelConnector connector = new SelectChannelConnector();
-        connector.setPort(0);
-        server.addConnector(connector);
-
-        final ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setDirectoriesListed(true);
-        resourceHandler.setResourceBase(new File("src/test/resources/web").getAbsolutePath());
-
-        final HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resourceHandler, new DefaultHandler()});
-        server.setHandler(handlers);
-
-        final Thread serverThread = new Thread(() -> {
-            try {
-                server.start();
-                runningPort = server.getConnectors()[0].getLocalPort();
-                server.join();
-            } catch (final Exception e) {
-                e.printStackTrace();
-            }
-
-        });
-        Executors.newSingleThreadExecutor().submit(serverThread);
+    @AfterClass
+    public static void stopLocalWebServer() throws Exception {
+        embeddedHttpServer.stop();
     }
 
     private PackageMaterialProperties repositoryConfiguration;
@@ -64,9 +38,7 @@ public class MavenRepositoryPollerTest {
 
     @Before
     public void setUp() throws Exception {
-        while (runningPort == null) {
-            Thread.sleep(100);
-        }
+        int runningPort = embeddedHttpServer.getRunningPort();
 
         final String configuration =
                 "{" +
@@ -127,10 +99,5 @@ public class MavenRepositoryPollerTest {
         final MavenRepositoryPoller mavenPoller = new MavenRepositoryPoller();
         final CheckConnectionResultMessage result = mavenPoller.checkConnectionToPackage(packageConfiguration, repositoryConfiguration);
         assertTrue(result.success());
-    }
-
-    @AfterClass
-    public static void stopLocalWebServer() throws Exception {
-        server.stop();
     }
 }
