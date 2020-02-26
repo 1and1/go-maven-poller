@@ -29,8 +29,8 @@
     </developer>
   </developers>
   <organization>
-    <name>1&amp;1 Internet AG</name>
-    <url>http://www.1und1.de/</url>
+    <name>1&amp;1 Ionos SE</name>
+    <url>http://www.ionos.com/</url>
   </organization>
   <scm>
     <url>https://github.com/1and1/go-maven-poller.git</url>
