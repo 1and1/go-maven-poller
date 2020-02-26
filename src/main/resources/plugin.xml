@@ -1,14 +1,13 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <go-plugin id="maven-repo" version="1">
-<about>
+  <about>
     <name>GoCD Maven Material Poller Plugin</name>
     <version>${project.version}</version>
     <target-go-version>17.1</target-go-version>
     <description>Polls a Maven repository by maven-metadata.xml</description>
     <vendor>
-        <name>1&amp;1 Internet SE</name>
-        <url>https://github.com/1and1/go-maven-poller</url>
+      <name>1&amp;1 Internet SE</name>
+      <url>https://github.com/1and1/go-maven-poller</url>
     </vendor>
-</about>
+  </about>
 </go-plugin>
-
