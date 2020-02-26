@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.oneandone</groupId>
   <artifactId>go-maven-poller</artifactId>
-  <version>1.3.4-SNAPSHOT</version>
+  <version>1.3.3-SNAPSHOT</version>
   <url>https://github.com/1and1/go-maven-poller</url>
   <licenses>
     <license>
