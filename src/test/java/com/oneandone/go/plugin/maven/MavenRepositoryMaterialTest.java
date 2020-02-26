@@ -27,7 +27,7 @@ public class MavenRepositoryMaterialTest {
 
     @BeforeClass
     public static void setUpLocalWebServer() {
-        embeddedHttpServer = new EmbeddedHttpServer(new File("src/test/resources/web"));
+        embeddedHttpServer = new EmbeddedHttpServer().withPath(new File("src/test/resources/web"));
         embeddedHttpServer.start();
     }
 

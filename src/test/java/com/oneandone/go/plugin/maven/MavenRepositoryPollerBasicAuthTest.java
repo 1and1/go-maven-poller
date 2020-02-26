@@ -14,17 +14,22 @@ import java.io.File;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class MavenRepositoryPollerTest {
+public class MavenRepositoryPollerBasicAuthTest {
 
     private static EmbeddedHttpServer embeddedHttpServer;
 
+    private static final String USER = "han solo";
+    private static final String PASSWORD = "leia";
+
     @BeforeClass
     public static void setUpLocalWebServer() {
-        embeddedHttpServer = new EmbeddedHttpServer().withPath(new File("src/test/resources/web"));
+        embeddedHttpServer = new EmbeddedHttpServer().withPath(new File("src/test/resources/web"))
+                .withBasicAuth(Collections.singletonMap(USER, PASSWORD));
         embeddedHttpServer.start();
     }
 
@@ -45,6 +50,12 @@ public class MavenRepositoryPollerTest {
                         "  \"repository-configuration\": {" +
                         "    \"REPO_URL\": {" +
                         "      \"value\": \"http://localhost:" + runningPort + "/\"" +
+                        "    }," +
+                        "    \"USERNAME\": {" +
+                        "      \"value\": \"" + USER + "\"" +
+                        "    }," +
+                        "    \"PASSWORD\": {" +
+                        "      \"value\": \"" + PASSWORD + "\"" +
                         "    }" +
                         "  }," +
                         "  \"package-configuration\": {" +
