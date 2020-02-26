@@ -11,7 +11,7 @@ This is a Maven repository package plugin for [Go CD](http://www.go.cd/) and a r
 * Building with Maven instead of Ant
 * Added proxy option to repository configuration
 * This plugin parses the *maven-metadata.xml* of a Maven repository instead of using the Nexus API and therefore can be used for a broader range of *Artifactory* and *Nexus* repositories. 
-* Use of [GoCD JSON API](http://www.go.cd/documentation/developer/writing_go_plugins/package_material/json_message_based_package_material_extension.html)
+* Use of GoCD JSON API
 
 Tested on following repositories:
 
