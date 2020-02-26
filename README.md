@@ -28,7 +28,7 @@ The go-maven-poller requires at least the following environment:
 
 ### Installation
 
-Download [`go-maven-poller.jar`](https://github.com/1and1/go-maven-poller/releases) into the `plugins/external` directory of your GoCD server and restart it.
+Download [`go-maven-poller-plugin.jar`](https://github.com/1and1/go-maven-poller/releases) into the `plugins/external` directory of your GoCD server and restart it.
 
 You can also download a signed jar from the [maven repository](https://repo1.maven.org/maven2/com/oneandone/go-maven-poller/) and verify the GPG signature with my [GPG public key](https://github.com/sfuhrm.gpg).
 
@@ -62,7 +62,7 @@ GO_PACKAGE_<REPO-NAME>_<PACKAGE-NAME>_ARTIFACT_ID
 GO_PACKAGE_<REPO-NAME>_<PACKAGE-NAME>_PACKAGING
 GO_PACKAGE_<REPO-NAME>_<PACKAGE-NAME>_LOCATION
 ```
-The LOCATION variable points to a downloadable url.
+The `GO_PACKAGE_..._LOCATION` variable points to a downloadable url.
 
 ### Downloading the Package
 
