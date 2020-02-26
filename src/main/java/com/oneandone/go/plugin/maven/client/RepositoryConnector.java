@@ -4,28 +4,31 @@ import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
 import com.oneandone.go.plugin.maven.util.MavenVersion;
 import com.thoughtworks.go.plugin.api.logging.Logger;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
-import org.apache.http.impl.client.DefaultRedirectStrategy;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpHead;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.DefaultHttpRequestRetryStrategy;
+import org.apache.hc.client5.http.impl.DefaultRedirectStrategy;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.HttpStatus;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.util.TimeValue;
+import org.apache.hc.core5.util.Timeout;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -84,28 +87,22 @@ public class RepositoryConnector {
      * @throws RuntimeException on any exception
      */
     public RepositoryResponse doHttpRequest(final String url) {
-        final HttpClient client = createHttpClient();
-
         String responseBody;
-        HttpGet method = null;
-        try {
-            method = new HttpGet(url);
+        try (final CloseableHttpClient client = createHttpClient()) {
+            HttpGet method = new HttpGet(url);
             method.setHeader("Accept", "application/xml");
-            HttpResponse response = client.execute(method);
-            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                throw new RuntimeException(String.format("HTTP %s, %s", response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
+            try (CloseableHttpResponse response = client.execute(method)) {
+                if (response.getCode() != HttpStatus.SC_OK) {
+                    throw new RuntimeException(String.format("HTTP %s, %s", response.getCode(), response.getReasonPhrase()));
+                }
+                HttpEntity entity = response.getEntity();
+                responseBody = EntityUtils.toString(entity);
+                return new RepositoryResponse(responseBody);
             }
-            HttpEntity entity = response.getEntity();
-            responseBody = EntityUtils.toString(entity);
-            return new RepositoryResponse(responseBody);
         } catch (final Exception e) {
             String message = String.format("Exception while connecting to %s%n%s", url, e);
             LOGGER.error(message, e);
             throw new RuntimeException(message, e);
-        } finally {
-            if (method != null) {
-                method.releaseConnection();
-            }
         }
     }
 
@@ -114,8 +111,8 @@ public class RepositoryConnector {
      *
      * @return a new HTTP client by the specified repository configuration
      */
-    private HttpClient createHttpClient() {
-        RequestConfig.Builder requestBuilder = RequestConfig.custom().setSocketTimeout(10 * 1000);
+    private CloseableHttpClient createHttpClient() throws URISyntaxException {
+        RequestConfig.Builder requestBuilder = RequestConfig.custom().setConnectTimeout(Timeout.ofSeconds(10));
 
         if (repoConfig.getProxy() != null) {
             requestBuilder.setProxy(HttpHost.create(repoConfig.getProxy()));
@@ -124,13 +121,15 @@ public class RepositoryConnector {
         HttpClientBuilder httpClientBuilder =
                 HttpClientBuilder.create()
                         .setDefaultRequestConfig(requestBuilder.build())
-                        .setRetryHandler(new DefaultHttpRequestRetryHandler(3, false))
+                        .setRetryStrategy(new DefaultHttpRequestRetryStrategy(3, TimeValue.ofSeconds(2)))
                         .setRedirectStrategy(new DefaultRedirectStrategy());
 
         if (repoConfig.getUsername() != null) {
-            final Credentials creds = new UsernamePasswordCredentials(repoConfig.getUsername(), repoConfig.getPassword());
-            final CredentialsProvider credsProvider = new BasicCredentialsProvider();
-            credsProvider.setCredentials(AuthScope.ANY, creds);
+            final Credentials creds = new UsernamePasswordCredentials(repoConfig.getUsername(), repoConfig.getPassword().toCharArray());
+            final BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
+            final URI repoUri = repoConfig.getRepoUrlAsURI();
+            credsProvider.setCredentials(new AuthScope(repoUri.getHost(), repoUri.getPort()), creds);
+            //credsProvider.setCredentials(AuthScope.ANY, creds);
             httpClientBuilder = httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
         }
         return httpClientBuilder.build();
@@ -143,60 +142,54 @@ public class RepositoryConnector {
      * @throws RuntimeException on any exception
      */
     public boolean testConnection() {
-        final String url = repoConfig.getRepoUrlAsString();
+        final URI uri = repoConfig.getRepoUrlAsURI();
         //noinspection UnusedAssignment
         boolean result = false;
-        final HttpClient client = createHttpClient();
 
-        HttpRequestBase headRequest = null;
-        HttpRequestBase getRequest = null;
-        try {
-            headRequest = new HttpHead(url);
+        try (final CloseableHttpClient client = createHttpClient()) {
+            // try with HTTP HEAD
+            HttpUriRequestBase headRequest = new HttpHead(uri);
             headRequest.setHeader("Accept", "*/*");
-            HttpResponse response = client.execute(headRequest);
-            result = (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
-
-            if (!result) {
-                LOGGER.warn("http HEAD failed for repository '" + url + "' will proceed with GET request");
-                getRequest = new HttpGet(url);
-                getRequest.setHeader("Accept", "*/*");
-                response = client.execute(getRequest);
-                result = (response.getStatusLine().getStatusCode() == HttpStatus.SC_OK);
+            try (CloseableHttpResponse response = client.execute(headRequest)) {
+                result = (response.getCode() == HttpStatus.SC_OK);
             }
 
             if (!result) {
-                final StringBuilder builder = new StringBuilder();
-                if (response.getEntity() != null) {
-                    try (final BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8))) {
-                        String line;
-                        while ((line = bReader.readLine()) != null) {
-                            builder.append(line);
+                LOGGER.warn("http HEAD failed for repository '" + uri.toASCIIString() + "' will proceed with GET request");
+                HttpUriRequestBase getRequest = new HttpGet(uri);
+                getRequest.setHeader("Accept", "*/*");
+                try (CloseableHttpResponse response = client.execute(getRequest)) {
+                    result = (response.getCode() == HttpStatus.SC_OK);
+
+                    if (!result) {
+                        final StringBuilder builder = new StringBuilder();
+                        if (response.getEntity() != null) {
+                            try (final BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8))) {
+                                String line;
+                                while ((line = bReader.readLine()) != null) {
+                                    builder.append(line);
+                                }
+                            }
+                        }
+
+                        if (builder.length() == 0) {
+                            LOGGER.error(String.format("expected HTTP status 200 but got %d on check of url '%s'", response.getCode(), uri.toASCIIString()));
+                        } else {
+                            LOGGER.error(String.format(
+                                    "expected HTTP status 200 but got %d on check of url '%s', with entity: %s",
+                                    response.getCode(),
+                                    uri.toASCIIString(),
+                                    builder.toString()
+                            ));
                         }
                     }
-                }
-
-                if (builder.length() == 0) {
-                    LOGGER.error(String.format("expected HTTP status 200 but got %d on check of url '%s'", response.getStatusLine().getStatusCode(), url));
-                } else {
-                    LOGGER.error(String.format(
-                            "expected HTTP status 200 but got %d on check of url '%s', with entity: %s",
-                            response.getStatusLine().getStatusCode(),
-                            url,
-                            builder.toString()
-                    ));
-                }
+                } //
             }
+
         } catch (final Exception e) {
-            final String message = String.format("Exception while connecting to %s%n%s", url, e.getMessage());
+            final String message = String.format("Exception while connecting to %s%n%s", uri.toASCIIString(), e.getMessage());
             LOGGER.error(message);
             throw new RuntimeException(message, e);
-        } finally {
-            if (headRequest != null) {
-                headRequest.releaseConnection();
-            }
-            if (getRequest != null) {
-                getRequest.releaseConnection();
-            }
         }
         return result;
     }

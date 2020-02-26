@@ -8,6 +8,7 @@ import com.thoughtworks.go.plugin.api.logging.Logger;
 import lombok.Getter;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.time.ZoneId;
 import java.time.zone.ZoneRulesException;
@@ -129,6 +130,13 @@ public class MavenRepoConfig {
      */
     public String getRepoUrlAsString() {
         return this.getRepoUrl().getURL();
+    }
+
+    /**
+     * @return {@link RepositoryURL#getURL()} ()}
+     */
+    public URI getRepoUrlAsURI() {
+        return URI.create(getRepoUrl().getURL());
     }
 
     /**
