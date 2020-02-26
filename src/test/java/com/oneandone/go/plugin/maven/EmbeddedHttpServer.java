@@ -4,7 +4,6 @@ import lombok.NonNull;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
-import org.eclipse.jetty.security.LoginService;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
@@ -73,9 +72,7 @@ public class EmbeddedHttpServer {
     public EmbeddedHttpServer withBasicAuth(@NonNull final Map<String,String> userPassword) {
         HashLoginService loginService = new HashLoginService();
         UserStore myUserStore = new UserStore();
-        userPassword.entrySet().forEach(entry -> {
-            myUserStore.addUser(entry.getKey(), Credential.getCredential(entry.getValue()), new String[] { "user" });
-        });
+        userPassword.forEach((key, value) -> myUserStore.addUser(key, Credential.getCredential(value), new String[]{"user"}));
         loginService.setUserStore(myUserStore);
 
         server.addBean(loginService);

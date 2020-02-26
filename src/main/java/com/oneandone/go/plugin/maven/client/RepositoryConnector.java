@@ -129,8 +129,7 @@ public class RepositoryConnector {
             final BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
             final URI repoUri = repoConfig.getRepoUrlAsURI();
             credsProvider.setCredentials(new AuthScope(repoUri.getHost(), repoUri.getPort()), creds);
-            //credsProvider.setCredentials(AuthScope.ANY, creds);
-            httpClientBuilder = httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
+            httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
         }
         return httpClientBuilder.build();
     }

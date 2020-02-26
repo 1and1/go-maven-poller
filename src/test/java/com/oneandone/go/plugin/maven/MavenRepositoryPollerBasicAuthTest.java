@@ -34,7 +34,7 @@ public class MavenRepositoryPollerBasicAuthTest {
     }
 
     @AfterClass
-    public static void stopLocalWebServer() throws Exception {
+    public static void stopLocalWebServer() {
         embeddedHttpServer.stop();
     }
 
@@ -42,7 +42,7 @@ public class MavenRepositoryPollerBasicAuthTest {
     private PackageMaterialProperties packageConfiguration;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         int runningPort = embeddedHttpServer.getRunningPort();
 
         final String configuration =

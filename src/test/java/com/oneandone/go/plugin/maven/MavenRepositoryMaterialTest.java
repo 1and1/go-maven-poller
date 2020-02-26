@@ -32,7 +32,7 @@ public class MavenRepositoryMaterialTest {
     }
 
     @AfterClass
-    public static void stopLocalWebServer() throws Exception {
+    public static void stopLocalWebServer() {
         embeddedHttpServer.stop();
     }
 

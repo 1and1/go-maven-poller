@@ -29,7 +29,7 @@ public class MavenRepositoryPollerTest {
     }
 
     @AfterClass
-    public static void stopLocalWebServer() throws Exception {
+    public static void stopLocalWebServer() {
         embeddedHttpServer.stop();
     }
 
@@ -37,7 +37,7 @@ public class MavenRepositoryPollerTest {
     private PackageMaterialProperties packageConfiguration;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         int runningPort = embeddedHttpServer.getRunningPort();
 
         final String configuration =
