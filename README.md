@@ -30,7 +30,7 @@ The go-maven-poller requires at least the following environment:
 
 Download [`go-maven-poller.jar`](https://github.com/1and1/go-maven-poller/releases) into the `plugins/external` directory of your GoCD server and restart it.
 
-You can also download a signed jar from the [maven repository](https://mvnrepository.com/artifact/com.oneandone/go-maven-poller) and verify the GPG signature with my [GPG public key](https://github.com/sfuhrm.gpg).
+You can also download a signed jar from the [maven repository](https://repo1.maven.org/maven2/com/oneandone/go-maven-poller/) and verify the GPG signature with my [GPG public key](https://github.com/sfuhrm.gpg).
 
 ### Repository definition
 
