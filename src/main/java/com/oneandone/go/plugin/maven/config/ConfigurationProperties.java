@@ -21,7 +21,7 @@ public class ConfigurationProperties {
     public static final String REPOSITORY_CONFIGURATION_KEY_USERNAME = "USERNAME";
 
     /** The property key for the authentication password. */
-    public static final String REPOSITORY_CONFIGURATION_KEY_PASSWORD = "PASSWORD";
+    public static final String REPOSITORY_CONFIGURATION_KEY_PASSWORD = "PASSWORD"; //NOSONAR
 
     /** The property key for the HTTP proxy. */
     public static final String REPOSITORY_CONFIGURATION_KEY_PROXY = "PROXY";
