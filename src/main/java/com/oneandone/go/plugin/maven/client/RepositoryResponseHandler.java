@@ -1,6 +1,7 @@
 package com.oneandone.go.plugin.maven.client;
 
 import com.oneandone.go.plugin.maven.exception.PluginException;
+import com.oneandone.go.plugin.maven.util.DocumentBuilders;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
 import org.w3c.dom.Document;
@@ -9,7 +10,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
@@ -65,8 +65,7 @@ class RepositoryResponseHandler {
         this.repoResponse = repoResponse;
 
         try {
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            this.documentBuilder = factory.newDocumentBuilder();
+            this.documentBuilder = DocumentBuilders.newDocumentBuilder();
 
             final XPathFactory xPathFactory = XPathFactory.newInstance();
             final XPath xPath = xPathFactory.newXPath();
