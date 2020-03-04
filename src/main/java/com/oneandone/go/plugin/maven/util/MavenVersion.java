@@ -63,7 +63,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
             this.original = trimmedVersion.substring(0, startOfSpecification);
 
             this.timestamp = trimmedVersion.substring(startOfSpecification + 2, startOfSpecification + 17);
-            this.buildNumber = trimmedVersion.substring(startOfSpecification + 18, trimmedVersion.lastIndexOf(")"));
+            this.buildNumber = trimmedVersion.substring(startOfSpecification + 18, trimmedVersion.lastIndexOf(')'));
         } else {
             this.original = trimmedVersion;
         }

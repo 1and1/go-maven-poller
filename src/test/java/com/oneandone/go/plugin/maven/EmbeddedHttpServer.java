@@ -107,13 +107,13 @@ public class EmbeddedHttpServer {
      * @return this instance.
      */
     public EmbeddedHttpServer withPath(@NonNull final File resourcePath) {
-        final ResourceHandler resourceHandler = new ResourceHandler();
+        final ResourceHandler myResourceHandler = new ResourceHandler();
 
-        resourceHandler.setDirectoriesListed(true);
-        resourceHandler.setResourceBase(resourcePath.getAbsolutePath());
+        myResourceHandler.setDirectoriesListed(true);
+        myResourceHandler.setResourceBase(resourcePath.getAbsolutePath());
 
         final HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resourceHandler, new DefaultHandler()});
+        handlers.setHandlers(new Handler[]{myResourceHandler, new DefaultHandler()});
         if (securityHandler != null) {
             securityHandler.setHandler(handlers);
         } else {
@@ -129,6 +129,8 @@ public class EmbeddedHttpServer {
                 try {
                     monitor.wait();
                 } catch (InterruptedException e) {
+                    Thread.interrupted();
+                    throw new IllegalStateException("Should not get interrupted");
                 }
             }
         }

@@ -115,10 +115,6 @@ public class RepositoryClient {
                 LOGGER.info("version '" + latest.getVersionSpecific() + "' is the same as the lastKnownVersion '" + lastKnownVersion.getVersionSpecific() + "'");
                 return null;
             }
-//            if (noNewerVersion(latest, lastKnownVersion)) {
-//                LOGGER.info("version '" + latest.getVersionSpecific() + "' is not newer than the lastKnownVersion '" + lastKnownVersion.getVersionSpecific() + "'");
-//                return null;
-//           }
         }
         if (!packageConfig.lowerBoundGiven() || latest.greaterOrEqual(packageConfig.getLowerBound())) {
             return latest;

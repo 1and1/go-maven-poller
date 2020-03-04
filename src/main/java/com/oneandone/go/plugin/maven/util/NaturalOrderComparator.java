@@ -43,9 +43,12 @@ class NaturalOrderComparator implements Comparator<String>, Serializable {
 
     @Override
     public int compare(final String a, final String b) {
-        int ia = 0, ib = 0;
-        int nza, nzb;
-        char ca, cb;
+        int ia = 0;
+        int ib = 0;
+        int nza;
+        int nzb;
+        char ca;
+        char cb;
         int result;
 
         while (true) {

@@ -97,6 +97,6 @@ public class RepositoryURL {
      * @return {@code true} if this URL uses either the {@code http(s)} protocol, otherwise {@code false}
      */
     public boolean isHttp() {
-        return "http".equals(url.getProtocol().toLowerCase()) || "https".equals(url.getProtocol().toLowerCase());
+        return "http".equalsIgnoreCase(url.getProtocol()) || "https".equalsIgnoreCase(url.getProtocol());
     }
 }
