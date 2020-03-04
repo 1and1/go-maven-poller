@@ -16,8 +16,7 @@ public class DocumentBuilders {
      * @see <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">XML External Entity (XXE) Processing</a>
      * */
     public static DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
-        //NOSONAR
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance(); //NOSONAR
         // deny all external entity processing (XXE)
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");

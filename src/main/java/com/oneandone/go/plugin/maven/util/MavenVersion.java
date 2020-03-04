@@ -264,8 +264,7 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
      * @param version the version to compare with
      * @return {@code true} if {@code this} version is equal to the specified {@code version}, otherwise {@code false}
      */
-    //NOSONAR
-    public boolean equal(final MavenVersion version) {
+    public boolean equal(final MavenVersion version) { //NOSONAR
         return this.compareTo(version) == 0;
     }
 
