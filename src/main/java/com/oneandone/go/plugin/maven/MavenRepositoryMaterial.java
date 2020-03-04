@@ -132,7 +132,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
     }
 
     /**
-     * Returns a message handler for request of type [@link REQUEST_PACKAGE_CONFIGURATION}.
+     * Returns a message handler for request of type {@link #REQUEST_PACKAGE_CONFIGURATION}.
      *
      * @return the message handler
      */
@@ -141,7 +141,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
     }
 
     /**
-     * Returns a message handler for request of type [@link REQUEST_REPOSITORY_CONFIGURATION}.
+     * Returns a message handler for request of type {@link #REQUEST_REPOSITORY_CONFIGURATION}.
      *
      * @return the message handler
      */
@@ -150,7 +150,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
     }
 
     /**
-     * Returns a message handler for request of type [@link REQUEST_VALIDATE_REPOSITORY_CONFIGURATION}.
+     * Returns a message handler for request of type {@link #REQUEST_VALIDATE_REPOSITORY_CONFIGURATION}.
      *
      * @return the message handler
      */
@@ -166,7 +166,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
     }
 
     /**
-     * Returns a message handler for request of type [@link REQUEST_VALIDATE_PACKAGE_CONFIGURATION}.
+     * Returns a message handler for request of type {@link #REQUEST_VALIDATE_PACKAGE_CONFIGURATION}.
      *
      * @return the message handler
      */
@@ -182,7 +182,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
     }
 
     /**
-     * Returns a message handler for request of type [@link REQUEST_CHECK_REPOSITORY_CONNECTION}.
+     * Returns a message handler for request of type {@link #REQUEST_CHECK_REPOSITORY_CONNECTION}.
      *
      * @return the message handler
      */
@@ -195,7 +195,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
     }
 
     /**
-     * Returns a message handler for request of type [@link REQUEST_CHECK_PACKAGE_CONNECTION}.
+     * Returns a message handler for request of type {@link #REQUEST_CHECK_PACKAGE_CONNECTION}.
      *
      * @return the message handler
      */
@@ -208,7 +208,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
     }
 
     /**
-     * Returns a message handler for request of type [@link REQUEST_LATEST_PACKAGE_REVISION}.
+     * Returns a message handler for request of type {@link #REQUEST_LATEST_PACKAGE_REVISION}.
      *
      * @return the message handler
      */
@@ -221,7 +221,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
     }
 
     /**
-     * Returns a message handler for request of type [@link REQUEST_LATEST_PACKAGE_REVISION_SINCE}.
+     * Returns a message handler for request of type {@link #REQUEST_LATEST_PACKAGE_REVISION_SINCE}.
      *
      * @return the message handler
      */
