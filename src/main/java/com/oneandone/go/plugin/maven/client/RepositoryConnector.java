@@ -1,5 +1,6 @@
 package com.oneandone.go.plugin.maven.client;
 
+import com.oneandone.go.plugin.maven.GoMavenPollerException;
 import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
 import com.oneandone.go.plugin.maven.util.MavenVersion;
@@ -68,7 +69,7 @@ public class RepositoryConnector {
             }
             return url.toExternalForm();
         } catch (MalformedURLException ex) {
-            throw new RuntimeException(ex);
+            throw new GoMavenPollerException(ex);
         }
     }
 
@@ -93,7 +94,7 @@ public class RepositoryConnector {
             method.setHeader("Accept", "application/xml");
             try (CloseableHttpResponse response = client.execute(method)) {
                 if (response.getCode() != HttpStatus.SC_OK) {
-                    throw new RuntimeException(String.format("HTTP %s, %s", response.getCode(), response.getReasonPhrase()));
+                    throw new GoMavenPollerException(String.format("HTTP %s, %s", response.getCode(), response.getReasonPhrase()));
                 }
                 HttpEntity entity = response.getEntity();
                 responseBody = EntityUtils.toString(entity);
@@ -102,7 +103,7 @@ public class RepositoryConnector {
         } catch (final Exception e) {
             String message = String.format("Exception while connecting to %s%n%s", url, e);
             LOGGER.error(message, e);
-            throw new RuntimeException(message, e);
+            throw new GoMavenPollerException(message, e);
         }
     }
 
@@ -188,7 +189,7 @@ public class RepositoryConnector {
         } catch (final Exception e) {
             final String message = String.format("Exception while connecting to %s%n%s", uri.toASCIIString(), e.getMessage());
             LOGGER.error(message);
-            throw new RuntimeException(message, e);
+            throw new GoMavenPollerException(message, e);
         }
         return result;
     }

@@ -150,7 +150,7 @@ class MavenRepositoryPoller {
                 stringBuilder.append(validationError.getMessage());
             }
 
-            throw new RuntimeException(stringBuilder.toString());
+            throw new GoMavenPollerException(stringBuilder.toString());
         }
     }
 
