@@ -47,7 +47,7 @@ public class ValidationResultMessage {
      *
      * @return {@code true} if no errors exists, otherwise {@code false}
      */
-    public Boolean success() {
+    public boolean success() {
         return !failure();
     }
 }
