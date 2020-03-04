@@ -1,5 +1,6 @@
 package com.oneandone.go.plugin.maven.config;
 
+import com.oneandone.go.plugin.maven.GoMavenPollerException;
 import com.oneandone.go.plugin.maven.message.PackageMaterialProperties;
 import com.oneandone.go.plugin.maven.message.ValidationError;
 import com.oneandone.go.plugin.maven.message.ValidationResultMessage;
@@ -92,7 +93,7 @@ public class MavenRepoConfig {
     private RepositoryURL getRepoUrl() {
         final RepositoryURL repoUrl = new RepositoryURL(repositoryURL, username, password);
         if (!repoUrl.isHttp()) {
-            throw new RuntimeException("Only http/https urls are supported");
+            throw new GoMavenPollerException("Only http/https urls are supported");
         }
         return repoUrl;
     }

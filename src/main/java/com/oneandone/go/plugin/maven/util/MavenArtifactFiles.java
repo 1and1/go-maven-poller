@@ -10,7 +10,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -73,8 +72,7 @@ public class MavenArtifactFiles {
         try {
             final RepositoryResponse repoResponse = new RepositoryConnector(repoConfig).doHttpRequest(this.getPomLocation());
 
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            final DocumentBuilder documentBuilder = factory.newDocumentBuilder();
+            final DocumentBuilder documentBuilder = DocumentBuilders.newDocumentBuilder();
             final Document document = documentBuilder.parse(new ByteArrayInputStream(repoResponse.getResponseBody().getBytes(StandardCharsets.UTF_8)));
 
             final Element projectElement = document.getDocumentElement();

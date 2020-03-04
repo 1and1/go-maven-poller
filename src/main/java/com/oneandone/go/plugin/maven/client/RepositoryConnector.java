@@ -1,5 +1,6 @@
 package com.oneandone.go.plugin.maven.client;
 
+import com.oneandone.go.plugin.maven.GoMavenPollerException;
 import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
 import com.oneandone.go.plugin.maven.util.MavenVersion;
@@ -18,6 +19,7 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -68,7 +70,7 @@ public class RepositoryConnector {
             }
             return url.toExternalForm();
         } catch (MalformedURLException ex) {
-            throw new RuntimeException(ex);
+            throw new GoMavenPollerException(ex);
         }
     }
 
@@ -90,10 +92,10 @@ public class RepositoryConnector {
         String responseBody;
         try (final CloseableHttpClient client = createHttpClient()) {
             HttpGet method = new HttpGet(url);
-            method.setHeader("Accept", "application/xml");
+            method.setHeader(HttpHeaders.ACCEPT, "application/xml");
             try (CloseableHttpResponse response = client.execute(method)) {
                 if (response.getCode() != HttpStatus.SC_OK) {
-                    throw new RuntimeException(String.format("HTTP %s, %s", response.getCode(), response.getReasonPhrase()));
+                    throw new GoMavenPollerException(String.format("HTTP %s, %s", response.getCode(), response.getReasonPhrase()));
                 }
                 HttpEntity entity = response.getEntity();
                 responseBody = EntityUtils.toString(entity);
@@ -102,7 +104,7 @@ public class RepositoryConnector {
         } catch (final Exception e) {
             String message = String.format("Exception while connecting to %s%n%s", url, e);
             LOGGER.error(message, e);
-            throw new RuntimeException(message, e);
+            throw new GoMavenPollerException(message, e);
         }
     }
 
@@ -148,7 +150,7 @@ public class RepositoryConnector {
         try (final CloseableHttpClient client = createHttpClient()) {
             // try with HTTP HEAD
             HttpUriRequestBase headRequest = new HttpHead(uri);
-            headRequest.setHeader("Accept", "*/*");
+            headRequest.setHeader(HttpHeaders.ACCEPT, "*/*");
             try (CloseableHttpResponse response = client.execute(headRequest)) {
                 result = (response.getCode() == HttpStatus.SC_OK);
             }
@@ -156,7 +158,7 @@ public class RepositoryConnector {
             if (!result) {
                 LOGGER.warn("http HEAD failed for repository '" + uri.toASCIIString() + "' will proceed with GET request");
                 HttpUriRequestBase getRequest = new HttpGet(uri);
-                getRequest.setHeader("Accept", "*/*");
+                getRequest.setHeader(HttpHeaders.ACCEPT, "*/*");
                 try (CloseableHttpResponse response = client.execute(getRequest)) {
                     result = (response.getCode() == HttpStatus.SC_OK);
 
@@ -188,7 +190,7 @@ public class RepositoryConnector {
         } catch (final Exception e) {
             final String message = String.format("Exception while connecting to %s%n%s", uri.toASCIIString(), e.getMessage());
             LOGGER.error(message);
-            throw new RuntimeException(message, e);
+            throw new GoMavenPollerException(message, e);
         }
         return result;
     }

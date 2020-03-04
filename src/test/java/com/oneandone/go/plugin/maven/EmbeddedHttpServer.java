@@ -32,7 +32,7 @@ public class EmbeddedHttpServer {
 
     private final Object monitor;
 
-    private final Thread serverThread;
+    private final Runnable serverRunnable;
 
     private ExecutorService executorService;
 
@@ -50,7 +50,7 @@ public class EmbeddedHttpServer {
         serverConnector.setPort(0);
         server.addConnector(serverConnector);
 
-        serverThread = new Thread(() -> {
+        serverRunnable = () -> {
             try {
                 server.start();
                 runningPort = ((ServerConnector)server.getConnectors()[0]).getLocalPort();
@@ -61,7 +61,7 @@ public class EmbeddedHttpServer {
             } catch (final Exception e) {
                 throw new IllegalStateException("Could not initialize server", e);
             }
-        });
+        };
     }
 
     /**
@@ -107,13 +107,13 @@ public class EmbeddedHttpServer {
      * @return this instance.
      */
     public EmbeddedHttpServer withPath(@NonNull final File resourcePath) {
-        final ResourceHandler resourceHandler = new ResourceHandler();
+        final ResourceHandler myResourceHandler = new ResourceHandler();
 
-        resourceHandler.setDirectoriesListed(true);
-        resourceHandler.setResourceBase(resourcePath.getAbsolutePath());
+        myResourceHandler.setDirectoriesListed(true);
+        myResourceHandler.setResourceBase(resourcePath.getAbsolutePath());
 
         final HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[]{resourceHandler, new DefaultHandler()});
+        handlers.setHandlers(new Handler[]{myResourceHandler, new DefaultHandler()});
         if (securityHandler != null) {
             securityHandler.setHandler(handlers);
         } else {
@@ -129,6 +129,8 @@ public class EmbeddedHttpServer {
                 try {
                     monitor.wait();
                 } catch (InterruptedException e) {
+                    Thread.interrupted();
+                    throw new IllegalStateException("Should not get interrupted");
                 }
             }
         }
@@ -137,7 +139,7 @@ public class EmbeddedHttpServer {
 
     public void start() {
         executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(serverThread);
+        executorService.submit(serverRunnable);
     }
 
     public void stop() {
