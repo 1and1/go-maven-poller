@@ -19,6 +19,7 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.HttpStatus;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -91,7 +92,7 @@ public class RepositoryConnector {
         String responseBody;
         try (final CloseableHttpClient client = createHttpClient()) {
             HttpGet method = new HttpGet(url);
-            method.setHeader("Accept", "application/xml");
+            method.setHeader(HttpHeaders.ACCEPT, "application/xml");
             try (CloseableHttpResponse response = client.execute(method)) {
                 if (response.getCode() != HttpStatus.SC_OK) {
                     throw new GoMavenPollerException(String.format("HTTP %s, %s", response.getCode(), response.getReasonPhrase()));
@@ -149,7 +150,7 @@ public class RepositoryConnector {
         try (final CloseableHttpClient client = createHttpClient()) {
             // try with HTTP HEAD
             HttpUriRequestBase headRequest = new HttpHead(uri);
-            headRequest.setHeader("Accept", "*/*");
+            headRequest.setHeader(HttpHeaders.ACCEPT, "*/*");
             try (CloseableHttpResponse response = client.execute(headRequest)) {
                 result = (response.getCode() == HttpStatus.SC_OK);
             }
@@ -157,7 +158,7 @@ public class RepositoryConnector {
             if (!result) {
                 LOGGER.warn("http HEAD failed for repository '" + uri.toASCIIString() + "' will proceed with GET request");
                 HttpUriRequestBase getRequest = new HttpGet(uri);
-                getRequest.setHeader("Accept", "*/*");
+                getRequest.setHeader(HttpHeaders.ACCEPT, "*/*");
                 try (CloseableHttpResponse response = client.execute(getRequest)) {
                     result = (response.getCode() == HttpStatus.SC_OK);
 
