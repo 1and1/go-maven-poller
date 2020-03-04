@@ -2,7 +2,8 @@ package com.oneandone.go.plugin.maven;
 
 import com.oneandone.go.plugin.maven.config.ConfigurationProvider;
 import com.oneandone.go.plugin.maven.message.*;
-import com.thoughtworks.go.plugin.api.AbstractGoPlugin;
+import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
+import com.thoughtworks.go.plugin.api.GoPlugin;
 import com.thoughtworks.go.plugin.api.GoPluginIdentifier;
 import com.thoughtworks.go.plugin.api.annotation.Extension;
 import com.thoughtworks.go.plugin.api.logging.Logger;
@@ -20,12 +21,9 @@ import static com.thoughtworks.go.plugin.api.response.DefaultGoPluginApiResponse
 
 /**
  * The Go CD Maven repository plugin.
- *
- * Take a look at the <a href="http://www.go.cd/documentation/developer/writing_go_plugins/package_material/json_message_based_package_material_extension.html">documentation</a>
- * for more information on package repository plugins.
  */
 @Extension
-public class MavenRepositoryMaterial extends AbstractGoPlugin {
+public class MavenRepositoryMaterial implements GoPlugin {
 
     /** The logging instance for this class. */
     private static final Logger LOGGER = Logger.getLoggerFor(MavenRepositoryMaterial.class);
@@ -33,31 +31,49 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
     /** The plugin extension type. */
     public static final String EXTENSION = "package-repository";
 
-    /** Request to retrieve plugin configuration. */
+    /** Request to retrieve plugin configuration.
+     * @see #getConfigurationMessageHandler()
+     * */
     public static final String REQUEST_PLUGIN_GET_CONFIGURATION = "go.plugin-settings.get-configuration";
 
-    /** Request to retrieve the repository configuration definition.*/
+    /** Request to retrieve the repository configuration definition.
+     * @see #repositoryConfigurationsMessageHandler()
+     * */
     public static final String REQUEST_REPOSITORY_CONFIGURATION = "repository-configuration";
 
-    /** Request to retrieve the package configuration definition. */
+    /** Request to retrieve the package configuration definition.
+     * @see #packageConfigurationMessageHandler()
+     * */
     public static final String REQUEST_PACKAGE_CONFIGURATION = "package-configuration";
 
-    /** Request to validate the repository configuration. */
+    /** Request to validate the repository configuration.
+     * @see #validateRepositoryConfigurationMessageHandler()
+     * */
     public static final String REQUEST_VALIDATE_REPOSITORY_CONFIGURATION = "validate-repository-configuration";
 
-    /** Request to validate the package configuration. */
+    /** Request to validate the package configuration.
+     * @see #validatePackageConfigurationMessageHandler()
+     * */
     public static final String REQUEST_VALIDATE_PACKAGE_CONFIGURATION = "validate-package-configuration";
 
-    /** Request to check the repository connection. */
+    /** Request to check the repository connection.
+     * @see #checkRepositoryConnectionMessageHandler()
+     * */
     public static final String REQUEST_CHECK_REPOSITORY_CONNECTION = "check-repository-connection";
 
-    /** Request to check the package connection. */
+    /** Request to check the package connection.
+     * @see #checkPackageConnectionMessageHandler()
+     * */
     public static final String REQUEST_CHECK_PACKAGE_CONNECTION = "check-package-connection";
 
-    /** Request to retrieve the latest revision. */
+    /** Request to retrieve the latest revision.
+     * @see #latestRevisionMessageHandler()
+     * */
     public static final String REQUEST_LATEST_PACKAGE_REVISION = "latest-revision";
 
-    /** Request to retrieve the latest revision since a specified revision. */
+    /** Request to retrieve the latest revision since a specified revision.
+     * @see #latestRevisionSinceMessageHandler()
+     * */
     public static final String REQUEST_LATEST_PACKAGE_REVISION_SINCE = "latest-revision-since";
 
     /** The map of message handlers. */
@@ -68,6 +84,9 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
 
     /** The repository poller analyzes the contents of a repository and retrieves the latest revision. */
     private final MavenRepositoryPoller packageRepositoryPoller;
+
+    /** The go application accessor. */
+    private GoApplicationAccessor goApplicationAccessor;
 
     /** Constructs this plugin and initializes the message handlers. */
     public MavenRepositoryMaterial() {
@@ -83,6 +102,11 @@ public class MavenRepositoryMaterial extends AbstractGoPlugin {
         handlerMap.put(REQUEST_CHECK_PACKAGE_CONNECTION, checkPackageConnectionMessageHandler());
         handlerMap.put(REQUEST_LATEST_PACKAGE_REVISION, latestRevisionMessageHandler());
         handlerMap.put(REQUEST_LATEST_PACKAGE_REVISION_SINCE, latestRevisionSinceMessageHandler());
+    }
+
+    @Override
+    public void initializeGoApplicationAccessor(GoApplicationAccessor goApplicationAccessor) {
+        this.goApplicationAccessor = goApplicationAccessor;
     }
 
     @Override
