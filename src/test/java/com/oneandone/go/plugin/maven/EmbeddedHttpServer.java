@@ -32,7 +32,7 @@ public class EmbeddedHttpServer {
 
     private final Object monitor;
 
-    private final Thread serverThread;
+    private final Runnable serverRunnable;
 
     private ExecutorService executorService;
 
@@ -50,7 +50,7 @@ public class EmbeddedHttpServer {
         serverConnector.setPort(0);
         server.addConnector(serverConnector);
 
-        serverThread = new Thread(() -> {
+        serverRunnable = () -> {
             try {
                 server.start();
                 runningPort = ((ServerConnector)server.getConnectors()[0]).getLocalPort();
@@ -61,7 +61,7 @@ public class EmbeddedHttpServer {
             } catch (final Exception e) {
                 throw new IllegalStateException("Could not initialize server", e);
             }
-        });
+        };
     }
 
     /**
@@ -139,7 +139,7 @@ public class EmbeddedHttpServer {
 
     public void start() {
         executorService = Executors.newSingleThreadExecutor();
-        executorService.submit(serverThread);
+        executorService.submit(serverRunnable);
     }
 
     public void stop() {
