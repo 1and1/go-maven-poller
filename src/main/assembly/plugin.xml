@@ -12,7 +12,7 @@
       <outputDirectory></outputDirectory>
       <includes>
         <include>README.md</include>
-        <include>MAINTAINERS</include>
+        <include>MAINTAINERS.md</include>
         <include>LICENSE</include>
       </includes>
     </fileSet>
