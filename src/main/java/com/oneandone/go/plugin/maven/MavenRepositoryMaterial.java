@@ -116,7 +116,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
                 return handlerMap.get(goPluginApiRequest.requestName()).handle(goPluginApiRequest);
             }
             return DefaultGoPluginApiResponse.badRequest(String.format("Invalid request name %s", goPluginApiRequest.requestName()));
-        } catch (final Throwable e) {
+        } catch (final Exception e) {
             LOGGER.error("could not handle request with name \"" + goPluginApiRequest.requestName() + "\" and body: " + goPluginApiRequest.requestBody(), e);
             return DefaultGoPluginApiResponse.error(e.getMessage());
         }
