@@ -13,6 +13,8 @@ public class DocumentBuilders {
     }
 
     /** Creates a securely configured document builder.
+     * @return a new instance of a securely configured document builder.
+     * @throws ParserConfigurationException if there is a problem creating a DocumentBuilder instance with the secure setttings.
      * @see <a href="https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing">XML External Entity (XXE) Processing</a>
      * */
     public static DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
