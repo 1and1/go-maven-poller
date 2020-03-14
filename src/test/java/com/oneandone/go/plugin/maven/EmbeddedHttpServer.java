@@ -129,7 +129,7 @@ public class EmbeddedHttpServer {
                 try {
                     monitor.wait();
                 } catch (InterruptedException e) {
-                    Thread.interrupted();
+                    Thread.currentThread().interrupt();
                     throw new IllegalStateException("Should not get interrupted");
                 }
             }
