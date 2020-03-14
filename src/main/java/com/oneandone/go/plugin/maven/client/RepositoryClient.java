@@ -1,8 +1,8 @@
 package com.oneandone.go.plugin.maven.client;
 
+import com.oneandone.go.plugin.maven.GoMavenPollerException;
 import com.oneandone.go.plugin.maven.config.MavenPackageConfig;
 import com.oneandone.go.plugin.maven.config.MavenRepoConfig;
-import com.oneandone.go.plugin.maven.exception.PluginException;
 import com.oneandone.go.plugin.maven.util.MavenArtifactFiles;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
@@ -51,7 +51,7 @@ public class RepositoryClient {
                 if (repositoryResponseHandler.canHandle()) {
                     lastUpdatedTimestamp = repositoryResponseHandler.getLastUpdated(repoConfig.getTimeZone());
                 }
-            } catch (final PluginException e) {
+            } catch (final GoMavenPollerException e) {
                 // do nothing here
             }
 
@@ -104,7 +104,7 @@ public class RepositoryClient {
                     LOGGER.warn("could not handle snapshot resolution");
                     return null;
                 }
-            } catch (final PluginException e) {
+            } catch (final GoMavenPollerException e) {
                 return null;
             }
         }
@@ -153,7 +153,7 @@ public class RepositoryClient {
                 LOGGER.warn("Returning empty version list - no XML nor HTML Nexus answer found");
                 return Collections.emptyList();
             }
-        } catch (final PluginException e) {
+        } catch (final GoMavenPollerException e) {
             return Collections.emptyList();
         }
     }
@@ -179,7 +179,7 @@ public class RepositoryClient {
                 LOGGER.warn("Returning empty latest version list - no XML nor HTML Nexus answer found");
                 return Collections.emptyList();
             }
-        } catch (final PluginException e) {
+        } catch (final GoMavenPollerException e) {
             return Collections.emptyList();
         }
     }

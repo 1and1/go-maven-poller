@@ -1,6 +1,6 @@
 package com.oneandone.go.plugin.maven.client;
 
-import com.oneandone.go.plugin.maven.exception.PluginException;
+import com.oneandone.go.plugin.maven.GoMavenPollerException;
 import com.oneandone.go.plugin.maven.util.DocumentBuilders;
 import com.oneandone.go.plugin.maven.util.MavenRevision;
 import com.thoughtworks.go.plugin.api.logging.Logger;
@@ -61,7 +61,7 @@ class RepositoryResponseHandler {
      *
      * @param repoResponse the Maven repository response
      */
-    public RepositoryResponseHandler(final RepositoryResponse repoResponse) throws PluginException {
+    public RepositoryResponseHandler(final RepositoryResponse repoResponse) throws GoMavenPollerException {
         this.repoResponse = repoResponse;
 
         try {
@@ -76,7 +76,7 @@ class RepositoryResponseHandler {
             this.lastUpdatedXpath = xPath.compile("/metadata/versioning/lastUpdated/text()");
         } catch (final ParserConfigurationException | XPathExpressionException e) {
             LOGGER.error("could not create xml parsing configuration", e);
-            throw new PluginException("could not initialize XML handlers", e);
+            throw new GoMavenPollerException("could not initialize XML handlers", e);
         }
     }
 
