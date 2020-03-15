@@ -5,6 +5,24 @@
   <formats>
     <format>jar</format>
   </formats>
+  <containerDescriptorHandlers>
+    <containerDescriptorHandler>
+      <handlerName>message-digest</handlerName>
+      <configuration>
+        <messageDigest>MD5</messageDigest>
+        <checksumFile>MD5SUM</checksumFile>
+        <exclusionPattern>(MD5SUM|SHA256SUM)</exclusionPattern>
+      </configuration>
+    </containerDescriptorHandler>
+    <containerDescriptorHandler>
+      <handlerName>message-digest</handlerName>
+      <configuration>
+        <messageDigest>SHA-256</messageDigest>
+        <checksumFile>SHA256SUM</checksumFile>
+        <exclusionPattern>(MD5SUM|SHA256SUM)</exclusionPattern>
+      </configuration>
+    </containerDescriptorHandler>
+  </containerDescriptorHandlers>
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
