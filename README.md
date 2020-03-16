@@ -8,7 +8,9 @@ Go Maven Poller
 [![Downloads](https://img.shields.io/github/downloads/1and1/go-maven-poller/total)](https://github.com/1and1/go-maven-poller/releases)
 [![ReleaseDate](https://img.shields.io/github/release-date/1and1/go-maven-poller)](https://github.com/1and1/go-maven-poller/releases)
 
-This is a Maven repository package plugin for [Go CD](http://www.go.cd/) and a remix of the [aresok's](https://github.com/aresok/go-maven-poller) codebase. The major differences are:
+This is a Maven repository package plugin for the [Go CD](http://www.go.cd/) continuous
+integration server and a remix of the [aresok's](https://github.com/aresok/go-maven-poller) codebase.
+The major differences are:
 
 * Building with Maven instead of Ant
 * Added proxy option to repository configuration
