@@ -7,19 +7,17 @@
   </formats>
   <containerDescriptorHandlers>
     <containerDescriptorHandler>
-      <handlerName>message-digest</handlerName>
+      <handlerName>message-digest-md5</handlerName>
       <configuration>
-        <messageDigest>MD5</messageDigest>
         <checksumFile>MD5SUM</checksumFile>
-        <exclusionPattern>(MD5SUM|SHA256SUM)</exclusionPattern>
+        <exclusionRegex>(MD5SUM|SHA256SUM)</exclusionRegex>
       </configuration>
     </containerDescriptorHandler>
     <containerDescriptorHandler>
-      <handlerName>message-digest</handlerName>
+      <handlerName>message-digest-sha-2-256</handlerName>
       <configuration>
-        <messageDigest>SHA-256</messageDigest>
         <checksumFile>SHA256SUM</checksumFile>
-        <exclusionPattern>(MD5SUM|SHA256SUM)</exclusionPattern>
+        <exclusionRegex>(MD5SUM|SHA256SUM)</exclusionRegex>
       </configuration>
     </containerDescriptorHandler>
   </containerDescriptorHandlers>
