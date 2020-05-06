@@ -5,3 +5,11 @@ matrix:
   - jdk: openjdk10
   - jdk: openjdk11
   - jdk: openjdk12
+
+cache:
+    directories:
+    - $HOME/.m2
+
+after_success:
+  - mvn clean test jacoco:report
+  - CODACY_PROJECT_TOKEN=${coveralls_token} bash <(curl -Ls https://coverage.codacy.com/get.sh)
