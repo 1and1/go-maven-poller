@@ -14,4 +14,18 @@
     <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
     <vulnerabilityName>Regex in its jQuery.htmlPrefilter  sometimes may introduce XSS</vulnerabilityName>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jquery.js
+   ]]></notes>
+    <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+    <cve>CVE-2020-11022</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jquery.js
+   ]]></notes>
+    <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+    <cve>CVE-2020-11023</cve>
+  </suppress>
 </suppressions>
