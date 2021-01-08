@@ -4,6 +4,7 @@ shared: &shared
   environment:
     JVM_OPTS: -Xmx1g
     TERM: dumb
+    GOVERSION: 17.4.0
   steps:
     - checkout
 
@@ -21,7 +22,7 @@ shared: &shared
 
     - run:
         name: Maven Build and test
-        command: mvn clean package
+        command: mvn -Dgo.version=${GOVERSION} clean package
 
     - store_artifacts:
         path: ./target/go-maven-poller-plugin.jar
@@ -46,6 +47,14 @@ jobs:
   jdk15:
     docker:
       - image: circleci/openjdk:15-jdk-buster
+    <<: *shared
+  gocd_api_20_10_0:
+    docker:
+      - image: circleci/openjdk:11-jdk-buster
+    environment:
+      JVM_OPTS: -Xmx1g
+      TERM: dumb
+      GOVERSION: 20.10.0
     <<: *shared
   coverage:
     docker:
@@ -78,3 +87,4 @@ workflows:
       - jdk14
       - jdk15
       - coverage
+      - gocd_api_20_10_0
