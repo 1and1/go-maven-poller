@@ -95,8 +95,10 @@ jobs:
           at: /tmp/workspace
 
       - run:
-          name: Upload latest to JFrog BinTray
-          command: curl -T /tmp/workspace/go-maven-poller-plugin.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar
+          name: Upload and publish latest to JFrog BinTray
+          command: |
+            curl -T /tmp/workspace/go-maven-poller-plugin.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar
+            curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/publish
 
 workflows:
   version: 2
