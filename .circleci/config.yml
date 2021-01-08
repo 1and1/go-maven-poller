@@ -154,7 +154,7 @@ jobs:
           name: Wait and get the plugin info
           command: |
             sleep 60
-            curl curl  -H 'Accept: application/vnd.go.cd.v7+json' http://localhost:8153/go/api/admin/plugin_info/maven-repo > plugin_info.json
+            curl  -H 'Accept: application/vnd.go.cd.v7+json' http://localhost:8153/go/api/admin/plugin_info/maven-repo > plugin_info.json
 
       - run:
           name: Kill the docker container
