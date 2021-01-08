@@ -167,12 +167,11 @@ jobs:
       - run:
           name: Test the JSON document for expected values
           command: |
-            if ! grep ARTIFACT_ID plugin_info.json ; then exit 1; fi
-            if ! grep PACKAGING plugin_info.json ; then exit 1; fi
-            if ! grep POLL_VERSION_FROM plugin_info.json ; then exit 1; fi
-            if ! grep POLL_VERSION_TO plugin_info.json ; then exit 1; fi
-            if ! grep REPO_URL plugin_info.json ; then exit 1; fi
-            if ! grep /go-working-dir/plugins/external/go-maven-poller.jar plugin_info.json ; then exit 1; fi
+            grep ARTIFACT_ID plugin_info.json || exit 1
+            grep PACKAGING plugin_info.json || exit 1
+            grep POLL_VERSION_TO plugin_info.json || exit 1
+            grep REPO_URL plugin_info.json || exit 1
+            grep /go-working-dir/plugins/external/go-maven-poller.jar plugin_info.json || exit 1
 
 workflows:
   version: 2
