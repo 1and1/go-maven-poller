@@ -6,18 +6,23 @@ shared: &shared
     TERM: dumb
   steps:
     - checkout
+
     - restore_cache:
         key: maven-{{ checksum "pom.xml" }}
+
     - run:
         name: Maven Get Dependencies
         command: mvn dependency:go-offline --fail-never
+
     - save_cache:
         paths:
           - ~/.m2
         key: maven-{{ checksum "pom.xml" }}
+
     - run:
         name: Maven Build and test
         command: mvn clean package
+
     - store_artifacts:
         path: ./target/go-maven-poller-plugin.jar
 
@@ -72,3 +77,4 @@ workflows:
       - jdk13
       - jdk14
       - jdk15
+      - coverage
