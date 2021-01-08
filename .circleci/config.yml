@@ -103,9 +103,22 @@ jobs:
           at: /tmp/workspace
 
       - run:
-          name: Upload and publish latest to JFrog BinTray
+          name: Calc checksums
+          working_directory: /tmp/workspace
           command: |
-            curl -T /tmp/workspace/go-maven-poller-plugin.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar
+            md5sum -b go-maven-poller-plugin.jar > go-maven-poller-plugin.jar.md5
+            sha256sum -b go-maven-poller-plugin.jar > go-maven-poller-plugin.jar.sha256
+
+      - run:
+          name: Upload and publish latest to JFrog BinTray
+          working_directory: /tmp/workspace
+          command: |
+            curl -X DELETE -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar
+            curl -X DELETE -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar.md5
+            curl -X DELETE -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar.sha256
+            curl -T go-maven-poller-plugin.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar
+            curl -T go-maven-poller-plugin.jar.md5 -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar.md5
+            curl -T go-maven-poller-plugin.jar.sha256 -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar.sha256
             curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/publish
 
   upload_jfrog_release:
