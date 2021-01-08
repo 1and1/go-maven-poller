@@ -153,5 +153,5 @@ workflows:
           filters:
             tags:
               only: /^go-maven-poller-[0-9.]*$/
-          branches:
+            branches:
               ignore: /.*/
