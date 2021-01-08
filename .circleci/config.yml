@@ -144,8 +144,8 @@ jobs:
           command: |
             VERSION=$(echo "<< pipeline.git.tag >>" | cut -d"-" -f4)
             cp go-maven-poller-plugin.jar go-maven-poller-plugin-${VERSION}.jar
-            md5sum -b go-maven-poller-plugin-latest.jar > go-maven-poller-plugin-${VERSION}.jar.md5
-            sha256sum -b go-maven-poller-plugin-latest.jar > go-maven-poller-plugin-${VERSION}.sha256
+            md5sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSION}.jar.md5
+            sha256sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSION}.sha256
 
       - run:
           name: Upload and publish git-tag to JFrog BinTray
