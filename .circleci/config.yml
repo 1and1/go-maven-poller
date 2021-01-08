@@ -90,7 +90,7 @@ jobs:
           name: Codacy Coverage upload
           command: bash <(curl -Ls https://coverage.codacy.com/get.sh)
 
-  upload_jfrog:
+  upload_jfrog_latest:
     docker:
       - image: cimg/base:2020.01
     working_directory: ~/repo
@@ -108,6 +108,24 @@ jobs:
             curl -T /tmp/workspace/go-maven-poller-plugin.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin.jar
             curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/publish
 
+  upload_jfrog_release:
+    docker:
+      - image: cimg/base:2020.01
+    working_directory: ~/repo
+    environment:
+      JVM_OPTS: -Xmx1g
+      TERM: dumb
+    steps:
+      - attach_workspace:
+        # Must be absolute path or relative path from working_directory
+          at: /tmp/workspace
+
+      - run:
+          name: Upload and publish git-tag to JFrog BinTray
+          command: |
+            curl -T /tmp/workspace/go-maven-poller-plugin.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin.jar
+            curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/publish
+
 workflows:
   version: 2
   work:
@@ -119,6 +137,15 @@ workflows:
       - jdk15
       - coverage
       - gocd_api_20_10_0
-      - upload_jfrog:
+      - upload_jfrog_latest:
           requires:
             - jdk8
+          filters:
+            branches:
+              only: /^master$/
+      - upload_jfrog_release:
+          requires:
+            - jdk8
+          filters:
+            tags:
+              only: /^go-maven-poller-[0-9.]*$/
