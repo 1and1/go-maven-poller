@@ -98,27 +98,23 @@ jobs:
       JVM_OPTS: -Xmx1g
       TERM: dumb
     steps:
+      - checkout
+
       - attach_workspace:
         # Must be absolute path or relative path from working_directory
           at: /tmp/workspace
 
       - run:
-          name: Calc checksums
+          name: Delete latest checksums
           working_directory: /tmp/workspace
           command: |
-            cp go-maven-poller-plugin.jar go-maven-poller-plugin-latest.jar
-            md5sum -b go-maven-poller-plugin-latest.jar > go-maven-poller-plugin-latest.jar.md5
-            sha1sum -b go-maven-poller-plugin-latest.jar > go-maven-poller-plugin-latest.jar.sha
+            ~/repo/.circleci/bintray-delete-version.sh latest
 
       - run:
           name: Upload and publish latest to JFrog BinTray
           working_directory: /tmp/workspace
           command: |
-            curl -X DELETE -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/packages/sfuhrm/go-maven-poller/plugin/versions/latest
-            curl -T go-maven-poller-plugin-latest.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin-latest.jar
-            curl -T go-maven-poller-plugin-latest.jar.md5 -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin-latest.jar.md5
-            curl -T go-maven-poller-plugin-latest.jar.sha -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin-latest.jar.sha
-            curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/publish
+            ~/repo/.circleci/bintray-upload-version.sh latest
 
       - store_artifacts:
           path: /tmp/workspace/go-maven-poller-plugin.jar.md5
@@ -134,29 +130,17 @@ jobs:
       JVM_OPTS: -Xmx1g
       TERM: dumb
     steps:
+      - checkout
+
       - attach_workspace:
         # Must be absolute path or relative path from working_directory
           at: /tmp/workspace
 
       - run:
-          name: Calc checksums
+          name: Upload and publish latest to JFrog BinTray
           working_directory: /tmp/workspace
           command: |
-            VERSION=$(echo "<< pipeline.git.tag >>" | cut -d"-" -f4)
-            cp go-maven-poller-plugin.jar go-maven-poller-plugin-${VERSION}.jar
-            md5sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSION}.jar.md5
-            sha1sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSION}.jar.sha
-
-      - run:
-          name: Upload and publish git-tag to JFrog BinTray
-          command: |
-            if [ "<< pipeline.git.tag >>" != "" ]; then
-              VERSION=$(echo "<< pipeline.git.tag >>" | cut -d"-" -f4)
-              curl -T /tmp/workspace/go-maven-poller-plugin-${VERSION}.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin-${VERSION}.jar;
-              curl -T /tmp/workspace/go-maven-poller-plugin-${VERSION}.jar.md5 -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin-${VERSION}.jar.md5;
-              curl -T /tmp/workspace/go-maven-poller-plugin-${VERSION}.jar.sha -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin-${VERSION}.jar.sha;
-              curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/publish;
-            fi
+            ~/repo/.circleci/bintray-upload-version.sh $(echo "<< pipeline.git.tag >>" | cut -d"-" -f4)
 
 workflows:
   version: 2
