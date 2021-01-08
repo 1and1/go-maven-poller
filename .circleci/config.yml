@@ -108,7 +108,7 @@ jobs:
           command: |
             cp go-maven-poller-plugin.jar go-maven-poller-plugin-latest.jar
             md5sum -b go-maven-poller-plugin-latest.jar > go-maven-poller-plugin-latest.jar.md5
-            sha256sum -b go-maven-poller-plugin-latest.jar > go-maven-poller-plugin-latest.jar.sha256
+            sha1sum -b go-maven-poller-plugin-latest.jar > go-maven-poller-plugin-latest.jar.sha
 
       - run:
           name: Upload and publish latest to JFrog BinTray
@@ -117,7 +117,7 @@ jobs:
             curl -X DELETE -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/packages/sfuhrm/go-maven-poller/plugin/versions/latest
             curl -T go-maven-poller-plugin-latest.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin-latest.jar
             curl -T go-maven-poller-plugin-latest.jar.md5 -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin-latest.jar.md5
-            curl -T go-maven-poller-plugin-latest.jar.sha256 -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin-latest.jar.sha256
+            curl -T go-maven-poller-plugin-latest.jar.sha -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/go-maven-poller-plugin-latest.jar.sha
             curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/latest/publish
 
       - store_artifacts:
@@ -145,7 +145,7 @@ jobs:
             VERSION=$(echo "<< pipeline.git.tag >>" | cut -d"-" -f4)
             cp go-maven-poller-plugin.jar go-maven-poller-plugin-${VERSION}.jar
             md5sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSION}.jar.md5
-            sha256sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSION}.sha256
+            sha1sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSION}.jar.sha
 
       - run:
           name: Upload and publish git-tag to JFrog BinTray
@@ -154,7 +154,7 @@ jobs:
               VERSION=$(echo "<< pipeline.git.tag >>" | cut -d"-" -f4)
               curl -T /tmp/workspace/go-maven-poller-plugin-${VERSION}.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin-${VERSION}.jar;
               curl -T /tmp/workspace/go-maven-poller-plugin-${VERSION}.jar.md5 -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin-${VERSION}.jar.md5;
-              curl -T /tmp/workspace/go-maven-poller-plugin-${VERSION}.jar.sha256 -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin-${VERSION}.jar.sha256;
+              curl -T /tmp/workspace/go-maven-poller-plugin-${VERSION}.jar.sha -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin-${VERSION}.jar.sha;
               curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/publish;
             fi
 
