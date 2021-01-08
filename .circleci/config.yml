@@ -18,6 +18,9 @@ shared: &shared
     - run:
         name: Maven Build and test
         command: mvn clean package
+    - store_artifacts:
+        path: ./target/go-maven-poller-plugin.jar
+
 jobs:
   jdk8:
     docker:
