@@ -122,6 +122,9 @@ jobs:
       - store_artifacts:
           path: /tmp/workspace/go-maven-poller-plugin.jar.md5
 
+      - store_artifacts:
+          path: /tmp/workspace/go-maven-poller-plugin.jar.sha256
+
   upload_jfrog_release:
     docker:
       - image: cimg/base:2020.01
