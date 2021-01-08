@@ -12,6 +12,14 @@ shared: &shared
         key: maven-{{ checksum "pom.xml" }}
 
     - run:
+        name: Show coords
+        command: |
+          echo pipeline.id << pipeline.id >>
+          echo pipeline.number << pipeline.number >>
+          echo pipeline.git.tag << pipeline.git.tag >>
+          echo pipeline.git.revision << pipeline.git.revision >>
+
+    - run:
         name: Maven Get Dependencies
         command: mvn dependency:go-offline --fail-never
 
