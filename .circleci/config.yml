@@ -84,7 +84,7 @@ jobs:
 
   upload_jfrog:
     docker:
-      - image: circleci/openjdk:11-jdk-buster
+      - image: cimg/base:2020.01
     working_directory: ~/repo
     environment:
       JVM_OPTS: -Xmx1g
