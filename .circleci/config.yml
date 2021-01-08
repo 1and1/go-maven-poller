@@ -123,8 +123,10 @@ jobs:
       - run:
           name: Upload and publish git-tag to JFrog BinTray
           command: |
-            curl -T /tmp/workspace/go-maven-poller-plugin.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin.jar
-            curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/publish
+            if [ "<< pipeline.git.tag >>" != "" ]; then
+              curl -T /tmp/workspace/go-maven-poller-plugin.jar -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/go-maven-poller-plugin.jar;
+              curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/<< pipeline.git.tag >>/publish;
+            fi
 
 workflows:
   version: 2
@@ -141,6 +143,8 @@ workflows:
           requires:
             - jdk8
           filters:
+            tags:
+              ignore: /.*/
             branches:
               only: /^master$/
       - upload_jfrog_release:
@@ -149,3 +153,5 @@ workflows:
           filters:
             tags:
               only: /^go-maven-poller-[0-9.]*$/
+          branches:
+              ignore: /.*/
