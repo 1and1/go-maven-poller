@@ -22,6 +22,6 @@ https://api.bintray.com/packages/sfuhrm/go-maven-poller/plugin/versions/${VERSIO
 {
   "desc": "GoCD Maven Poller Plugin Version ${VERSION}",
   "vcs_tag": "${VERSION}",
-  "released": "$(date --iso-8601=seconds)"
+  "released": "$(date --iso-8601=ns)"
 }
 EOF
