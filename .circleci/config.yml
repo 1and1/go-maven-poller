@@ -1,4 +1,5 @@
 version: 2.1
+# Generic shared rule to build with Maven.
 shared: &shared
   working_directory: ~/repo
   environment:
@@ -41,26 +42,38 @@ shared: &shared
         path: ./target/go-maven-poller-plugin.jar
 
 jobs:
+  # Builds with JDK 8.
   jdk8:
     docker:
       - image: circleci/openjdk:8-jdk-buster
     <<: *shared
+
+  # Builds with JDK 11.
   jdk11:
     docker:
       - image: circleci/openjdk:11-jdk-buster
     <<: *shared
+
+  # Builds with JDK 13.
   jdk13:
     docker:
       - image: circleci/openjdk:13-jdk-buster
     <<: *shared
+
+  # Builds with JDK 14.
   jdk14:
     docker:
       - image: circleci/openjdk:14-jdk-buster
     <<: *shared
+
+  # Builds with JDK 15.
   jdk15:
     docker:
       - image: circleci/openjdk:15-jdk-buster
     <<: *shared
+
+  # Builds with a newer GoCD API jar to check
+  # build time breaks.
   gocd_api_20_10_0:
     docker:
       - image: circleci/openjdk:11-jdk-buster
@@ -69,6 +82,8 @@ jobs:
       TERM: dumb
       GOVERSION: 20.10.0
     <<: *shared
+
+  # Uploads the test code coverage information to Codacy.
   coverage:
     docker:
       - image: circleci/openjdk:11-jdk-buster
@@ -90,6 +105,7 @@ jobs:
           name: Codacy Coverage upload
           command: bash <(curl -Ls https://coverage.codacy.com/get.sh)
 
+  # Uploads a latest build to JFROGs BinTray.
   upload_jfrog_latest:
     docker:
       - image: cimg/base:2020.01
@@ -122,6 +138,7 @@ jobs:
       - store_artifacts:
           path: /tmp/workspace/go-maven-poller-plugin.jar.sha256
 
+  # Uploads a release tag to JFROGs BinTray.
   upload_jfrog_release:
     docker:
       - image: cimg/base:2020.01
@@ -142,6 +159,9 @@ jobs:
           command: |
             ~/repo/.circleci/bintray-upload-version.sh $(echo "<< pipeline.git.tag >>" | cut -d"-" -f4)
 
+  # Test the plugin jar with a gocd-server docker container.
+  # Reads the plugin info via REST in JSON and checks some
+  # mandatory fields.
   test_gocd_server_container:
     machine: true
     steps:
