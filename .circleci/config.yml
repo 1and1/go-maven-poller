@@ -178,8 +178,10 @@ jobs:
               # busy loop sleep
               sleep 1
               echo -n "."
-              # download API, break if success
-              curl > plugin_info.json -H 'Accept: application/vnd.go.cd.v7+json' http://localhost:8153/go/api/admin/plugin_info/maven-repo && break
+              # download API
+              curl > plugin_info.json -H 'Accept: application/vnd.go.cd.v7+json' http://localhost:8153/go/api/admin/plugin_info/maven-repo
+              # break if success
+              grep ARTIFACT_ID plugin_info.json && break
             done
 
       - run:
