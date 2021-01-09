@@ -1,6 +1,6 @@
 version: 2.1
 # Generic shared rule to build with Maven.
-shared: &shared
+shared_maven: &shared_maven
   working_directory: ~/repo
   environment:
     JVM_OPTS: -Xmx1g
@@ -47,31 +47,31 @@ jobs:
   jdk8:
     docker:
       - image: circleci/openjdk:8-jdk-buster
-    <<: *shared
+    <<: *shared_maven
 
   # Builds with JDK 11.
   jdk11:
     docker:
       - image: circleci/openjdk:11-jdk-buster
-    <<: *shared
+    <<: *shared_maven
 
   # Builds with JDK 13.
   jdk13:
     docker:
       - image: circleci/openjdk:13-jdk-buster
-    <<: *shared
+    <<: *shared_maven
 
   # Builds with JDK 14.
   jdk14:
     docker:
       - image: circleci/openjdk:14-jdk-buster
-    <<: *shared
+    <<: *shared_maven
 
   # Builds with JDK 15.
   jdk15:
     docker:
       - image: circleci/openjdk:15-jdk-buster
-    <<: *shared
+    <<: *shared_maven
 
   # Builds with a newer GoCD API jar to check
   # build time breaks.
@@ -82,7 +82,7 @@ jobs:
       JVM_OPTS: -Xmx1g
       TERM: dumb
       GOVERSION: 20.10.0
-    <<: *shared
+    <<: *shared_maven
 
   # Uploads the test code coverage information to Codacy.
   coverage:
