@@ -94,7 +94,7 @@ shared_gocd_server_integration: &shared_gocd_server_integration
           grep PACKAGING plugin_info.json || exit 1
           grep POLL_VERSION_TO plugin_info.json || exit 1
           grep REPO_URL plugin_info.json || exit 1
-          grep /go-working-dir/plugins/external/go-maven-poller.jar \
+          grep /go-working-dir/plugins/external/go-maven-poller-plugin.jar \
           plugin_info.json || exit 1
 
 jobs:
