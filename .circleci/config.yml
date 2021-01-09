@@ -68,7 +68,7 @@ shared_gocd_server_integration: &shared_gocd_server_integration
             echo -n "."
             # download API
             curl > plugin_info.json --silent \
-            -H 'Accept: ${ACCEPT}' \
+            -H "Accept: ${ACCEPT}" \
             http://localhost:8153/go/api/admin/plugin_info/maven-repo \
             || continue
             # break if success
