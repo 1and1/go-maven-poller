@@ -37,6 +37,7 @@ shared: &shared
         root: ./target
         paths:
           - go-maven-poller-plugin.jar
+          - .
 
     - store_artifacts:
         path: ./target/go-maven-poller-plugin.jar
