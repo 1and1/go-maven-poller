@@ -61,6 +61,7 @@ shared_gocd_server_integration: &shared_gocd_server_integration
     - run:
         name: Wait and get the plugin info via API
         command: |
+          echo "Accept: ${ACCEPT} for GoCD version ${GOVERSION}"
           for (( i = 0; i < 180 ; i++ )); do
             # busy loop sleep
             sleep 1
@@ -215,6 +216,12 @@ jobs:
       ACCEPT: application/vnd.go.cd.v7+json
     <<: *shared_gocd_server_integration
 
+  gocd_server_integration_19_1_0:
+    environment:
+      GOVERSION: v19.1.0
+      ACCEPT: application/vnd.go.cd.v4+json
+    <<: *shared_gocd_server_integration
+
   gocd_server_integration_18_1_0:
     environment:
       GOVERSION: v18.1.0
@@ -226,6 +233,13 @@ jobs:
       GOVERSION: v17.6.0
       ACCEPT: application/vnd.go.cd.v2+json
     <<: *shared_gocd_server_integration
+
+filter_only_master: &filter_only_master
+  filters:
+    tags:
+      ignore: /.*/
+    branches:
+      only: /^master$/
 
 workflows:
   version: 2
@@ -242,13 +256,9 @@ workflows:
       - coverage
       - gocd_api_20_10_0
       - upload_jfrog_latest:
+          <<: *filter_only_master
           requires:
             - jdk8
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              only: /^master$/
       - upload_jfrog_release:
           requires:
             - jdk8
@@ -258,26 +268,18 @@ workflows:
             branches:
               ignore: /.*/
       - gocd_server_integration_17_6_0:
+          <<: *filter_only_master
           requires:
             - upload_jfrog_latest
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              only: /^master$/
       - gocd_server_integration_18_1_0:
+          <<: *filter_only_master
           requires:
             - upload_jfrog_latest
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              only: /^master$/
+      - gocd_server_integration_19_1_0:
+          <<: *filter_only_master
+          requires:
+            - upload_jfrog_latest
       - gocd_server_integration_20_10_0:
+          <<: *filter_only_master
           requires:
             - upload_jfrog_latest
-          filters:
-            tags:
-              ignore: /.*/
-            branches:
-              only: /^master$/
