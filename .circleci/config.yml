@@ -54,10 +54,10 @@ shared_gocd_server_integration: &shared_gocd_server_integration
         command: |
           mkdir external
           curl \
-            "https://bintray.com/sfuhrm/go-maven-poller/download_file?file_path=go-maven-poller-plugin-latest.jar"
+            "https://bintray.com/sfuhrm/go-maven-poller/download_file?file_path=go-maven-poller-plugin-latest.jar" \
             > external/go-maven-poller-plugin.jar
           docker run --name gocd-server \
-           -v ${PWD}/external:/godata/plugins/external
+           -v ${PWD}/external:/godata/plugins/external \
            -d -p8153:8153 \
            gocd/gocd-server:${GOVERSION}
 
