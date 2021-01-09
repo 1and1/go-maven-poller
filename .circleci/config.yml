@@ -73,6 +73,7 @@ shared_gocd_server_integration: &shared_gocd_server_integration
 
     - store_artifacts:
         path: ./plugin_info.json
+
      - run:
         name: Test the JSON document for expected values
         command: |
