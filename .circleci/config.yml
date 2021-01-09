@@ -67,7 +67,7 @@ shared_gocd_server_integration: &shared_gocd_server_integration
             echo -n "."
             # download API
             curl > plugin_info.json --silent \
-            -H 'Accept: application/vnd.go.cd.v7+json' \
+            -H 'Accept: ${ACCEPT}' \
             http://localhost:8153/go/api/admin/plugin_info/maven-repo \
             || continue
             # break if success
@@ -212,16 +212,19 @@ jobs:
   gocd_server_integration_20_10_0:
     environment:
       GOVERSION: v20.10.0
+      ACCEPT: application/vnd.go.cd.v7+json
     <<: *shared_gocd_server_integration
 
   gocd_server_integration_18_1_0:
     environment:
       GOVERSION: v18.1.0
+      ACCEPT: application/vnd.go.cd.v3+json
     <<: *shared_gocd_server_integration
 
   gocd_server_integration_17_6_0:
     environment:
       GOVERSION: v17.6.0
+      ACCEPT: application/vnd.go.cd.v2+json
     <<: *shared_gocd_server_integration
 
 workflows:
