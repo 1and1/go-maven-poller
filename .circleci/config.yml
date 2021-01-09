@@ -58,7 +58,7 @@ shared_gocd_server_integration: &shared_gocd_server_integration
           mkdir /tmp/workspace/external
           cp /tmp/workspace/go-maven-poller-plugin.jar /tmp/workspace/external
           docker run --name gocd-server \
-           -v /tmp/workspace/external:/godata/plugins/external \
+           -v /tmp/workspace/external:${GOPLUGINSEXTERNAL} \
            -d -p8153:8153 \
            gocd/gocd-server:${GOVERSION}
 
@@ -216,24 +216,28 @@ jobs:
     environment:
       GOVERSION: v20.10.0
       ACCEPT: application/vnd.go.cd.v7+json
+      GOPLUGINSEXTERNAL: /go-working-dir/plugins/external
     <<: *shared_gocd_server_integration
 
   gocd_server_integration_19_1_0:
     environment:
       GOVERSION: v19.1.0
       ACCEPT: application/vnd.go.cd.v4+json
+      GOPLUGINSEXTERNAL: /godata/plugins/external
     <<: *shared_gocd_server_integration
 
   gocd_server_integration_18_1_0:
     environment:
       GOVERSION: v18.1.0
       ACCEPT: application/vnd.go.cd.v3+json
+      GOPLUGINSEXTERNAL: /godata/plugins/external
     <<: *shared_gocd_server_integration
 
   gocd_server_integration_17_6_0:
     environment:
       GOVERSION: v17.6.0
       ACCEPT: application/vnd.go.cd.v2+json
+      GOPLUGINSEXTERNAL: /godata/plugins/external
     <<: *shared_gocd_server_integration
 
 filter_only_master: &filter_only_master
