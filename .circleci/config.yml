@@ -174,12 +174,12 @@ jobs:
       - run:
           name: Wait and get the plugin info via API
           command: |
-            for (( i = 0; i < 60 ; i++ )); do
+            for (( i = 0; i < 180 ; i++ )); do
               # busy loop sleep
               sleep 1
               echo -n "."
               # download API
-              curl > plugin_info.json -H 'Accept: application/vnd.go.cd.v7+json' http://localhost:8153/go/api/admin/plugin_info/maven-repo || continue
+              curl > plugin_info.json --silent -H 'Accept: application/vnd.go.cd.v7+json' http://localhost:8153/go/api/admin/plugin_info/maven-repo || continue
               # break if success
               grep ARTIFACT_ID plugin_info.json && break
             done
