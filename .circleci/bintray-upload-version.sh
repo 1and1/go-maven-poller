@@ -11,7 +11,7 @@ md5sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSI
 sha1sum -b go-maven-poller-plugin-${VERSION}.jar > go-maven-poller-plugin-${VERSION}.jar.sha
 for FILE in go-maven-poller-plugin-${VERSION}.jar go-maven-poller-plugin-${VERSION}.jar.md5 go-maven-poller-plugin-${VERSION}.jar.sha; do
     curl -T ${FILE} -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/${VERSION}/${FILE}
-done    
+done
 curl -X POST -u${JFROG_USER}:${JFROG_APIKEY} https://api.bintray.com/content/sfuhrm/go-maven-poller/plugin/${VERSION}/publish
 
 
