@@ -17,7 +17,7 @@ public class RepositoryResponse {
     @Getter private final String responseBody;
 
     /**
-     * Constructs a Maven repository response by the specified repsonse body.
+     * Constructs a Maven repository response by the specified response body.
      *
      * @param responseBody the response body
      */

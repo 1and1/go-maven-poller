@@ -127,11 +127,11 @@ public class RepositoryConnector {
                         .setRedirectStrategy(new DefaultRedirectStrategy());
 
         if (repoConfig.getUsername() != null) {
-            final Credentials creds = new UsernamePasswordCredentials(repoConfig.getUsername(), repoConfig.getPassword().toCharArray());
-            final BasicCredentialsProvider credsProvider = new BasicCredentialsProvider();
+            final Credentials credentials = new UsernamePasswordCredentials(repoConfig.getUsername(), repoConfig.getPassword().toCharArray());
+            final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             final URI repoUri = repoConfig.getRepoUrlAsURI();
-            credsProvider.setCredentials(new AuthScope(repoUri.getHost(), repoUri.getPort()), creds);
-            httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
+            credentialsProvider.setCredentials(new AuthScope(repoUri.getHost(), repoUri.getPort()), credentials);
+            httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
         return httpClientBuilder.build();
     }

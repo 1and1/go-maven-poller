@@ -29,7 +29,7 @@ public class RepositoryClient {
     }
 
     /*
-     * Dependening on, if there is special latest version xml tag for latest version specified for current repository
+     * Depending on, if there is special latest version xml tag for latest version specified for current repository
      * we deliver either the value of this tag or the highest from all available versions.
      */
     public MavenRevision getLatest() {

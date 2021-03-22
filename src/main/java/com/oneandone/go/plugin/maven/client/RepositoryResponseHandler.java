@@ -196,8 +196,8 @@ class RepositoryResponseHandler {
             final String timestamp = lastUpdatedXpath.evaluate(metaData, XPathConstants.STRING).toString();
             if (timestamp.matches("[0-9]{14}")) {
                 LOGGER.info("lastUpdated set to '" + timestamp + "'");
-                final LocalDateTime localdate = LocalDateTime.parse(timestamp, DATE_FORMAT);
-                return Optional.of(ZonedDateTime.of(localdate, timeZone));
+                final LocalDateTime localDateTime = LocalDateTime.parse(timestamp, DATE_FORMAT);
+                return Optional.of(ZonedDateTime.of(localDateTime, timeZone));
             } else {
                 LOGGER.warn("lastUpdated '" + timestamp + "' does not match the expected date pattern '" + DATE_FORMAT + "'");
             }
