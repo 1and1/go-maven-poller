@@ -310,6 +310,7 @@ workflows:
       - jdk13
       - jdk14
       - jdk15
+      - jdk16
       - coverage
       - gocd_api_20_10_0
       - upload_jfrog_latest:
