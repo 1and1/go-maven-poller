@@ -175,6 +175,12 @@ jobs:
       - image: circleci/openjdk:15-jdk-buster
     <<: *shared_maven
 
+  # Builds with JDK 16.
+  jdk16:
+    docker:
+      - image: circleci/openjdk:16-jdk-buster
+    <<: *shared_maven
+
   # Builds with a newer GoCD API jar to check
   # build time breaks.
   gocd_api_20_10_0:
