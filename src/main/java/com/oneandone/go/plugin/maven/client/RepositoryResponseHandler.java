@@ -39,22 +39,22 @@ class RepositoryResponseHandler {
     private final RepositoryResponse repoResponse;
 
     /** The document builder. */
-    private DocumentBuilder documentBuilder;
+    private final DocumentBuilder documentBuilder;
 
     /** The metadata document or {@code null}. */
     private Document metaData;
 
     /** The XPath to the versions. */
-    private XPathExpression versionsXPath;
+    private final XPathExpression versionsXPath;
 
     /** The XPath to the SNAPSHOT timestamp. */
-    private XPathExpression timestampXpath;
+    private final XPathExpression timestampXpath;
 
     /** The XPath to the SNAPSHOT build number. */
-    private XPathExpression buildNumberXpath;
+    private final XPathExpression buildNumberXpath;
 
     /** The XPath to the timestamp of the last update. */
-    private XPathExpression lastUpdatedXpath;
+    private final XPathExpression lastUpdatedXpath;
 
     /**
      * Constructs a new response handler.

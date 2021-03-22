@@ -28,7 +28,7 @@ public class RepositoryResponseHandlerTest {
     }
 
     @Test
-    public void testCannotHandle() throws Exception {
+    public void testCannotHandle() {
         final RepositoryResponseHandler repositoryResponseHandler = new RepositoryResponseHandler(new RepositoryResponse("foobar"));
         assertFalse(repositoryResponseHandler.canHandle());
     }
