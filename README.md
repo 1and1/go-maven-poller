@@ -2,7 +2,7 @@ Go Maven Poller
 ===================
 
 [![Circle CI Status](https://img.shields.io/circleci/build/github/1and1/go-maven-poller?style=plastic)](https://app.circleci.com/pipelines/github/1and1/go-maven-poller)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/go-maven-poller/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/go-maven-poller) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/go-maven-poller/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/go-maven-poller)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/3384a8a750e34feaadfa5647eff4f3c3)](https://www.codacy.com/manual/Stephan-FuhrmannOrganization/go-maven-poller?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1and1/go-maven-poller&amp;utm_campaign=Badge_Grade)
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/3384a8a750e34feaadfa5647eff4f3c3)](https://www.codacy.com/manual/Stephan-FuhrmannOrganization/go-maven-poller?utm_source=github.com&utm_medium=referral&utm_content=1and1/go-maven-poller&utm_campaign=Badge_Coverage)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
