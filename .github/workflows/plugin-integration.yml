@@ -18,11 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goversion: []
-        accept: []
+        goversion: [ "v19.1.0" ]
+        accept: [ "application/vnd.go.cd.v4+json" ]
         include:
-          - goversion: v19.1.0
-            accept: application/vnd.go.cd.v4+json
           - goversion: v18.1.0
             accept: application/vnd.go.cd.v3+json
           - goversion: v17.6.0
