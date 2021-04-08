@@ -23,3 +23,7 @@ jobs:
         java-version: ${{ matrix.java }}
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - uses: actions/upload-artifact@v2
+      with:
+        name: plugin-jdk-${{ matrix.java }}
+        path: target/go-maven-poller-plugin.jar
