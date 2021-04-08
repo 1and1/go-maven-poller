@@ -15,6 +15,22 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 8
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+    - uses: actions/upload-artifact@v2
+      with:
+        name: plugin
+        path: target/go-maven-poller-plugin.jar
+
+  integration:
+    needs: build
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         goversion: [ "v19.1.0" ]
@@ -27,17 +43,14 @@ jobs:
           - goversion: v17.6.0
             accept: application/vnd.go.cd.v2+json
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 8
-      uses: actions/setup-java@v1
+    - name: Download the plugin
+      uses: actions/download-artifact@v2
       with:
-        java-version: 8
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml
+        name: plugin
     - name: Start a docker container
       run: |
         mkdir -p /tmp/workspace/external
-        cp target/go-maven-poller-plugin.jar /tmp/workspace/external
+        cp go-maven-poller-plugin.jar /tmp/workspace/external
         docker run --name gocd-server \
          -v /tmp/workspace/external:/godata/plugins/external \
          -d -p8153:8153 \
