@@ -5,6 +5,7 @@ name: Integration Test
 
 env:
  GOVERSION: v19.1.0
+ ACCEPT: application/vnd.go.cd.v4+json
 
 on:
   push:
