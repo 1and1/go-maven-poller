@@ -74,6 +74,7 @@ jobs:
         name: output-json-${{ matrix.goversion }}
         path: plugin_info.json
     - name: Kill the docker container
+      continue-on-error: true
       run: |
         docker container kill gocd-server
     - name: Show container logs
@@ -119,6 +120,7 @@ jobs:
         name: output-json-${{ matrix.goversion }}
         path: plugin_info.json
     - name: Kill the docker containers
+      continue-on-error: true
       run: |
         docker container kill gocd-server
         docker container kill nginx
