@@ -24,6 +24,8 @@ jobs:
         goversion: [ "v19.1.0" ]
         accept: [ "application/vnd.go.cd.v4+json" ]
         include:
+          - goversion: v20.10.0
+            accept: application/vnd.go.cd.v7+json
           - goversion: v18.1.0
             accept: application/vnd.go.cd.v3+json
           - goversion: v17.6.0
