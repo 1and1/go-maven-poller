@@ -64,10 +64,8 @@ jobs:
           grep ARTIFACT_ID plugin_info.json && break
         done
     - uses: actions/upload-artifact@v2
-      env:
-        GOVERSION: ${{ matrix.goversion }}
       with:
-        name: output-json-${GOVERSION}
+        name: output-json-${{ matrix.goversion }}
         path: plugin_info.json
     - name: Kill the docker container
       run: |
