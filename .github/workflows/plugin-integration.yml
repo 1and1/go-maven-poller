@@ -16,6 +16,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goversion: []
+        accept: []
+        include:
+          - goversion: v19.1.0
+            accept: application/vnd.go.cd.v4+json
+          - goversion: v18.1.0
+            accept: application/vnd.go.cd.v3+json
+          - goversion: v17.6.0
+            accept: application/vnd.go.cd.v2+json
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 8
@@ -25,6 +36,8 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Start a docker container
+      env:
+        GOVERSION: ${{ matrix.goversion }}
       run: |
         mkdir -p /tmp/workspace/external
         cp target/go-maven-poller-plugin.jar /tmp/workspace/external
@@ -33,8 +46,10 @@ jobs:
          -d -p8153:8153 \
          gocd/gocd-server:${GOVERSION}
     - name: Wait and get the plugin info via API
+      env:
+        ACCEPT: ${{ matrix.accept }}
       run: |
-        echo "Accept: ${ACCEPT} for GoCD version ${GOVERSION}"
+        echo "Accept: ${ACCEPT} for GoCD"
         for (( i = 0; i < 180 ; i++ )); do
           # busy loop sleep
           sleep 1
