@@ -28,7 +28,8 @@ jobs:
         name: plugin
         path: target/go-maven-poller-plugin.jar
 
-  integration:
+  # integration test by mounting the plugin via docker
+  integration_mount:
     needs: build
     runs-on: ubuntu-latest
     strategy:
@@ -36,8 +37,6 @@ jobs:
         goversion: [ "v19.1.0" ]
         accept: [ "application/vnd.go.cd.v4+json" ]
         include:
-          - goversion: v20.10.0
-            accept: application/vnd.go.cd.v7+json
           - goversion: v18.1.0
             accept: application/vnd.go.cd.v3+json
           - goversion: v17.6.0
@@ -77,6 +76,62 @@ jobs:
     - name: Kill the docker container
       run: |
         docker container kill gocd-server
+    - name: Test the JSON document for expected values
+      run: |
+        grep ARTIFACT_ID plugin_info.json || exit 1
+        grep PACKAGING plugin_info.json || exit 1
+        grep POLL_VERSION_TO plugin_info.json || exit 1
+        grep REPO_URL plugin_info.json || exit 1
+
+  # integration test by downloading the plugin via curl
+  # at startup
+  integration_env:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goversion: [ "v20.10.0" ]
+        accept: [ "application/vnd.go.cd.v7+json" ]
+    steps:
+    - name: Download the plugin
+      uses: actions/download-artifact@v2
+      with:
+        name: plugin
+    - name: Start the nginx container
+      run: |
+        cp go-maven-poller-plugin.jar /tmp/workspace/external
+        docker run --name nginx \
+         -v $PWD:/usr/share/nginx/html:ro -p 8080:80 -d nginx:1.19.9
+    - name: Start the GoCD container
+      run: |
+        docker run --name gocd-server \
+         -e "GOCD_PLUGIN_INSTALL_go-maven-poller=\
+            http://localhost/go-maven-poller-plugin.jar" \
+         -d -p8153:8153 \
+         gocd/gocd-server:${{ matrix.goversion }}
+    - name: Wait and get the plugin info via API
+      run: |
+        echo "Accept: ${ACCEPT} for GoCD ${{ matrix.goversion }}"
+        for (( i = 0; i < 180 ; i++ )); do
+          # busy loop sleep
+          sleep 1
+          echo -n "."
+          # download API
+          curl > plugin_info.json --silent \
+          -H "Accept: ${{ matrix.accept }}" \
+          http://localhost:8153/go/api/admin/plugin_info/maven-repo \
+          || continue
+          # break if success
+          grep ARTIFACT_ID plugin_info.json && break
+        done
+    - uses: actions/upload-artifact@v2
+      with:
+        name: output-json-${{ matrix.goversion }}
+        path: plugin_info.json
+    - name: Kill the docker containers
+      run: |
+        docker container kill gocd-server
+        docker container kill nginx
     - name: Test the JSON document for expected values
       run: |
         grep ARTIFACT_ID plugin_info.json || exit 1
