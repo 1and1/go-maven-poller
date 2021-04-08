@@ -1,6 +1,6 @@
 # This workflow is an integration test that
-# starts a GoCD docker container containing
-# the plugin.
+# * builds the plugin and then
+# * starts a GoCD docker container with the plugin mounted.
 #
 # The test only takes a look whether GoCD
 # recognizes the plugin correctly.
