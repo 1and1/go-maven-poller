@@ -54,3 +54,9 @@ jobs:
     - name: Kill the docker container
       run: |
         docker container kill gocd-server
+    - name: Test the JSON document for expected values
+      run: |
+        grep ARTIFACT_ID plugin_info.json || exit 1
+        grep PACKAGING plugin_info.json || exit 1
+        grep POLL_VERSION_TO plugin_info.json || exit 1
+        grep REPO_URL plugin_info.json || exit 1
