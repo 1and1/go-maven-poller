@@ -31,3 +31,25 @@ jobs:
          -v /tmp/workspace/external:/godata/plugins/external \
          -d -p8153:8153 \
          gocd/gocd-server:${GOVERSION}
+    - name: Wait and get the plugin info via API
+      run: |
+        echo "Accept: ${ACCEPT} for GoCD version ${GOVERSION}"
+        for (( i = 0; i < 180 ; i++ )); do
+          # busy loop sleep
+          sleep 1
+          echo -n "."
+          # download API
+          curl > plugin_info.json --silent \
+          -H "Accept: ${ACCEPT}" \
+          http://localhost:8153/go/api/admin/plugin_info/maven-repo \
+          || continue
+          # break if success
+          grep ARTIFACT_ID plugin_info.json && break
+        done
+    - uses: actions/upload-artifact@v2
+      with:
+        name: output-json
+        path: plugin_info.json
+    - name: Kill the docker container
+      run: |
+        docker container kill gocd-server
