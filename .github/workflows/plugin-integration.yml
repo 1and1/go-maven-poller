@@ -61,6 +61,8 @@ jobs:
           # busy loop sleep
           sleep 1
           echo -n "."
+          # check docker still running
+          docker ps | grep > /dev/null gocd-server || exit
           # download API
           curl > plugin_info.json --silent \
           -H "Accept: ${{ matrix.accept }}" \
@@ -120,6 +122,8 @@ jobs:
           # busy loop sleep
           sleep 1
           echo -n "."
+          # check docker still running
+          docker ps | grep > /dev/null gocd-server || exit
           # download API
           curl > plugin_info.json --silent \
           -H "Accept: ${{ matrix.accept }}" \
@@ -127,7 +131,7 @@ jobs:
           || continue
           # break if success
           grep ARTIFACT_ID plugin_info.json && break
-        done      
+        done
     - uses: actions/upload-artifact@v2
       with:
         name: output-json-${{ matrix.goversion }}
