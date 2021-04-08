@@ -99,8 +99,9 @@ jobs:
         name: plugin
     - name: Start the nginx container
       run: |
+        cp go-maven-poller-plugin.jar /tmp
         docker run --name nginx \
-         -v $PWD:/usr/share/nginx/html:ro -p 8080:80 -d nginx:1.19.9
+         -v /tmp:/usr/share/nginx/html:ro -p 8080:80 -d nginx:1.19.9
     - name: Start the GoCD container
       run: |
         docker run --name gocd-server \
