@@ -6,10 +6,6 @@
 # recognizes the plugin correctly.
 name: Integration Test
 
-env:
- GOVERSION: v19.1.0
- ACCEPT: application/vnd.go.cd.v4+json
-
 on:
   push:
     branches: [ master ]
@@ -39,27 +35,23 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Start a docker container
-      env:
-        GOVERSION: ${{ matrix.goversion }}
       run: |
         mkdir -p /tmp/workspace/external
         cp target/go-maven-poller-plugin.jar /tmp/workspace/external
         docker run --name gocd-server \
          -v /tmp/workspace/external:/godata/plugins/external \
          -d -p8153:8153 \
-         gocd/gocd-server:${GOVERSION}
+         gocd/gocd-server:${{ matrix.goversion }}
     - name: Wait and get the plugin info via API
-      env:
-        ACCEPT: ${{ matrix.accept }}
       run: |
-        echo "Accept: ${ACCEPT} for GoCD"
+        echo "Accept: ${ACCEPT} for GoCD ${{ matrix.goversion }}"
         for (( i = 0; i < 180 ; i++ )); do
           # busy loop sleep
           sleep 1
           echo -n "."
           # download API
           curl > plugin_info.json --silent \
-          -H "Accept: ${ACCEPT}" \
+          -H "Accept: ${{ matrix.accept }}" \
           http://localhost:8153/go/api/admin/plugin_info/maven-repo \
           || continue
           # break if success
