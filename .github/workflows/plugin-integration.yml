@@ -110,7 +110,7 @@ jobs:
       run: |
         docker run --name gocd-server \
          -e "GOCD_PLUGIN_INSTALL_go-maven-poller=\
-            http://localhost:8080/go-maven-poller-plugin.jar" \
+            http://$(hostname -I | cut -f1 -d" "):8080/go-maven-poller-plugin.jar" \
          -d -p8153:8153 \
          gocd/gocd-server:${{ matrix.goversion }}
     - name: Wait and get the plugin info via API
