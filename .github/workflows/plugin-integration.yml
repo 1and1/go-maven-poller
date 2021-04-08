@@ -76,6 +76,9 @@ jobs:
     - name: Kill the docker container
       run: |
         docker container kill gocd-server
+    - name: Show container logs
+      run: |
+        docker container logs gocd-server
     - name: Test the JSON document for expected values
       run: |
         grep ARTIFACT_ID plugin_info.json || exit 1
@@ -132,6 +135,10 @@ jobs:
       run: |
         docker container kill gocd-server
         docker container kill nginx
+    - name: Show container logs
+      run: |
+        docker container logs gocd-server
+        docker container logs nginx
     - name: Test the JSON document for expected values
       run: |
         grep ARTIFACT_ID plugin_info.json || exit 1
