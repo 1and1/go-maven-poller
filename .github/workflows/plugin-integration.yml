@@ -62,7 +62,7 @@ jobs:
           sleep 1
           echo -n "."
           # check docker still running
-          docker ps | grep > /dev/null gocd-server || exit
+          docker ps | grep > /dev/null gocd-server || break
           # download API
           curl > plugin_info.json --silent \
           -H "Accept: ${{ matrix.accept }}" \
@@ -123,7 +123,7 @@ jobs:
           sleep 1
           echo -n "."
           # check docker still running
-          docker ps | grep > /dev/null gocd-server || exit
+          docker ps | grep > /dev/null gocd-server || break
           # download API
           curl > plugin_info.json --silent \
           -H "Accept: ${{ matrix.accept }}" \
