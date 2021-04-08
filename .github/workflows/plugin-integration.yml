@@ -55,7 +55,7 @@ jobs:
          -d -p8153:8153 \
          gocd/gocd-server:${{ matrix.goversion }}
     - name: Wait and get the plugin info via API
-      run: |
+      run: &WAIT_FOR_PLUGIN_INFO_ON_HTTP |
         echo "Accept: ${ACCEPT} for GoCD ${{ matrix.goversion }}"
         for (( i = 0; i < 180 ; i++ )); do
           # busy loop sleep
@@ -80,7 +80,7 @@ jobs:
       run: |
         docker container logs gocd-server
     - name: Test the JSON document for expected values
-      run: |
+      run: &TEST_PLUGIN_INFO_JSON |
         grep ARTIFACT_ID plugin_info.json || exit 1
         grep PACKAGING plugin_info.json || exit 1
         grep POLL_VERSION_TO plugin_info.json || exit 1
@@ -113,20 +113,7 @@ jobs:
          -d -p8153:8153 \
          gocd/gocd-server:${{ matrix.goversion }}
     - name: Wait and get the plugin info via API
-      run: |
-        echo "Accept: ${ACCEPT} for GoCD ${{ matrix.goversion }}"
-        for (( i = 0; i < 180 ; i++ )); do
-          # busy loop sleep
-          sleep 1
-          echo -n "."
-          # download API
-          curl > plugin_info.json --silent \
-          -H "Accept: ${{ matrix.accept }}" \
-          http://localhost:8153/go/api/admin/plugin_info/maven-repo \
-          || continue
-          # break if success
-          grep ARTIFACT_ID plugin_info.json && break
-        done
+      run: *WAIT_FOR_PLUGIN_INFO_ON_HTTP
     - uses: actions/upload-artifact@v2
       with:
         name: output-json-${{ matrix.goversion }}
@@ -140,8 +127,4 @@ jobs:
         docker container logs gocd-server
         docker container logs nginx
     - name: Test the JSON document for expected values
-      run: |
-        grep ARTIFACT_ID plugin_info.json || exit 1
-        grep PACKAGING plugin_info.json || exit 1
-        grep POLL_VERSION_TO plugin_info.json || exit 1
-        grep REPO_URL plugin_info.json || exit 1
+      run: *TEST_PLUGIN_INFO_JSON
