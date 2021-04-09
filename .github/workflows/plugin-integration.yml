@@ -105,6 +105,12 @@ jobs:
             accept: application/vnd.go.cd.v7+json
           - goversion: v21.1.0
             accept: application/vnd.go.cd.v7+json
+          - goversion: v20.9.0
+            accept: application/vnd.go.cd.v7+json
+          - goversion: v20.8.0
+            accept: application/vnd.go.cd.v7+json
+          - goversion: v20.7.0
+            accept: application/vnd.go.cd.v7+json
     steps:
     - uses: actions/checkout@v2
     - name: Download the plugin
