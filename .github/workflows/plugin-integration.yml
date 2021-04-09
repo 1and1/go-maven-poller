@@ -148,6 +148,7 @@ jobs:
       run: |
         docker-compose down
     - name: Show container logs
+      working-directory: ./.github/integration-helper-docker-compose
       run: |
         docker-compose logs gocd-server
         docker-compose logs nginx
