@@ -115,12 +115,12 @@ jobs:
         pwd
         ls -al
 
-    # TODO change gocd version
     - name: Start the containers
       working-directory: ./.github/integration-helper-docker-compose
       run: |
         pwd
         ls -al
+        echo "goversion=${{ matrix.goversion }}" > .env
         docker-compose up --detach
     - name: Wait and get the plugin info via API
       run: |
