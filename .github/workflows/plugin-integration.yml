@@ -103,6 +103,9 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: plugin
+    - name: Install docker compose
+      run: |
+        apt-get update && apt-get install docker-compose
     - name: Copy the plugin to /tmp for docker compose
       run: |
         cp go-maven-poller-plugin.jar /tmp
