@@ -100,6 +100,11 @@ jobs:
       matrix:
         goversion: [ "v20.10.0" ]
         accept: [ "application/vnd.go.cd.v7+json" ]
+        include:
+          - goversion: v21.2.0
+            accept: application/vnd.go.cd.v7+json
+          - goversion: v21.1.0
+            accept: application/vnd.go.cd.v7+json
     steps:
     - uses: actions/checkout@v2
     - name: Download the plugin
