@@ -111,10 +111,15 @@ jobs:
     - name: Copy the plugin to /tmp for docker compose
       run: |
         cp go-maven-poller-plugin.jar /tmp
+        pwd
+        ls -al
+
     # TODO change gocd version
     - name: Start the containers
       working-directory: ./.github/integration-helper-docker-compose
       run: |
+        pwd
+        ls -al
         docker-compose start
     - name: Wait and get the plugin info via API
       run: |
