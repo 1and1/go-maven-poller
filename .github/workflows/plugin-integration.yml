@@ -56,9 +56,8 @@ jobs:
          -d -p8153:8153 \
          gocd/gocd-server:${{ matrix.goversion }}
     - name: Wait and get the plugin info via API
-      working-directory: ./.github/integration-helper
       run: |
-        bash ./wait-download-plugin_info.sh ${{ matrix.accept }} ${{ matrix.goversion }}
+        bash ./.github/integration-helper/wait-download-plugin_info.sh ${{ matrix.accept }} ${{ matrix.goversion }}
     - uses: actions/upload-artifact@v2
       with:
         name: output-json-${{ matrix.goversion }}
@@ -122,9 +121,8 @@ jobs:
         echo "goversion=${{ matrix.goversion }}" > .env
         docker-compose up --detach
     - name: Wait and get the plugin info via API
-      working-directory: ./.github/integration-helper
       run: |
-        bash ./wait-download-plugin_info.sh ${{ matrix.accept }} ${{ matrix.goversion }}
+        bash ./.github/integration-helper/wait-download-plugin_info.sh ${{ matrix.accept }} ${{ matrix.goversion }}
     - uses: actions/upload-artifact@v2
       with:
         name: output-json-${{ matrix.goversion }}
