@@ -42,6 +42,7 @@ jobs:
           - goversion: v17.6.0
             accept: application/vnd.go.cd.v2+json
     steps:
+    - uses: actions/checkout@v2
     - name: Download the plugin
       uses: actions/download-artifact@v2
       with:
@@ -55,22 +56,9 @@ jobs:
          -d -p8153:8153 \
          gocd/gocd-server:${{ matrix.goversion }}
     - name: Wait and get the plugin info via API
+      working-directory: ./.github/integration-helper
       run: |
-        echo "Accept: ${ACCEPT} for GoCD ${{ matrix.goversion }}"
-        for (( i = 0; i < 180 ; i++ )); do
-          # busy loop sleep
-          sleep 1
-          echo -n "."
-          # check docker still running
-          docker ps | grep > /dev/null gocd-server || break
-          # download API
-          curl > plugin_info.json --silent \
-          -H "Accept: ${{ matrix.accept }}" \
-          http://localhost:8153/go/api/admin/plugin_info/maven-repo \
-          || continue
-          # break if success
-          grep ARTIFACT_ID plugin_info.json && break
-        done
+        bash ./wait-download-plugin_info.sh ${{ matrix.accept }} ${{ matrix.goversion }}
     - uses: actions/upload-artifact@v2
       with:
         name: output-json-${{ matrix.goversion }}
@@ -134,22 +122,9 @@ jobs:
         echo "goversion=${{ matrix.goversion }}" > .env
         docker-compose up --detach
     - name: Wait and get the plugin info via API
+      working-directory: ./.github/integration-helper
       run: |
-        echo "Accept: ${ACCEPT} for GoCD ${{ matrix.goversion }}"
-        for (( i = 0; i < 180 ; i++ )); do
-          # busy loop sleep
-          sleep 1
-          echo -n "."
-          # check docker still running
-          docker ps | grep > /dev/null gocd-server || break
-          # download API
-          curl > plugin_info.json --silent \
-          -H "Accept: ${{ matrix.accept }}" \
-          http://localhost:8153/go/api/admin/plugin_info/maven-repo \
-          || continue
-          # break if success
-          grep ARTIFACT_ID plugin_info.json && break
-        done
+        bash ./wait-download-plugin_info.sh ${{ matrix.accept }} ${{ matrix.goversion }}
     - uses: actions/upload-artifact@v2
       with:
         name: output-json-${{ matrix.goversion }}
