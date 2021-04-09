@@ -127,7 +127,7 @@ jobs:
         ls -al
 
     - name: Start the containers
-      working-directory: ./.github/integration-helper-docker-compose
+      working-directory: ./.github/integration-helper/docker-compose
       run: |
         pwd
         ls -al
@@ -155,11 +155,11 @@ jobs:
         name: output-json-${{ matrix.goversion }}
         path: plugin_info.json
     - name: Kill the containers
-      working-directory: ./.github/integration-helper-docker-compose
+      working-directory: ./.github/integration-helper/docker-compose
       run: |
         docker-compose down
     - name: Show container logs
-      working-directory: ./.github/integration-helper-docker-compose
+      working-directory: ./.github/integration-helper/docker-compose
       run: |
         docker-compose logs gocd-server
         docker-compose logs nginx
