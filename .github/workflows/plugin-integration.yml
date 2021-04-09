@@ -101,6 +101,7 @@ jobs:
         goversion: [ "v20.10.0" ]
         accept: [ "application/vnd.go.cd.v7+json" ]
     steps:
+    - uses: actions/checkout@v2
     - name: Download the plugin
       uses: actions/download-artifact@v2
       with:
