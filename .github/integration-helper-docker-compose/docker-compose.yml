@@ -1,0 +1,18 @@
+version: "3.3"
+services:
+  gocd-server:
+    image: gocd/gocd-server:v20.10.0
+    ports:
+      - "8153:8153"
+    environment:
+      GOCD_PLUGIN_INSTALL_go-maven-poller: http://nginx:80/go-maven-poller-plugin.jar
+    links:
+      - nginx
+  nginx:
+    image: nginx:1.19.9
+    expose:
+      - "80"
+    # the file "go-maven-poller-plugin.jar" is expected
+    # to be located in /tmp
+    volumes:
+      - /tmp:/usr/share/nginx/html

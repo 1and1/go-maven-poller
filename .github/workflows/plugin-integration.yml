@@ -103,18 +103,14 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: plugin
-    - name: Start the nginx container
+    - name: Copy the plugin to /tmp for docker compose
       run: |
         cp go-maven-poller-plugin.jar /tmp
-        docker run --name nginx \
-         -v /tmp:/usr/share/nginx/html:ro -p 8080:80 -d nginx:1.19.9
-    - name: Start the GoCD container
+    # TODO change gocd version
+    - name: Start the containers
+      working-directory: ./.github/integration-helper-docker-compose
       run: |
-        docker run --name gocd-server \
-         -e "GOCD_PLUGIN_INSTALL_go-maven-poller=\
-            http://$(hostname -I | cut -f1 -d" "):8080/go-maven-poller-plugin.jar" \
-         -d -p8153:8153 \
-         gocd/gocd-server:${{ matrix.goversion }}
+        docker-compose start
     - name: Wait and get the plugin info via API
       run: |
         echo "Accept: ${ACCEPT} for GoCD ${{ matrix.goversion }}"
@@ -136,11 +132,11 @@ jobs:
       with:
         name: output-json-${{ matrix.goversion }}
         path: plugin_info.json
-    - name: Kill the docker containers
-      continue-on-error: true
+    - name: Kill the containers
+      working-directory: ./.github/integration-helper-docker-compose
       run: |
-        docker container kill gocd-server
-        docker container kill nginx
+        docker-compose stop
+    # TODO fix container names
     - name: Show container logs
       run: |
         docker container logs gocd-server
