@@ -1,6 +1,7 @@
 version: "3.3"
 services:
   gocd-server:
+    container_name: gocd-server
     image: gocd/gocd-server:v20.10.0
     ports:
       - "8153:8153"
@@ -9,6 +10,7 @@ services:
     links:
       - nginx
   nginx:
+    container_name: nginx
     image: nginx:1.19.9
     expose:
       - "80"

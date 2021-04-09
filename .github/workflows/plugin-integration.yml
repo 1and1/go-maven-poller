@@ -121,7 +121,7 @@ jobs:
       run: |
         pwd
         ls -al
-        docker-compose start
+        docker-compose up --detach
     - name: Wait and get the plugin info via API
       run: |
         echo "Accept: ${ACCEPT} for GoCD ${{ matrix.goversion }}"
@@ -146,12 +146,11 @@ jobs:
     - name: Kill the containers
       working-directory: ./.github/integration-helper-docker-compose
       run: |
-        docker-compose stop
-    # TODO fix container names
+        docker-compose down
     - name: Show container logs
       run: |
-        docker container logs gocd-server
-        docker container logs nginx
+        docker-compose logs gocd-server
+        docker-compose logs nginx
     - name: Test the JSON document for expected values
       run: |
         grep ARTIFACT_ID plugin_info.json || exit 1
