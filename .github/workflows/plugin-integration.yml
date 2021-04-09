@@ -94,6 +94,8 @@ jobs:
   integration_env:
     needs: build
     runs-on: ubuntu-latest
+    env:
+      DEBIAN_FRONTEND: noninteractive
     strategy:
       matrix:
         goversion: [ "v20.10.0" ]
@@ -105,7 +107,7 @@ jobs:
         name: plugin
     - name: Install docker compose
       run: |
-        apt-get update && apt-get install docker-compose
+        sudo apt-get update && sudo apt-get install --yes docker-compose
     - name: Copy the plugin to /tmp for docker compose
       run: |
         cp go-maven-poller-plugin.jar /tmp
