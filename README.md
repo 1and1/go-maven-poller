@@ -1,7 +1,6 @@
 Go Maven Poller
 ===================
-
-[![Circle CI Status](https://img.shields.io/circleci/build/github/1and1/go-maven-poller?style=plastic)](https://app.circleci.com/pipelines/github/1and1/go-maven-poller)
+[![Java CI with Maven](https://github.com/1and1/go-maven-poller/actions/workflows/maven.yml/badge.svg)](https://github.com/sfuhrm/sudoku/actions/workflows/maven.yml)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/go-maven-poller/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/go-maven-poller)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Downloads](https://img.shields.io/github/downloads/1and1/go-maven-poller/total)](https://github.com/1and1/go-maven-poller/releases)
