@@ -4,7 +4,7 @@
 
   <groupId>com.oneandone</groupId>
   <artifactId>go-maven-poller</artifactId>
-  <version>1.5.3-SNAPSHOT</version>
+  <version>1.5.3</version>
 
   <name>GoCD Maven Material Poller Plugin</name>
   <description>GoCD plugin to poll maven artifacts as materials</description>
@@ -40,7 +40,7 @@
     <url>https://github.com/1and1/go-maven-poller.git</url>
     <connection>scm:git:git@github.com:1and1/go-maven-poller.git</connection>
     <developerConnection>scm:git:git@github.com:1and1/go-maven-poller.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>go-maven-poller-1.5.3</tag>
   </scm>
 
   <properties>
