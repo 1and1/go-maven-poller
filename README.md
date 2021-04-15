@@ -2,6 +2,7 @@ Go Maven Poller
 ===================
 [![Java Build](https://github.com/1and1/go-maven-poller/actions/workflows/maven.yml/badge.svg)](https://github.com/1and1/go-maven-poller/actions/workflows/maven.yml)
 [![Integration Test](https://github.com/1and1/go-maven-poller/actions/workflows/plugin-integration.yml/badge.svg)](https://github.com/1and1/go-maven-poller/actions/workflows/plugin-integration.yml)
+[![Coverage](https://raw.githubusercontent.com/1and1/go-maven-poller/master/.github/badges/jacoco.svg)](https://github.com/1and1/go-maven-poller/actions/workflows/jacoco-badge.yml)
 [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/1and1/go-maven-poller)](https://github.com/1and1/go-maven-poller/releases)
 [![ReleaseDate](https://img.shields.io/github/release-date/1and1/go-maven-poller)](https://github.com/1and1/go-maven-poller/releases)
 [![Downloads](https://img.shields.io/github/downloads/1and1/go-maven-poller/total)](https://github.com/1and1/go-maven-poller/releases)
