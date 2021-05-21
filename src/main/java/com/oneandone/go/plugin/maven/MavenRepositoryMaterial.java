@@ -14,6 +14,7 @@ import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.oneandone.go.plugin.maven.util.JsonUtil.fromJsonString;
 import static com.oneandone.go.plugin.maven.util.JsonUtil.toJsonString;
@@ -117,7 +118,8 @@ public class MavenRepositoryMaterial implements GoPlugin {
             }
             return DefaultGoPluginApiResponse.badRequest(String.format("Invalid request name %s", goPluginApiRequest.requestName()));
         } catch (final Exception e) {
-            LOGGER.error("could not handle request with name \"" + goPluginApiRequest.requestName() + "\" and body: " + goPluginApiRequest.requestBody(), e);
+            LOGGER.error("could not handle request with name \"" + goPluginApiRequest.requestName() +
+                    "\" and body: " + getSanitizedRequestBody(goPluginApiRequest.requestBody()), e);
             return DefaultGoPluginApiResponse.error(e.getMessage());
         }
     }
@@ -125,6 +127,26 @@ public class MavenRepositoryMaterial implements GoPlugin {
     @Override
     public GoPluginIdentifier pluginIdentifier() {
         return new GoPluginIdentifier(EXTENSION, Collections.singletonList("1.0"));
+    }
+
+    /**
+     * Returns an API request body with password masked by "********".
+     *
+     * @return sanitized repository request body as String
+     */
+
+    private String getSanitizedRequestBody(final String requestBody) {
+        ConfigurationMessage message = fromJsonString(requestBody, ConfigurationMessage.class);
+        PackageMaterialProperties properties = message.getRepositoryConfiguration();
+        Optional<String> password = properties.getValue("PASSWORD");
+        if(password.isPresent())
+        {
+            // Overwrite the "PASSWORD" property with stars for e.g. log output
+            properties.addPackageMaterialProperty("PASSWORD", new PackageMaterialProperty().withValue("********").withSecure(true));
+            return toJsonString(message);
+        }
+
+        return requestBody;
     }
 
     private MessageHandler getConfigurationMessageHandler() {
