@@ -1,5 +1,6 @@
 package com.oneandone.go.plugin.maven;
 
+import com.oneandone.go.plugin.maven.config.ConfigurationProperties;
 import com.oneandone.go.plugin.maven.config.ConfigurationProvider;
 import com.oneandone.go.plugin.maven.message.*;
 import com.thoughtworks.go.plugin.api.GoApplicationAccessor;
@@ -119,7 +120,7 @@ public class MavenRepositoryMaterial implements GoPlugin {
             return DefaultGoPluginApiResponse.badRequest(String.format("Invalid request name %s", goPluginApiRequest.requestName()));
         } catch (final Exception e) {
             LOGGER.error("could not handle request with name \"" + goPluginApiRequest.requestName() +
-                    "\" and body: " + getSanitizedRequestBody(goPluginApiRequest.requestBody()), e);
+                    "\" and body: " + sanitizeRequestBody(goPluginApiRequest.requestBody()), e);
             return DefaultGoPluginApiResponse.error(e.getMessage());
         }
     }
@@ -134,16 +135,23 @@ public class MavenRepositoryMaterial implements GoPlugin {
      *
      * @return sanitized repository request body as String
      */
-
-    private String getSanitizedRequestBody(final String requestBody) {
-        ConfigurationMessage message = fromJsonString(requestBody, ConfigurationMessage.class);
-        PackageMaterialProperties properties = message.getRepositoryConfiguration();
-        Optional<String> password = properties.getValue("PASSWORD");
-        if(password.isPresent())
-        {
-            // Overwrite the "PASSWORD" property with stars for e.g. log output
-            properties.addPackageMaterialProperty("PASSWORD", new PackageMaterialProperty().withValue("********").withSecure(true));
-            return toJsonString(message);
+    static String sanitizeRequestBody(final String requestBody) {
+        try {
+            ConfigurationMessage message = fromJsonString(requestBody, ConfigurationMessage.class);
+            PackageMaterialProperties properties = message.getRepositoryConfiguration();
+            if (properties != null) {
+                Optional<String> password = properties.getValue(ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD);
+                if (password.isPresent()) {
+                    // Overwrite the "PASSWORD" property with stars for e.g. log output
+                    properties.addPackageMaterialProperty(
+                            ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD,
+                            new PackageMaterialProperty().withValue("********").withSecure(true));
+                    return toJsonString(message);
+                }
+            }
+        }
+        catch (Exception e) {
+            // ignore, return the original requestBody
         }
 
         return requestBody;

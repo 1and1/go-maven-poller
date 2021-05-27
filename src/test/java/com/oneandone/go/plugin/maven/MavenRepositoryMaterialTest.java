@@ -1,5 +1,6 @@
 package com.oneandone.go.plugin.maven;
 
+import com.oneandone.go.plugin.maven.config.ConfigurationProperties;
 import com.oneandone.go.plugin.maven.message.*;
 import com.oneandone.go.plugin.maven.util.JsonUtil;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
@@ -104,6 +105,55 @@ public class MavenRepositoryMaterialTest {
         final MavenRepositoryMaterial material = new MavenRepositoryMaterial();
         assertEquals("package-repository", material.pluginIdentifier().getExtension());
         assertTrue(material.pluginIdentifier().getSupportedExtensionVersions().contains("1.0"));
+    }
+
+    @Test
+    public void testSanitizeRequestBodyWithNull() {
+        String result = MavenRepositoryMaterial.sanitizeRequestBody(null);
+        assertEquals(null, result);
+    }
+
+    @Test
+    public void testSanitizeRequestBodyWithEmptyString() {
+        String result = MavenRepositoryMaterial.sanitizeRequestBody("");
+        assertEquals("", result);
+    }
+
+    @Test
+    public void testSanitizeRequestBodyWithUnparsable() {
+        String result = MavenRepositoryMaterial.sanitizeRequestBody("[]");
+        assertEquals("[]", result);
+    }
+
+    @Test
+    public void testSanitizeRequestBodyWithNoChange() {
+        ConfigurationMessage configurationMessage = new ConfigurationMessage();
+        String json = JsonUtil.toJsonString(configurationMessage);
+        String result = MavenRepositoryMaterial.sanitizeRequestBody(json);
+        assertEquals(json, result);
+    }
+
+    @Test
+    public void testSanitizeRequestBodyWithPasswordReplaced() throws NoSuchFieldException, IllegalAccessException {
+        final ConfigurationMessage configurationMessage = new ConfigurationMessage();
+        final Class<ConfigurationMessage> messageClass = ConfigurationMessage.class;
+        final Map<String, PackageMaterialProperty> repositoryConfiguration = new HashMap<>();
+
+        final Field repositoryConfigurationField = messageClass.getDeclaredField("repositoryConfiguration");
+        repositoryConfigurationField.setAccessible(true);
+        repositoryConfigurationField.set(configurationMessage, repositoryConfiguration);
+        repositoryConfiguration.put(
+                ConfigurationProperties.REPOSITORY_CONFIGURATION_KEY_PASSWORD,
+                new PackageMaterialProperty().withSecure(true).withValue("replace_me"));
+
+        String json = JsonUtil.toJsonString(configurationMessage);
+        String result = MavenRepositoryMaterial.sanitizeRequestBody(json);
+
+        // password should be replaced
+        assertNotEquals(json, result);
+
+        // this is how it should look like
+        assertEquals(json.replaceAll("replace_me", "********"), result);
     }
 
     private static GoPluginApiRequest request(final String requestName, final String requestBody) {
