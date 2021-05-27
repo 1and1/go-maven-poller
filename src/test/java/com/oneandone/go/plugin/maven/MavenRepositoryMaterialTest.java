@@ -207,9 +207,9 @@ public class MavenRepositoryMaterialTest {
         final Field packageConfigurationField = messageClass.getDeclaredField("packageConfiguration");
         packageConfigurationField.setAccessible(true);
         final Map<String, PackageMaterialProperty> packageConfiguration = new HashMap<>();
-        packageConfiguration.put("GROUP_ID", new PackageMaterialProperty().withValue("com.oneandone.network"));
-        packageConfiguration.put("ARTIFACT_ID", new PackageMaterialProperty().withValue("rrd-client-ra"));
-        packageConfiguration.put("PACKAGING", new PackageMaterialProperty().withValue("rar"));
+        packageConfiguration.put(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_GROUP_ID, new PackageMaterialProperty().withValue("com.oneandone.network"));
+        packageConfiguration.put(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_ARTIFACT_ID, new PackageMaterialProperty().withValue("rrd-client-ra"));
+        packageConfiguration.put(ConfigurationProperties.PACKAGE_CONFIGURATION_KEY_PACKAGING, new PackageMaterialProperty().withValue("rar"));
         packageConfigurationField.set(configurationMessage, packageConfiguration);
 
         final Field previousRevisonField = messageClass.getDeclaredField("previousRevision");
