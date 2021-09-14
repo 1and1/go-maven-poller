@@ -180,7 +180,7 @@ public class RepositoryConnector {
                                     "expected HTTP status 200 but got %d on check of url '%s', with entity: %s",
                                     response.getCode(),
                                     uri.toASCIIString(),
-                                    builder.toString()
+                                    builder
                             ));
                         }
                     }

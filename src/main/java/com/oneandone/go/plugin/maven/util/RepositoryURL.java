@@ -50,7 +50,7 @@ public class RepositoryURL {
      * @return the URL with a trailing slash
      */
     public String getURL() {
-        return url.toString().endsWith("/") ? url.toString() : url.toString() + "/";
+        return url.toString().endsWith("/") ? url.toString() : url + "/";
     }
 
     /**

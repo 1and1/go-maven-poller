@@ -34,7 +34,7 @@ class NaturalOrderComparator implements Comparator<String>, Serializable {
                 }
             } else if (ca > cb) {
                 if (bias == 0)
-                    bias = +1;
+                    bias = 1;
             } else if (ca == 0 && cb == 0) {
                 return bias;
             }
