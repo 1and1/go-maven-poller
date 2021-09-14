@@ -24,8 +24,8 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory></directory>
-      <outputDirectory></outputDirectory>
+      <directory/>
+      <outputDirectory/>
       <includes>
         <include>README.md</include>
         <include>MAINTAINERS.md</include>
@@ -34,7 +34,7 @@
     </fileSet>
     <fileSet>
       <directory>target/classes/</directory>
-      <outputDirectory></outputDirectory>
+      <outputDirectory/>
     </fileSet>
   </fileSets>
   <dependencySets>
