@@ -127,7 +127,7 @@
           <target>11</target>
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
-          <failOnWarning>true</failOnWarning>
+          <failOnWarning>false</failOnWarning>
           <failOnError>true</failOnError>
           <compilerArgs>
             <arg>-Xlint:deprecation</arg>
