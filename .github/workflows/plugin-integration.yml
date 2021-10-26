@@ -29,51 +29,6 @@ jobs:
         name: plugin
         path: target/go-maven-poller-plugin.jar
 
-  # integration test by mounting the plugin via docker
-  integration_mount:
-    needs: build
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        goversion: [ "v19.1.0" ]
-        accept: [ "application/vnd.go.cd.v4+json" ]
-        include:
-          - goversion: v18.1.0
-            accept: application/vnd.go.cd.v3+json
-          - goversion: v17.6.0
-            accept: application/vnd.go.cd.v2+json
-    steps:
-    - uses: actions/checkout@v2
-    - name: Download the plugin
-      uses: actions/download-artifact@v2
-      with:
-        name: plugin
-    - name: Start a docker container
-      run: |
-        mkdir -p /tmp/workspace/external
-        cp go-maven-poller-plugin.jar /tmp/workspace/external
-        docker run --name gocd-server \
-         -v /tmp/workspace/external:/godata/plugins/external \
-         -d -p8153:8153 \
-         gocd/gocd-server:${{ matrix.goversion }}
-    - name: Wait and get the plugin info via API
-      run: |
-        bash ./.github/integration-helper/wait-download-plugin_info.sh ${{ matrix.accept }} ${{ matrix.goversion }}
-    - uses: actions/upload-artifact@v2
-      with:
-        name: output-json-${{ matrix.goversion }}
-        path: plugin_info.json
-    - name: Kill the docker container
-      continue-on-error: true
-      run: |
-        docker container kill gocd-server
-    - name: Show container logs
-      run: |
-        docker container logs gocd-server
-    - name: Test the JSON document for expected values
-      run: |
-        bash ./.github/integration-helper/check-plugin_info.sh plugin_info.json || exit 1
-
   # integration test by downloading the plugin via curl
   # at startup
   integration_env:
