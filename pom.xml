@@ -10,7 +10,7 @@
   <description>GoCD plugin to poll maven artifacts as materials</description>
   <url>https://github.com/1and1/go-maven-poller</url>
   <organization>
-    <name>1&amp;1 Ionos SE</name>
+    <name>IONOS SE</name>
     <url>http://www.ionos.com/</url>
   </organization>
   <licenses>
