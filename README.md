@@ -28,8 +28,8 @@ Requirements
 
 The go-maven-poller requires at least the following environment:
 
-* GoCD 17.4.0 and later
-* JDK 8 - 12 and later (the JDK GoCD is running with)
+* GoCD 20.1.0 and later
+* JDK 11 - 17 and later (the JDK GoCD is running with)
 
 Installation
 ------------
