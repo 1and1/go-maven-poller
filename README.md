@@ -23,7 +23,7 @@ Tested on following repositories:
 * JBoss Nexus ([Link](https://repository.jboss.org/nexus/content/repositories/))
 * JFrog Artifactory ([Link](https://jfrog.com/artifactory/))
 
-Open job opportunities
+Open job opportunities (ad)
 ------------
 A selection of open job offers from Germanys biggest internet hoster IONOS (2022-01-21). Remote work is possible:
 
