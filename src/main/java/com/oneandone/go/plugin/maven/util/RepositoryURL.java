@@ -60,29 +60,30 @@ public class RepositoryURL {
      */
     public String getURLWithBasicAuth() {
         final StringBuilder sb = new StringBuilder();
-        sb.append(url.getProtocol());
-        sb.append("://");
+        sb.append(url.getProtocol()).append("://");
 
         if (hasCredentials()) {
-            sb.append(String.format("%s:%s", this.username, URLEncoder.encode(this.password, StandardCharsets.UTF_8))).append("@");
+            sb.append(String.format("%s:%s",
+                    this.username,
+                    URLEncoder.encode(this.password, StandardCharsets.UTF_8))).append('@');
         }
 
         sb.append(url.getHost());
         if (url.getPort() != -1) {
-            sb.append(":").append(url.getPort());
+            sb.append(':').append(url.getPort());
         }
 
         sb.append(url.getPath());
         if (url.getQuery() != null) {
-            sb.append("?").append(url.getQuery());
+            sb.append('?').append(url.getQuery());
         }
 
         if (url.getRef() != null) {
-            sb.append("#").append(url.getRef());
+            sb.append('#').append(url.getRef());
         }
 
         if (url.getQuery() == null && url.getRef() == null && !url.getPath().endsWith("/")) {
-            sb.append("/");
+            sb.append('/');
         }
         return sb.toString();
     }
