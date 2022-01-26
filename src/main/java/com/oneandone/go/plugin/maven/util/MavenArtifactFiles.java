@@ -39,7 +39,7 @@ public class MavenArtifactFiles {
     private String url;
 
     /** Flag indicating whether the pom was already parsed. */
-    private boolean modelParsed = false;
+    private boolean modelParsed;
 
     /**
      * Constructs a new maven artifact location representative.
