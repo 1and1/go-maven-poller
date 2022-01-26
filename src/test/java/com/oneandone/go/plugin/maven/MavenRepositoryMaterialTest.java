@@ -110,7 +110,7 @@ public class MavenRepositoryMaterialTest {
     @Test
     public void testSanitizeRequestBodyWithNull() {
         String result = MavenRepositoryMaterial.sanitizeRequestBody(null);
-        assertEquals(null, result);
+        assertNull(result);
     }
 
     @Test
