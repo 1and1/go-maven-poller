@@ -1,9 +1,9 @@
 package com.oneandone.go.plugin.maven.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /** Representation of a Maven repository URL. */
 public class RepositoryURL {
@@ -64,11 +64,7 @@ public class RepositoryURL {
         sb.append("://");
 
         if (hasCredentials()) {
-            try {
-                sb.append(String.format("%s:%s", this.username, URLEncoder.encode(this.password, "UTF-8"))).append("@");
-            } catch (final UnsupportedEncodingException e) {
-                // should not happen
-            }
+            sb.append(String.format("%s:%s", this.username, URLEncoder.encode(this.password, StandardCharsets.UTF_8))).append("@");
         }
 
         sb.append(url.getHost());
