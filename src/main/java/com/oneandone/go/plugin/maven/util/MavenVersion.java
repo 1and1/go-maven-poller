@@ -89,14 +89,11 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
     private static int[] parseVersionDigits(String version) {
         final StringTokenizer versionTokenizer = new StringTokenizer(version, ".");
         final int absoluteTokenCount = versionTokenizer.countTokens();
-        final String[] digitStrings = new String[absoluteTokenCount];
         final int[] digits = new int[absoluteTokenCount];
 
         for (int i = 0; i < absoluteTokenCount; i++) {
-            final String digit = versionTokenizer.nextToken();
-            digitStrings[i] = digit;
-
             try {
+                final String digit = versionTokenizer.nextToken();
                 digits[i] = Integer.parseInt(digit);
             } catch (final NumberFormatException e) {
                 throw new IllegalArgumentException("invalid version string " + version);
