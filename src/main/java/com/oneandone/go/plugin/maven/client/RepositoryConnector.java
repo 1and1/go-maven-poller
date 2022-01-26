@@ -90,16 +90,17 @@ public class RepositoryConnector {
      */
     public RepositoryResponse doHttpRequest(final String url) {
         String responseBody;
-        try (final CloseableHttpClient client = createHttpClient()) {
+        try (CloseableHttpClient client = createHttpClient()) {
             HttpGet method = new HttpGet(url);
             method.setHeader(HttpHeaders.ACCEPT, "application/xml");
             try (CloseableHttpResponse response = client.execute(method)) {
                 if (response.getCode() != HttpStatus.SC_OK) {
                     throw new GoMavenPollerException(String.format("HTTP %s, %s", response.getCode(), response.getReasonPhrase()));
                 }
-                HttpEntity entity = response.getEntity();
-                responseBody = EntityUtils.toString(entity);
-                return new RepositoryResponse(responseBody);
+                try (HttpEntity entity = response.getEntity()) {
+                    responseBody = EntityUtils.toString(entity);
+                    return new RepositoryResponse(responseBody);
+                }
             }
         } catch (final Exception e) {
             String message = String.format("Exception while connecting to %s%n%s", url, e);
@@ -147,12 +148,12 @@ public class RepositoryConnector {
         //noinspection UnusedAssignment
         boolean result = false;
 
-        try (final CloseableHttpClient client = createHttpClient()) {
+        try (CloseableHttpClient client = createHttpClient()) {
             // try with HTTP HEAD
             HttpUriRequestBase headRequest = new HttpHead(uri);
             headRequest.setHeader(HttpHeaders.ACCEPT, "*/*");
             try (CloseableHttpResponse response = client.execute(headRequest)) {
-                result = (response.getCode() == HttpStatus.SC_OK);
+                result = response.getCode() == HttpStatus.SC_OK;
             }
 
             if (!result) {
@@ -160,12 +161,12 @@ public class RepositoryConnector {
                 HttpUriRequestBase getRequest = new HttpGet(uri);
                 getRequest.setHeader(HttpHeaders.ACCEPT, "*/*");
                 try (CloseableHttpResponse response = client.execute(getRequest)) {
-                    result = (response.getCode() == HttpStatus.SC_OK);
+                    result = response.getCode() == HttpStatus.SC_OK;
 
                     if (!result) {
                         final StringBuilder builder = new StringBuilder();
                         if (response.getEntity() != null) {
-                            try (final BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8))) {
+                            try (BufferedReader bReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent(), StandardCharsets.UTF_8))) {
                                 String line;
                                 while ((line = bReader.readLine()) != null) {
                                     builder.append(line);
