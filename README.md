@@ -25,7 +25,7 @@ Tested on following repositories:
 
 Open job opportunities (ad)
 ------------
-A selection of open job offers from Germanys biggest internet hoster IONOS (2022-01-21). Remote work is possible:
+A selection of open job offers from Germanys biggest internet hoster IONOS (2022-02-12). Remote work is possible:
 
 - [Software Developer CI/CD](https://bit.ly/3rLJKFA)
 - [Java Backend Developers](https://bit.ly/33JC8vt)
