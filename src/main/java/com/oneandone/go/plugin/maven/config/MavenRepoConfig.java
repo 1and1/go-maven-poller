@@ -116,7 +116,7 @@ public class MavenRepoConfig {
     }
 
     public Boolean hasLatestVersionTag() {
-        return (latestVersionTag != null);
+        return latestVersionTag != null;
     }
 
     /**

@@ -34,9 +34,6 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
     /** The SNAPSHOT build number. */
     private String buildNumber;
 
-    /** The version digits as String. */
-    private final String[] digitStrings;
-
     /** The version digits. */
     private final int[] digits;
 
@@ -79,21 +76,30 @@ public class MavenVersion implements Serializable, Comparable<MavenVersion> {
             this.version = this.original;
         }
 
-        final StringTokenizer versionTokenizer = new StringTokenizer(this.version, ".");
+        this.digits = parseVersionDigits(this.version);
+    }
+
+    /** Parse the digits out of the version String.
+     * @param version a version String, like {@code "12.34.56"}.
+     * @return the parsed-out digits, example {@code int[] {12, 34, 56}}
+     * for the input {@code "12.34.56"}.
+     * @throws IllegalArgumentException if the version string is not
+     * consisting of numbers.
+     * */
+    private static int[] parseVersionDigits(String version) {
+        final StringTokenizer versionTokenizer = new StringTokenizer(version, ".");
         final int absoluteTokenCount = versionTokenizer.countTokens();
-        this.digitStrings = new String[absoluteTokenCount];
-        this.digits = new int[absoluteTokenCount];
+        final int[] digits = new int[absoluteTokenCount];
 
         for (int i = 0; i < absoluteTokenCount; i++) {
-            final String digit = versionTokenizer.nextToken();
-            digitStrings[i] = digit;
-
             try {
+                final String digit = versionTokenizer.nextToken();
                 digits[i] = Integer.parseInt(digit);
             } catch (final NumberFormatException e) {
                 throw new IllegalArgumentException("invalid version string " + version);
             }
         }
+        return digits;
     }
 
     /**

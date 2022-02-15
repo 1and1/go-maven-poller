@@ -131,7 +131,7 @@ public class MavenPackageConfig {
             return;
         }
 
-        if ((groupOrArtifactId.contains("*") || groupOrArtifactId.contains("?"))) {
+        if (groupOrArtifactId.contains("*") || groupOrArtifactId.contains("?")) {
             final String message = String.format("%s [%s] is invalid", what, groupOrArtifactId);
             LOGGER.info(message);
             errors.addError(new ValidationError(what, message));

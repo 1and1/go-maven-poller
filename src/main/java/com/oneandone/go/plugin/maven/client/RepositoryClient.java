@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/** Retrieves the latest artifact version from a repository.
+ * */
 public class RepositoryClient {
 
     private static final Logger LOGGER = Logger.getLoggerFor(RepositoryClient.class);
@@ -28,10 +30,12 @@ public class RepositoryClient {
         this.packageConfig = packageConfig;
     }
 
-    /*
-     * Depending on, if there is special latest version xml tag for latest version specified for current repository
+    /** Gets the latest maven revision from the repository.
+     * If there is special latest version xml tag for latest version specified for current repository
      * we deliver either the value of this tag or the highest from all available versions.
-     */
+     * @return the latest artifact revision. Can be {@code null} if there are no artifacts with the
+     * given coordinates.
+     * */
     public MavenRevision getLatest() {
         final RepositoryResponse repoResponse = repositoryConnector.makeAllVersionsRequest(repoConfig, packageConfig);
         LOGGER.debug(repoResponse.getResponseBody());

@@ -1,9 +1,9 @@
 package com.oneandone.go.plugin.maven.util;
 
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /** Representation of a Maven repository URL. */
 public class RepositoryURL {
@@ -60,33 +60,30 @@ public class RepositoryURL {
      */
     public String getURLWithBasicAuth() {
         final StringBuilder sb = new StringBuilder();
-        sb.append(url.getProtocol());
-        sb.append("://");
+        sb.append(url.getProtocol()).append("://");
 
         if (hasCredentials()) {
-            try {
-                sb.append(String.format("%s:%s", this.username, URLEncoder.encode(this.password, "UTF-8"))).append("@");
-            } catch (final UnsupportedEncodingException e) {
-                // should not happen
-            }
+            sb.append(String.format("%s:%s",
+                    this.username,
+                    URLEncoder.encode(this.password, StandardCharsets.UTF_8))).append('@');
         }
 
         sb.append(url.getHost());
         if (url.getPort() != -1) {
-            sb.append(":").append(url.getPort());
+            sb.append(':').append(url.getPort());
         }
 
         sb.append(url.getPath());
         if (url.getQuery() != null) {
-            sb.append("?").append(url.getQuery());
+            sb.append('?').append(url.getQuery());
         }
 
         if (url.getRef() != null) {
-            sb.append("#").append(url.getRef());
+            sb.append('#').append(url.getRef());
         }
 
         if (url.getQuery() == null && url.getRef() == null && !url.getPath().endsWith("/")) {
-            sb.append("/");
+            sb.append('/');
         }
         return sb.toString();
     }

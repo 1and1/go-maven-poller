@@ -23,6 +23,18 @@ Tested on following repositories:
 * JBoss Nexus ([Link](https://repository.jboss.org/nexus/content/repositories/))
 * JFrog Artifactory ([Link](https://jfrog.com/artifactory/))
 
+Open job opportunities (ad)
+------------
+A selection of open job offers from Germanys biggest internet hoster IONOS (2022-02-12). Remote work is possible:
+
+- [Software Developer CI/CD](https://bit.ly/3rLJKFA)
+- [Java Backend Developers](https://bit.ly/33JC8vt)
+- [PHP / GO Developers](https://bit.ly/3nPV8zm)
+- [Java Developers](https://bit.ly/3fQdOdP)
+- [more jobs](https://bit.ly/3tSh9kI)
+
+German job openings don't mean that we're not talking english :).
+
 Requirements
 ------------
 
