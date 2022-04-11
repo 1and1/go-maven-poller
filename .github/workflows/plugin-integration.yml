@@ -41,6 +41,10 @@ jobs:
         include:
           - goversion: v22.1.0
             accept: application/vnd.go.cd.v7+json
+          - goversion: v21.4.0
+            accept: application/vnd.go.cd.v7+json
+          - goversion: v21.3.0
+            accept: application/vnd.go.cd.v7+json
           - goversion: v21.2.0
             accept: application/vnd.go.cd.v7+json
           - goversion: v21.1.0
