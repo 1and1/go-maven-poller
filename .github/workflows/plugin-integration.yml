@@ -18,13 +18,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 11
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         distribution: 'adopt'
         java-version: 11
     - name: Build with Maven
       run: mvn -B package --file pom.xml
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: plugin
         path: target/go-maven-poller-plugin.jar
@@ -86,7 +86,7 @@ jobs:
     - name: Wait and get the plugin info via API
       run: |
         bash ./.github/integration-helper/wait-download-plugin_info.sh ${{ matrix.accept }} ${{ matrix.goversion }}
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: output-json-${{ matrix.goversion }}
         path: plugin_info.json

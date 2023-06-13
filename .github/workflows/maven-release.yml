@@ -37,7 +37,7 @@ jobs:
       run: echo "::set-output name=sha256sum::$(sha256sum -b target/go-maven-poller-plugin.jar | cut -f1 -d" ")"
       id: sha256sum
       shell: bash
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: go-maven-poller-plugin.jar
         path: target/go-maven-poller-plugin.jar
