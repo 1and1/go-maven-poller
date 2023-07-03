@@ -13,7 +13,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  integration_build:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -32,7 +32,7 @@ jobs:
   # integration test by downloading the plugin via curl
   # at startup
   integration_env:
-    needs: build
+    needs: integration_build
     runs-on: ubuntu-latest
     env:
       DEBIAN_FRONTEND: noninteractive
