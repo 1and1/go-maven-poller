@@ -28,4 +28,11 @@
     <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
     <cve>CVE-2020-11023</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+    file name: jquery-ui.min.js
+    ]]></notes>
+    <packageUrl regex="true">^pkg:javascript/jquery\-ui@.*$</packageUrl>
+    <cve>CVE-2022-31160</cve>
+  </suppress>
 </suppressions>
