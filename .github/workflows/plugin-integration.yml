@@ -39,6 +39,10 @@ jobs:
     strategy:
       matrix:
         include:
+          - goversion: v23.2.0
+            accept: application/vnd.go.cd.v7+json
+          - goversion: v23.1.0
+            accept: application/vnd.go.cd.v7+json
           - goversion: v22.3.0
             accept: application/vnd.go.cd.v7+json
           - goversion: v22.2.0
