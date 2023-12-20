@@ -104,7 +104,7 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-security</artifactId>
-      <version>11.0.18</version>
+      <version>11.0.19</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
